@@ -13,7 +13,6 @@ int main(void)
 	while (1)
 	{
 		command = readline(">> ");
-		// printf("command: %s\n", command);
 		add_history(command);
 
 		/* コマンドの処理 */
