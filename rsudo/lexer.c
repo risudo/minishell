@@ -30,21 +30,22 @@ char	*get_str(char *start, char *cmd)
 	return (str);
 }
 
-t_token	*new_token(t_token *cur, char *cmd, char *start, int *flag_quot)
+t_token	*new_token(t_token *cur, char **cmd, char **start, int *flag_quot)
 {
 	t_token				*tok;
 	static enum e_type	cur_type;
 
 	tok = ft_calloc(1, sizeof(*tok));//!malloc
-	tok->str = get_str(start, cmd);
+	tok->str = get_str(*start, *cmd);
 	// cur_type = get_type(cur_type);
 	tok->type = cur_type;
 	cur->next = tok;
 	tok->prev = cur;
 		// printf("*flag_quot: %d\n", *flag_quot);
-	// while (ft_isspace(*cmd) && *flag_quot == DEFAULT_QUOT)
-	// 	cmd++;
-	// start = cmd;
+	while (ft_isspace(**cmd) && *flag_quot == DEFAULT_QUOT)
+		(*cmd)++;
+	*start = *cmd;
+	*flag_quot = DEFAULT_QUOT;
 	return (tok);
 }
 //setが来たら区切ってlist->cmdに入れる
@@ -65,18 +66,11 @@ t_token	*tokenize_space(char *cmd)
 		if ((*start == '\"' || *start == '\'') && flag_quot == DEFAULT_QUOT)
 			flag_quot = START_QUOT;
 		if (*cmd == ' ' && flag_quot > 0)
-		{
-				// printf("flag_quot: %d\n", flag_quot);
-			cur = new_token(cur, cmd, start, &flag_quot);
-			while (ft_isspace(*cmd) && flag_quot == DEFAULT_QUOT)
-				cmd++;
-			flag_quot = DEFAULT_QUOT;
-			start = cmd;
-		}
+			cur = new_token(cur, &cmd, &start, &flag_quot);
 		cmd++;
 	}
 	if (cmd != start)
-		cur = new_token(cur, cmd, start, &flag_quot);
+		cur = new_token(cur, &cmd, &start, &flag_quot);
 	return (head.next);
 }
 
@@ -91,8 +85,6 @@ t_token	*token_insert(t_token *list, char *ope)
 	list->next = new;
 	new->prev = list;
 	new->next = next;
-	printf("nextp: %p\n", new->next);
-	printf("next->str: [%s]\n", list->next->str);
 	return (new);
 }
 
@@ -130,7 +122,10 @@ t_token	*pick_ope(t_token *list)
 	{
 		i++;
 	}
-	return (new_token_ope(list, i));
+	if (i == 0)
+		return (new_token_ope(list, 1));
+	else
+		return (new_token_ope(list, i));
 }
 
 t_token	*tokenize_ope(t_token *list)
@@ -146,6 +141,7 @@ t_token	*tokenize_ope(t_token *list)
 			&& (ft_strchr(list->str, '>') || ft_strchr(list->str, '<') || ft_strchr(list->str, '|')))
 		{
 			list = pick_ope(list);
+			continue ;
 		}
 		list = list->next;
 	}
@@ -165,7 +161,7 @@ void	lexer(char *command)
 
 int	main()
 {
-	char *cmd1 = "echo   'test hoge'  'fuga' |   cat|cat>file";
+	char *cmd1 = "echo   'test hoge'  'fuga' |   cat|cat>>file";
 	char *cmd2 = "echo test | cat";
 
 	printf("cmd: [%s]\n", cmd1);
