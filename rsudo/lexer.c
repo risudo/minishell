@@ -9,19 +9,21 @@ bool	ft_isspace(char c)
 		return (false);
 }
 
+// get str from start to cmd
+// return : str
+
 char	*get_str(char *start, char *cmd)
 {
 	int		i;
-	int		j;
+	int		len_str;
 	char	*str;
 
 	i = 0;
-	while (start[i] != *cmd)
-		i++;
-	str = (char *)malloc(sizeof(char) * (i + 1));//!malloc
-	i = 0;
-	j = cmd - start;
-	while (j--)
+	len_str = cmd - start;
+	str = (char *)malloc(sizeof(char) * (len_str + 1));
+	if (str == NULL)
+		return (NULL);
+	while (i < len_str)
 	{
 		str[i] = start[i];
 		i++;
@@ -30,31 +32,40 @@ char	*get_str(char *start, char *cmd)
 	return (str);
 }
 
+// create a new list
+// use calloc not to set tok->next = NULL
+// return : new list
+
 t_token	*new_token(t_token *cur, char **cmd, char **start, int *flag_quot)
 {
 	t_token				*tok;
 	static enum e_type	cur_type;
 
-	tok = ft_calloc(1, sizeof(*tok));//!malloc
+	tok = ft_calloc(1, sizeof(*tok));
+	if (tok == NULL)
+		return (NULL);
 	tok->str = get_str(*start, *cmd);
-	// cur_type = get_type(cur_type);
+	if (tok->str == NULL)
+		return (NULL);
 	tok->type = cur_type;
 	cur->next = tok;
 	tok->prev = cur;
-		// printf("*flag_quot: %d\n", *flag_quot);
 	while (ft_isspace(**cmd) && *flag_quot == DEFAULT_QUOT)
 		(*cmd)++;
 	*start = *cmd;
 	*flag_quot = DEFAULT_QUOT;
 	return (tok);
 }
-//setが来たら区切ってlist->cmdに入れる
-t_token	*tokenize_space(char *cmd)
+
+// split by ' ' if it is out of quot.
+// return : t_token list that has splited str.
+
+t_token	*tokenize_cmd_by_space(char *cmd)
 {
 	t_token	head;
 	t_token	*cur;
 	char	*start;
-	int	flag_quot;
+	int		flag_quot;
 
 	flag_quot = DEFAULT_QUOT;
 	cur = &head;
@@ -67,6 +78,8 @@ t_token	*tokenize_space(char *cmd)
 			flag_quot = START_QUOT;
 		if (*cmd == ' ' && flag_quot > 0)
 			cur = new_token(cur, &cmd, &start, &flag_quot);
+		if (cur == NULL)
+			;//TODO:リストをクリアしてexit
 		cmd++;
 	}
 	if (cmd != start)
@@ -74,12 +87,14 @@ t_token	*tokenize_space(char *cmd)
 	return (head.next);
 }
 
-t_token	*token_insert(t_token *list, char *ope)
+t_token	*insert_new_token(t_token *list, char *ope)
 {
 	t_token	*new;
 	t_token	*next;
 
-	new = ft_calloc(1, sizeof(*list)); //!malloc
+	new = ft_calloc(1, sizeof(*list));
+	if (new == NULL)
+		return (NULL);
 	new->str = ope;
 	next = list->next;
 	list->next = new;
@@ -88,59 +103,64 @@ t_token	*token_insert(t_token *list, char *ope)
 	return (new);
 }
 
-t_token	*new_token_ope(t_token *list, int i)
-{
-	char	*str;
-	char	*ope;
-	int		j;
-
-	j = 0;
-	str = (char *)malloc(sizeof(char) * (i + 1)); //!malloc
-	ope = (char *)malloc(sizeof(char) * (ft_strlen(list->str) - i + 1)); //!malloc
-	while (i--)
-	{
-		str[j] = list->str[j];
-		j++;
-	}
-	str[j] = '\0';
-	i++;
-	while (list->str[j])
-		ope[i++] = list->str[j++];
-	ope[i] = '\0';
-	free(list->str);//* free
-	list->str = str;
-	list = token_insert(list, ope);
-	return (list);
-}
-
-t_token	*pick_ope(t_token *list)
+int	get_newstr_len(t_token *list)
 {
 	int	i;
 
 	i = 0;
 	while (list->str[i] != '>' && list->str[i] != '<' && list->str[i] != '|')
-	{
 		i++;
-	}
 	if (i == 0)
-		return (new_token_ope(list, 1));
-	else
-		return (new_token_ope(list, i));
+		i = 1;
+	return (i);
 }
 
-t_token	*tokenize_ope(t_token *list)
+// allocate new str removed operater.
+// insert new token that has remaining str
+
+t_token	*get_newstr_list(t_token *list)
 {
-	int		i;
+	char	*newstr;
+	char	*excluded;
+	int		newstr_len;
+	int		excluded_i;
+	int		newstr_i;
+
+	newstr_i = -1;
+	excluded_i = 0;
+	newstr_len = get_newstr_len(list);
+	newstr = (char *)malloc(sizeof(char) * (newstr_len + 1));
+	excluded = (char *)malloc(sizeof(char)
+		* (ft_strlen(list->str) - newstr_len + 1));
+	if (newstr == NULL || excluded == NULL)
+		return (NULL);
+	while (++newstr_i < newstr_len)
+		newstr[newstr_i] = list->str[newstr_i];
+	newstr[newstr_i] = '\0';
+	while (list->str[newstr_i])
+		excluded[excluded_i++] = list->str[newstr_i++];
+	excluded[excluded_i] = '\0';
+	free(list->str);//* free
+	list->str = newstr;
+	list = insert_new_token(list, excluded);
+	return (list);
+}
+
+// split operater like pipe or ridirect
+
+t_token	*split_operater(t_token *list)
+{
 	t_token	*head;
 
 	head = list;
 	while (list)
 	{
-		//パイプ、リダイレクトがあったら分割
-		if (ft_strlen(list->str) >= 2
-			&& (ft_strchr(list->str, '>') || ft_strchr(list->str, '<') || ft_strchr(list->str, '|')))
+		if (ft_strlen(list->str) >= 2 && (ft_strchr(list->str, '>')
+				|| ft_strchr(list->str, '<') || ft_strchr(list->str, '|')))
 		{
-			list = pick_ope(list);
+			list = get_newstr_list(list);
+			if (list == NULL)
+				;//TODO: リストをクリアしてexit
 			continue ;
 		}
 		list = list->next;
@@ -153,16 +173,16 @@ void	lexer(char *command)
 {
 	t_token	*list;
 
-	list = tokenize_space(command);
-	put_list(list);
-	list = tokenize_ope(list);
+	list = tokenize_cmd_by_space(command);
+	// put_list(list);
+	list = split_operater(list);
 	put_list(list);
 }
 
-int	main()
+int	main(void)
 {
-	char *cmd1 = "echo   'test hoge'  'fuga' |   cat|cat>>file";
-	char *cmd2 = "echo test | cat";
+	char	*cmd1 = "echo   'test hoge'  'fuga' |   cat|cat>>file";
+	char	*cmd2 = "echo test | cat";
 
 	printf("cmd: [%s]\n", cmd1);
 	lexer(cmd1);
