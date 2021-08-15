@@ -7,7 +7,6 @@ void	clear_tokenlist(t_token *list)
 	while (list)
 	{
 		next = list->next;
-		//clear list->str and list
 		free(list->str);
 		free(list);
 		list = next;

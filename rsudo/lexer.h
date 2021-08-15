@@ -1,8 +1,5 @@
 #ifndef LEXER_H
 # define LEXER_H
-// # define DEFAULT 1
-// # define START_QUOT -1
-// # define END_QUOT 2
 
 # include "../libft/libft.h"
 # include <stdio.h>
@@ -17,23 +14,10 @@ typedef enum e_quottype
 	END_D_QUOT
 }	t_quottype;
 
-enum e_built_cmd
-{
-	ECHO,
-	ECHO_N,
-	CD,
-	PWD,
-	EXPORT,
-	UNSET,
-	ENV,
-	EXIT
-};
-
 typedef struct s_token
 {
 	char			*str;
 	t_quottype		type;
-	// enum e_built_cmd	built;
 	struct s_token	*next;
 	struct s_token	*prev;
 }	t_token;
