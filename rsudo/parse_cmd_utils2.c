@@ -5,14 +5,13 @@ static t_token	*insert_new_token(t_token *list, char *ope)
 	t_token	*new;
 	t_token	*next;
 
-	new = ft_calloc(1, sizeof(*list));
-	if (new == NULL)
-		return (NULL);
+	new = ft_calloc(1, sizeof(*new));
 	new->str = ope;
+	new->prev = list;
 	next = list->next;
 	list->next = new;
-	new->prev = list;
 	new->next = next;
+	next->prev = new;
 	return (new);
 }
 
@@ -36,32 +35,21 @@ static t_token	*get_newstr_list(t_token *list)
 	char	*newstr;
 	char	*excluded;
 	int		newstr_len;
-	int		excluded_i;
-	int		newstr_i;
 
-	newstr_i = -1;
-	excluded_i = 0;
 	newstr_len = get_newstr_len(list);
-	newstr = (char *)malloc(sizeof(char) * (newstr_len + 1));
-	excluded = (char *)malloc(sizeof(char)
-			* (ft_strlen(list->str) - newstr_len + 1));
-	if (newstr == NULL || excluded == NULL)
-		return (NULL);
-	while (++newstr_i < newstr_len)
-		newstr[newstr_i] = list->str[newstr_i];
-	newstr[newstr_i] = '\0';
-	while (list->str[newstr_i])
-		excluded[excluded_i++] = list->str[newstr_i++];
-	excluded[excluded_i] = '\0';
+	newstr = ft_substr(list->str, 0, newstr_len);
+	excluded = ft_substr(list->str, newstr_len,
+			ft_strlen(list->str) - newstr_len);
 	free(list->str);
 	list->str = newstr;
 	list = insert_new_token(list, excluded);
 	return (list);
 }
 
-// split operater like pipe or ridirect
+// Find pipe or ridirect that is not splited and insert new token
+// that have splited operater.
 
-t_token	*split_operater(t_token *list)
+int	split_operater(t_token *list)
 {
 	t_token	*head;
 
@@ -72,11 +60,9 @@ t_token	*split_operater(t_token *list)
 				|| ft_strchr(list->str, '<') || ft_strchr(list->str, '|')))
 		{
 			list = get_newstr_list(list);
-			if (list == NULL)
-				clear_tokenlist(head);
 			continue ;
 		}
 		list = list->next;
 	}
-	return (head);
+	return (0);
 }

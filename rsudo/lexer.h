@@ -1,31 +1,33 @@
 #ifndef LEXER_H
 # define LEXER_H
 
+# include "../includes/minishell.h"
 # include "../libft/libft.h"
-# include <stdio.h>
 # include <stdbool.h>
+# include <stdio.h>
 
-typedef enum e_quottype
+typedef struct s_execarg
 {
-	DEFAULT,
-	D_QUOT,
-	S_QUOT,
-	END_S_QUOT,
-	END_D_QUOT
-}	t_quottype;
+	t_envlist	*envlist;
+	int			*status;
+}	t_execarg;
 
-typedef struct s_token
-{
-	char			*str;
-	t_quottype		type;
-	struct s_token	*next;
-	struct s_token	*prev;
-}	t_token;
+t_token		*tokenize_cmd_by_space(char *cmd);
+int			parse_tokenlist(t_token *list);
+int			split_operater(t_token *list);
+void		clear_tokenlist(t_token *list);
+t_envlist	*create_envlist(char **envp);
+void		clear_envlist(t_envlist *envlist);
+t_execdata	*create_execdata(t_token *tokenlist, t_envlist *envlist);
+t_iolist	*get_iolst(t_token *start, t_token *cur_token);
+t_cmdlist	*get_clst(t_token *start, t_token *cur_token);
+void		clear_execdata(t_execdata *data);
 
-void	parse_cmd(char *command);
-void	put_list(t_token *list);
-t_token	*tokenize_cmd_by_space(char *cmd);
-t_token	*split_operater(t_token *list);
-void	clear_tokenlist(t_token *list);
+// *test
+void		put_execdata(t_execdata *data);
+void		put_tokenlist(t_token *list);
+void		put_cmdlist(t_cmdlist *list);
+void		put_iolist(t_iolist *list);
+void		put_envlist(t_envlist *envlist);
 
 #endif
