@@ -7,7 +7,7 @@
 # include <sys/stat.h>
 #include<string.h>
 #include<errno.h>
-#include "libft/libft.h"
+#include "libft.h"
 
 enum e_special_c
 {
@@ -84,13 +84,6 @@ typedef struct s_execdata
 	t_envlist		*elst;
 	struct s_execdata	*next;
 }   t_execdata;
-/*
-void end(void)__attribute__((destructor));
-
-void end(void)
-{
-}
-*/
 
 /*
 void	to_cmd(t_execdata *edata)
@@ -133,12 +126,12 @@ void	put_2d_array(char **a)
 {
 	if (a == NULL)
 	{
-		printf("array is NULL");
+		fprintf(stderr, "array is NULL");
 		return ;
 	}
 	while (*a != NULL)
 	{
-		printf("%s\n", *a);
+		fprintf(stderr, "%s\n", *a);
 		a++;
 	}
 }
@@ -248,6 +241,7 @@ char	*set_cmd_path(char *cmd, char *path_env)
 	else
 		pathlist = make_exec_pathlist(cmd, path_env);
 	cmd_path = NULL;
+	i = 0;
 	while(pathlist && pathlist[i])
 	{
 		if (ft_stat(pathlist[i]))
@@ -806,6 +800,40 @@ void	free_edata(t_execdata *edata)
 	}
 }
 
+void	xwaitpid(pid_t pid, int *wstatus, int options)
+{
+	if (waitpid(pid, wstatus, options) == -1)
+	{
+		perror("waitpid");
+		exit(1);
+	}
+}
+/*
+void	execute_start(t_execdata *edata)
+{
+	int			lastchild_pid;
+	int			wstatus;
+
+	if (edata->next == NULL && 
+		(edata->cmd_type == CD || edata->cmd_type == EXPORT || edata->cmd_type == UNSET || edata->cmd_type == EXIT))
+	{
+		if (set_execdata(edata) == 0)
+			to_cmd(edata);
+		free_2d_array(edata->cmdline);
+	}
+	else
+	{
+		lastchild_pid = execute_loop(edata);
+		xwaitpid(lastchild_pid, &wstatus, 0);
+		*(edata->status) = WEXITSTATUS(wstatus);//confirm WIFEXITED and WIFSIGNALED etc..
+		while(edata->next)
+		{
+			xwaitpid(0, NULL, 0);
+			edata = edata->next;
+		}
+	}
+}
+*/
 void	execute_start(t_execdata *edata)
 {
 	int			lastchild_pid;
@@ -836,7 +864,7 @@ int	main(int ac, char **av, char **envp)
 	int			*status;
 	t_envlist	*etmp;
 
-
+/*
 	edata = NULL;
 	//elst
 	elst = NULL;
@@ -882,8 +910,8 @@ int	main(int ac, char **av, char **envp)
 	edata = add_execdata(edata, status, ENV, clst, iolst, etmp);
 	execute_start(edata);
 	free_edata(edata);
+*/
 
-/*
 	edata = NULL;
 	//elst
 	elst = NULL;
@@ -898,14 +926,16 @@ int	main(int ac, char **av, char **envp)
 	clst = add_cmdlist(clst, "-e");
 	iolst = NULL;
 	iolst = add_iolist(iolst, IN_REDIRECT, "hello.txt", -1);
+	iolst = add_iolist(iolst, OUT_REDIRECT, "outfile", -1);
 	edata = add_execdata(edata, status, OTHER, clst, iolst, elst);
-	
+
 	clst = NULL;
-	clst = add_cmdlist(clst, "cat");
+	clst = add_cmdlist(clst, "echo");
 	clst = add_cmdlist(clst, "-n");
 	iolst = NULL;
+	iolst = add_iolist(iolst, IN_REDIRECT, "hello.txt", -1);
 	iolst = add_iolist(iolst, OUT_REDIRECT, "outfile1", -1);
-	edata = add_execdata(edata, status, OTHER, clst, iolst, elst);
+	edata = add_execdata(edata, status, ECHO, clst, iolst, elst);
 
 	clst = NULL;
 	clst = add_cmdlist(clst, "env");
@@ -920,7 +950,7 @@ int	main(int ac, char **av, char **envp)
 	//execute
 	execute_start(edata);
 	free_edata(edata);
-*/
+
 //	put_edata(edata);
 
 //	system("leaks a.out");
