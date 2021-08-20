@@ -2,7 +2,6 @@
 # define MINISHELL_H
 
 # include "../libft/libft.h"
-# include <stdio.h>
 
 typedef enum e_quottype
 {
@@ -23,11 +22,32 @@ typedef enum e_special_c
 	ELSE
 }	t_special_c;
 
-typedef struct s_iolist //リダイレクトなど入出力に関わるリスト
+enum e_cmd
 {
-	t_special_c		c_type; //初期値-1
+	ECHO,
+	CD,
+	PWD,
+	EXPORT,
+	UNSET,
+	ENV,
+	EXIT,
+	OTHER,
+	NON_CMD,
+	CMD_NUM
+};
+
+enum e_pipefd
+{
+	READ,
+	WRITE,
+	PIPEFD_NUM
+};
+
+typedef struct s_iolist
+{
+	t_special_c		c_type;
 	char			*str;
-	int 			here_doc_fd; //初期値-1,後僕が使います
+	int				here_doc_fd;
 	struct s_iolist	*next;
 	struct s_iolist	*prev;
 }	t_iolist;
@@ -41,7 +61,7 @@ typedef struct s_token
 	struct s_token	*prev;
 }	t_token;
 
-typedef struct s_cmdlist //リダイレクトなど以外の文字列が入るリスト
+typedef struct s_cmdlist
 {
 	char				*str;
 	struct s_cmdlist	*next;
@@ -57,16 +77,18 @@ typedef struct s_envlist
 
 typedef struct s_execdata
 {
-	char				**cmdline;	 //初期値NULL、後僕が使います
-	int					in_fd;		 //初期値STDIN_FILENO,後僕が使います
-	int					out_fd;		 //初期値STDOUT_FILENO,後僕が使います
-	int					*status;	 //どっかでint型で用意した変数(=0)のアドレスを全てのexecdataのstatusに持たせる->どのexecdataでも共有できる(※親プロセスでなら)
-	//	int pipefd[PIPEFD_NUM]; //初期値指定なし、後僕が使います
-	//	enum e_cmd cmd_type;
-	t_cmdlist			*clst; //cmdlistが発生すれば先頭アドレスを入れる、なければNULL
-	t_iolist			*iolst; //iolistが発生すれば先頭アドレスを入れる、なければNULL
-	t_envlist			*elst; //全てのexecdataにも毎回同じenvlistの先頭アドレスを渡す、どのexecdataでも共有できる(※親プロセスなら)
+	char				**cmdline;
+	int					in_fd;
+	int					out_fd;
+	int					*status;
+	int					pipefd[PIPEFD_NUM];
+	enum e_cmd			cmd_type;
+	t_cmdlist			*clst;
+	t_iolist			*iolst;
+	t_envlist			*elst;
 	struct s_execdata	*next;
 }	t_execdata;
+
+t_execdata	*parse_cmd(char *command, char **envp);
 
 #endif
