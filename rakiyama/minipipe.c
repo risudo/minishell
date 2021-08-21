@@ -7,7 +7,8 @@
 # include <sys/stat.h>
 #include<string.h>
 #include<errno.h>
-#include "libft/libft.h"
+#include "libft.h"
+
 
 enum e_special_c
 {
@@ -84,13 +85,6 @@ typedef struct s_execdata
 	t_envlist		*elst;
 	struct s_execdata	*next;
 }   t_execdata;
-/*
-void end(void)__attribute__((destructor));
-
-void end(void)
-{
-}
-*/
 
 /*
 void	to_cmd(t_execdata *edata)
@@ -133,23 +127,77 @@ void	put_2d_array(char **a)
 {
 	if (a == NULL)
 	{
-		printf("array is NULL");
+		fprintf(stderr, "array is NULL");
 		return ;
 	}
 	while (*a != NULL)
 	{
-		printf("%s\n", *a);
+		fprintf(stderr, "%s\n", *a);
 		a++;
 	}
 }
 
+//from rsudo
+void	*ft_xcalloc(size_t count, size_t size)
+{
+	void	*ptr;
+
+	ptr = ft_calloc(count, size);
+	if (!ptr)
+	{
+		perror("malloc");
+		exit(EXIT_FAILURE);
+	}
+	return (ptr);
+}
+
+char	*ft_xstrdup(char *src)
+{
+	char	*dup_str;
+
+	dup_str = ft_strdup(src);
+	if (!dup_str)
+	{
+		perror("malloc");
+		exit(EXIT_FAILURE);
+	}
+	return (dup_str);
+}
+
+char	*ft_xstrjoin(char *str1, char *str2)
+{
+	char	*joined_str;
+
+	joined_str = ft_strjoin(str1, str2);
+	if (!joined_str)
+	{
+		perror("malloc");
+		exit(EXIT_FAILURE);
+	}
+	return (joined_str);
+}
+
+int	envlist_size(t_envlist *elst)
+{
+	t_envlist	*move;
+	int			cnt;
+
+	cnt = 0;
+	move = elst;
+	while (move)
+	{
+		cnt++;
+		move = move->next;
+	}
+	return (cnt);
+}
 void	xclose(int fd)
 {
 	if (close(fd) == -1)
 	{
 		ft_putstr_fd("close : ", STDERR_FILENO);
 		ft_putendl_fd(strerror(errno), STDERR_FILENO);
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 }
 
@@ -159,7 +207,7 @@ void	xdup2(int oldfd, int newfd)
 	{
 		ft_putstr_fd("dup2 : ", STDERR_FILENO);
 		ft_putendl_fd(strerror(errno), STDERR_FILENO);
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 }
 
@@ -175,7 +223,7 @@ int	ft_stat(char *pathname)
 /*	{
 		ft_putstr_fd("stat : ", STDERR_FILENO);
 		ft_putendl_fd(strerror(errno), STDERR_FILENO);
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 	if (S_ISREG(sb.st_mode))
 		return (1);
@@ -204,28 +252,16 @@ char	**make_exec_pathlist(char *cmd, char *path_env)
 	{
 		ft_putstr_fd("malloc : ", STDERR_FILENO);
 		ft_putendl_fd(strerror(errno), STDERR_FILENO);
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 	i = 0;
 	while (pathlist[i])
 	{
 		tmp = pathlist[i];
-		pathlist[i] = ft_strjoin(pathlist[i], "/");
-		if (!pathlist[i])
-		{
-			ft_putstr_fd("malloc : ", STDERR_FILENO);
-			ft_putendl_fd(strerror(errno), STDERR_FILENO);
-			exit(1);
-		}
+		pathlist[i] = ft_xstrjoin(pathlist[i], "/");
 		free(tmp);
 		tmp = pathlist[i];
-		pathlist[i] = ft_strjoin(pathlist[i], cmd);
-		if (!pathlist[i])
-		{
-			ft_putstr_fd("malloc : ", STDERR_FILENO);
-			ft_putendl_fd(strerror(errno), STDERR_FILENO);
-			exit(1);
-		}
+		pathlist[i] = ft_xstrjoin(pathlist[i], cmd);
 		free(tmp);
 		i++;
 	}
@@ -248,17 +284,12 @@ char	*set_cmd_path(char *cmd, char *path_env)
 	else
 		pathlist = make_exec_pathlist(cmd, path_env);
 	cmd_path = NULL;
+	i = 0;
 	while(pathlist && pathlist[i])
 	{
 		if (ft_stat(pathlist[i]))
 		{
-			cmd_path = ft_strdup(pathlist[i]);
-			if (!cmd_path)
-			{
-				ft_putstr_fd("malloc : ", STDERR_FILENO);
-				ft_putendl_fd(strerror(errno), STDERR_FILENO);
-				exit(1);
-			}
+			cmd_path = ft_xstrdup(pathlist[i]);
 			break ;
 		}
 		i++;
@@ -316,47 +347,22 @@ char	**convert_envlist_2dchar(t_envlist *elst)
 {
 	char 		**array;
 	t_envlist	*move;
-	int			size;
+	int			cnt;
 	char		*tmp;
 
-	size = 0;
+	cnt = envlist_size(elst);
+	array = (char **)ft_xcalloc((cnt + 1), sizeof(char *));
+	cnt = 0;
 	move = elst;
 	while (move)
 	{
-		size++;
-		move = move->next;
-	}
-	array = (char **)malloc(sizeof(char *) * (size + 1));
-	if (array == NULL)
-	{
-		ft_putstr_fd("malloc : ", STDERR_FILENO);
-		ft_putendl_fd(strerror(errno), STDERR_FILENO);
-		exit(1);
-	}
-	size = 0;
-	move = elst;
-	while (move)
-	{
-		array[size] = ft_strjoin(move->key, "=");
-		if (array[size] == NULL)
-		{
-			ft_putstr_fd("malloc : ", STDERR_FILENO);
-			ft_putendl_fd(strerror(errno), STDERR_FILENO);
-			exit(1);
-		}
-		tmp = array[size];
-		array[size] = ft_strjoin(array[size], move->value);
-		if (array[size] == NULL)
-		{
-			ft_putstr_fd("malloc : ", STDERR_FILENO);
-			ft_putendl_fd(strerror(errno), STDERR_FILENO);
-			exit(1);
-		}
+		array[cnt] = ft_xstrjoin(move->key, "=");
+		tmp = array[cnt];
+		array[cnt] = ft_xstrjoin(array[cnt], move->value);
 		free(tmp);
-		size++;
+		cnt++;
 		move = move->next;
 	}
-	array[size] = NULL;
 	return (array);
 }
 
@@ -374,8 +380,8 @@ void	ft_execve(t_execdata *edata)
 		exit(127);
 	}
 	if (execve(cmd_path, edata->cmdline, convert_envlist_2dchar(edata->elst)) == -1)
-		ft_putendl_fd(strerror(errno), STDERR_FILENO);
-	exit(1);
+		perror(edata->cmdline[0]);
+	*(edata->status) = 126;
 }
 
 void	ft_echo(t_execdata *edata)
@@ -392,13 +398,11 @@ void	ft_echo(t_execdata *edata)
 	}
 	while (edata->cmdline[arg_i])
 	{
-//		ft_putstr_fd(edata->cmdline[arg_i], edata->out_fd);
 		printf("%s", edata->cmdline[arg_i]);
 		arg_i++;
 	}
 	if (option == 0)
 		printf("\n");
-//		ft_putstr_fd("\n", edata->out_fd);
 	*(edata->status) = 0;
 }
 
@@ -420,8 +424,7 @@ void	ft_cd(t_execdata *edata)
 		path = edata->cmdline[1];
 	if (chdir(path) == -1)
 	{
-		ft_putstr_fd("cd : ", STDERR_FILENO);
-		ft_putendl_fd(strerror(errno), STDERR_FILENO);
+		perror("cd");
 		*(edata->status) = 1;
 		return ;
 	}
@@ -432,16 +435,15 @@ void	ft_pwd(t_execdata *edata)
 {
 	char	*pathname;
 
-	pathname = getcwd(NULL,  1000);
+	pathname = getcwd(NULL, 0);
 	if (!pathname)
 	{
-		ft_putstr_fd("pwd : ", STDERR_FILENO);
-		ft_putendl_fd(strerror(errno), STDERR_FILENO);
+		perror("pwd");
 		*(edata->status) = 1;
 	}
 	else
 	{
-		ft_putendl_fd(pathname, edata->out_fd);
+		printf("%s\n", pathname);
 		*(edata->status) = 0;
 	}
 	free(pathname);
@@ -504,7 +506,7 @@ int	ft_open(int	old_fd, char *filepath, int flags, mode_t mode)
 		ft_putstr_fd("open: ", STDERR_FILENO);
 		ft_putstr_fd(filepath, STDERR_FILENO);
 		ft_putstr_fd(": ", STDERR_FILENO);
-		ft_putendl_fd(strerror(errno), STDERR_FILENO);
+		perror("");
 	}
 	return (fd);
 }
@@ -516,37 +518,24 @@ char	**convert_cmdlist_2dchar(t_cmdlist *clst)
 {
 	char 		**array;
 	t_cmdlist	*move;
-	int			size;
+	int			cnt;
 
-	size = 0;
+	cnt = 0;
 	move = clst;
 	while (move)
 	{
-		size++;
+		cnt++;
 		move = move->next;
 	}
-	array = (char **)malloc(sizeof(char *) * (size + 1));
-	if (array == NULL)
-	{
-		ft_putstr_fd("malloc : ", STDERR_FILENO);
-		ft_putendl_fd(strerror(errno), STDERR_FILENO);
-		exit(1);
-	}
-	size = 0;
+	array = (char **)ft_xcalloc((cnt + 1), sizeof(char *));
+	cnt = 0;
 	move = clst;
 	while (move)
 	{
-		array[size] = ft_strdup(move->str);
-		if (array[size] == NULL)
-		{
-			ft_putstr_fd("malloc : ", STDERR_FILENO);
-			ft_putendl_fd(strerror(errno), STDERR_FILENO);
-			exit(1);
-		}
-		size++;
+		array[cnt] = ft_xstrdup(move->str);
+		cnt++;
 		move = move->next;
 	}
-	array[size] = NULL;
 	return (array);
 }
 
@@ -579,6 +568,11 @@ int	set_execdata(t_execdata *edata)
 		}
 		move = move->next;
 	}
+	return (0);
+}
+
+int	dup_io(t_execdata *edata)
+{
 	if (edata->in_fd != STDIN_FILENO)
 	{
 		xdup2(edata->in_fd, STDIN_FILENO);
@@ -612,9 +606,8 @@ void	xpipe(int *pipefd)
 {
 	if (pipe(pipefd) == -1)
 	{
-		ft_putstr_fd("pipe : ", STDERR_FILENO);
-		ft_putendl_fd(strerror(errno), STDERR_FILENO);
-		exit(1);
+		perror("pipe");
+		exit(EXIT_FAILURE);
 	}
 }
 
@@ -625,9 +618,8 @@ pid_t	xfork(void)
 	pid = fork();
 	if (pid == -1)
 	{
-		ft_putstr_fd("fork : ", STDERR_FILENO);
-		ft_putendl_fd(strerror(errno), STDERR_FILENO);
-		exit(1);
+		perror("fork");
+		exit(EXIT_FAILURE);
 	}
 	return (pid);
 }
@@ -649,14 +641,14 @@ int	execute_loop(t_execdata *edata)
 			xclose(edata->pipefd[READ]);
 			if (edata->next != NULL)
 				edata->out_fd = edata->pipefd[WRITE];
-			if (set_execdata(edata) == 0)
+			if (set_execdata(edata) == 0 && dup_io(edata) == 0)
 				to_cmd(edata);
 			exit(*(edata->status));
 		}
 		else
 		{
 			xclose(edata->pipefd[WRITE]);
-			dup2(edata->pipefd[READ], STDIN_FILENO);
+			xdup2(edata->pipefd[READ], STDIN_FILENO);
 			xclose(edata->pipefd[READ]);
 		}
 		edata = edata->next;
@@ -806,6 +798,15 @@ void	free_edata(t_execdata *edata)
 	}
 }
 
+void	xwaitpid(pid_t pid, int *wstatus, int options)
+{
+	if (waitpid(pid, wstatus, options) == -1)
+	{
+		perror("waitpid");
+		exit(EXIT_FAILURE);
+	}
+}
+
 void	execute_start(t_execdata *edata)
 {
 	int			lastchild_pid;
@@ -821,9 +822,13 @@ void	execute_start(t_execdata *edata)
 	else
 	{
 		lastchild_pid = execute_loop(edata);
-		if (waitpid(lastchild_pid, &wstatus, 0) == -1)//add wait() for {child - 1xwaitpid} cnt?
-			exit(1);//xwait
+		xwaitpid(lastchild_pid, &wstatus, 0);
 		*(edata->status) = WEXITSTATUS(wstatus);//confirm WIFEXITED and WIFSIGNALED etc..
+		while(edata->next)
+		{
+			xwaitpid(0, NULL, 0);
+			edata = edata->next;
+		}
 	}
 }
 
@@ -836,7 +841,7 @@ int	main(int ac, char **av, char **envp)
 	int			*status;
 	t_envlist	*etmp;
 
-
+/*
 	edata = NULL;
 	//elst
 	elst = NULL;
@@ -882,8 +887,8 @@ int	main(int ac, char **av, char **envp)
 	edata = add_execdata(edata, status, ENV, clst, iolst, etmp);
 	execute_start(edata);
 	free_edata(edata);
+*/
 
-/*
 	edata = NULL;
 	//elst
 	elst = NULL;
@@ -898,14 +903,15 @@ int	main(int ac, char **av, char **envp)
 	clst = add_cmdlist(clst, "-e");
 	iolst = NULL;
 	iolst = add_iolist(iolst, IN_REDIRECT, "hello.txt", -1);
+	iolst = add_iolist(iolst, OUT_REDIRECT, "outfile", -1);
 	edata = add_execdata(edata, status, OTHER, clst, iolst, elst);
-	
+
 	clst = NULL;
-	clst = add_cmdlist(clst, "cat");
+	clst = add_cmdlist(clst, "echo");
 	clst = add_cmdlist(clst, "-n");
 	iolst = NULL;
-	iolst = add_iolist(iolst, OUT_REDIRECT, "outfile1", -1);
-	edata = add_execdata(edata, status, OTHER, clst, iolst, elst);
+	iolst = add_iolist(iolst, IN_REDIRECT, "hello.txt", -1);
+	edata = add_execdata(edata, status, ECHO, clst, iolst, elst);
 
 	clst = NULL;
 	clst = add_cmdlist(clst, "env");
@@ -920,7 +926,7 @@ int	main(int ac, char **av, char **envp)
 	//execute
 	execute_start(edata);
 	free_edata(edata);
-*/
+
 //	put_edata(edata);
 
 //	system("leaks a.out");
