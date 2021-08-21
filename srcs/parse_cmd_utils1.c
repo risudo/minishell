@@ -75,11 +75,8 @@ t_token	*tokenize_cmd_by_space(char *cmd)
 	while (*cmd)
 	{
 		if (ft_isspace(*cmd) && !(flag_quot == D_QUOT || flag_quot == S_QUOT))
-		{
 			cur = new_token(cur, &cmd, &start, &flag_quot);
-		}
-		flag_quot = get_flag_quot(cmd, flag_quot);
-		cmd++;
+		flag_quot = get_flag_quot(cmd, flag_quot), cmd++;
 	}
 	if (cur != NULL && cmd != start)
 		cur = new_token(cur, &cmd, &start, &flag_quot);
