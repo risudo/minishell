@@ -1,4 +1,4 @@
-#include "lexer.h"
+#include "../includes/parse.h"
 
 void	put_tokenlist(t_token *list)
 {
@@ -31,7 +31,7 @@ void	put_cmdlist(t_cmdlist *list)
 	i = 0;
 	while (list)
 	{
-		printf("\t\033[32mcmdlist[%d]\033[39m: %s\n", i, list->str);
+		printf("\t\033[32mcmdlist[%d]\033[39m: \"%s\"\n", i, list->str);
 		list = list->next;
 		i++;
 	}
@@ -44,7 +44,7 @@ void	put_iolist(t_iolist *list)
 	i = 0;
 	while (list)
 	{
-		printf("\t\033[32miolist[%d]\033[39m\n\t  str: %s\n", i, list->str);
+		printf("\t\033[32miolist[%d]\033[39m\n\t  str: \"%s\"\n", i, list->str);
 		if (list->c_type == IN_REDIRECT)
 			printf("\t  c_type: IN_REDIRECT\n");
 		if (list->c_type == OUT_REDIRECT)
@@ -99,20 +99,25 @@ void	put_envlist(t_envlist *envlist)
 int	main(int argc, char **argv, char **envp)
 {
 	t_execdata	*data;
+	char		*cmd1;
+	char		*cmd3;
+	char		*cmd4;
+	char		*cmd5;
 
-	char		*cmd1 = "<in echo   'test hoge hoge'  \"fuga \" |   cat|cat>>file1 >> file2";
-	char		*cmd2 = "echo test || cat";
-	char		*cmd3 = " >>file1 echo aaa bbb >> file2";
-	char		*cmd4 = " >>file1 echo aaa>> file2| cat";
-	char		*cmd5 = "<<LIMITER < > file2 echo aaa | < abc cat < file3 | hoge hoge";
-
-	// printf("cmd: [%s]\n", cmd5);
-	data = parse_cmd(cmd1, envp);
+	cmd1 = \
+	ft_xstrdup("<in echo 'test hoge hoge'\"fuga  |cat>>file1 >> file2");
+	cmd3 = ft_xstrdup(" >>file1 echo aaa bbb >> file2 |");
+	cmd4 = ft_xstrdup(" >>file1 echo aaa>> file2| cat");
+	cmd5 = \
+	ft_xstrdup("<<LIMITER < > file2 echo aaa | < abc cat < file3 | hoge hoge");
+	data = parse_cmd(cmd5, envp);
 	if (data)
+	{
 		put_execdata(data);
-	clear_execdata(data);
-	(void)cmd1, (void)cmd2, (void)cmd3, (void)cmd4;
-	(void)cmd5, (void)argc, (void)argv;
+		clear_execdata(data);
+	}
+	xfree(cmd1), xfree(cmd3), xfree(cmd4), xfree(cmd5);
+	(void)argc, (void)argv;
 	if (system("leaks a.out > /dev/null"))
 		system("leaks a.out");
 }
