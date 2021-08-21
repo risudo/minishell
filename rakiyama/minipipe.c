@@ -151,19 +151,6 @@ void	*ft_xcalloc(size_t count, size_t size)
 	return (ptr);
 }
 
-char	*ft_xstrdup(char *src)
-{
-	char	*dup_str;
-
-	dup_str = ft_strdup(src);
-	if (!dup_str)
-	{
-		perror("malloc");
-		exit(EXIT_FAILURE);
-	}
-	return (dup_str);
-}
-
 char	*ft_xstrjoin(char *str1, char *str2)
 {
 	char	*joined_str;
@@ -175,6 +162,19 @@ char	*ft_xstrjoin(char *str1, char *str2)
 		exit(EXIT_FAILURE);
 	}
 	return (joined_str);
+}
+
+char	**ft_xsplit(char *src_str, char cut_char)
+{
+	char	**splited_str;
+
+	splited_str = ft_split(src_str, cut_char); 
+	if (!splited_str)
+	{
+		perror("malloc");
+		exit(EXIT_FAILURE);
+	}
+	return (splited_str);
 }
 
 int	envlist_size(t_envlist *elst)
@@ -247,13 +247,7 @@ char	**make_exec_pathlist(char *cmd, char *path_env)
 	char	*tmp;
 	int		i;
 
-	pathlist = ft_split(path_env, ':'); 
-	if (!pathlist)
-	{
-		ft_putstr_fd("malloc : ", STDERR_FILENO);
-		ft_putendl_fd(strerror(errno), STDERR_FILENO);
-		exit(EXIT_FAILURE);
-	}
+	pathlist = ft_xsplit(path_env, ':'); 
 	i = 0;
 	while (pathlist[i])
 	{
@@ -289,7 +283,7 @@ char	*set_cmd_path(char *cmd, char *path_env)
 	{
 		if (ft_stat(pathlist[i]))
 		{
-			cmd_path = ft_xstrdup(pathlist[i]);
+			cmd_path = ft_xstrjoin(pathlist[i], NULL);
 			break ;
 		}
 		i++;
@@ -532,7 +526,7 @@ char	**convert_cmdlist_2dchar(t_cmdlist *clst)
 	move = clst;
 	while (move)
 	{
-		array[cnt] = ft_xstrdup(move->str);
+		array[cnt] = ft_xstrjoin(move->str, NULL);
 		cnt++;
 		move = move->next;
 	}
