@@ -1,15 +1,6 @@
-# include <stdio.h>
-# include <stdlib.h>
-# include <unistd.h>
-# include <fcntl.h>
-# include <sys/types.h>
-# include <sys/wait.h>
-# include <sys/stat.h>
-#include<string.h>
-#include<errno.h>
-#include "libft.h"
+#include "rakiyama.h"
 
-
+/*
 enum e_special_c
 {
 	IN_REDIRECT,
@@ -85,7 +76,7 @@ typedef struct s_execdata
 	t_envlist		*elst;
 	struct s_execdata	*next;
 }   t_execdata;
-
+*/
 /*
 void	to_cmd(t_execdata *edata)
 {
@@ -151,32 +142,6 @@ void	*ft_xcalloc(size_t count, size_t size)
 	return (ptr);
 }
 
-char	*ft_xstrjoin(char *str1, char *str2)
-{
-	char	*joined_str;
-
-	joined_str = ft_strjoin(str1, str2);
-	if (!joined_str)
-	{
-		perror("malloc");
-		exit(EXIT_FAILURE);
-	}
-	return (joined_str);
-}
-
-char	**ft_xsplit(char *src_str, char cut_char)
-{
-	char	**splited_str;
-
-	splited_str = ft_split(src_str, cut_char); 
-	if (!splited_str)
-	{
-		perror("malloc");
-		exit(EXIT_FAILURE);
-	}
-	return (splited_str);
-}
-
 int	envlist_size(t_envlist *elst)
 {
 	t_envlist	*move;
@@ -190,25 +155,6 @@ int	envlist_size(t_envlist *elst)
 		move = move->next;
 	}
 	return (cnt);
-}
-void	xclose(int fd)
-{
-	if (close(fd) == -1)
-	{
-		ft_putstr_fd("close : ", STDERR_FILENO);
-		ft_putendl_fd(strerror(errno), STDERR_FILENO);
-		exit(EXIT_FAILURE);
-	}
-}
-
-void	xdup2(int oldfd, int newfd)
-{
-	if (dup2(oldfd, newfd) == -1)
-	{
-		ft_putstr_fd("dup2 : ", STDERR_FILENO);
-		ft_putendl_fd(strerror(errno), STDERR_FILENO);
-		exit(EXIT_FAILURE);
-	}
 }
 
 /*check if the file exists*/
@@ -596,28 +542,6 @@ void	to_cmd(t_execdata *edata)
 	cmd_func[edata->cmd_type](edata);
 }
 
-void	xpipe(int *pipefd)
-{
-	if (pipe(pipefd) == -1)
-	{
-		perror("pipe");
-		exit(EXIT_FAILURE);
-	}
-}
-
-pid_t	xfork(void)
-{
-	int	pid;
-
-	pid = fork();
-	if (pid == -1)
-	{
-		perror("fork");
-		exit(EXIT_FAILURE);
-	}
-	return (pid);
-}
-
 /*
 if pipe exists in input,
 this loop execute each command and connect those input and output
@@ -789,15 +713,6 @@ void	free_edata(t_execdata *edata)
 		tmp = edata;
 		edata = edata->next;
 		free(tmp);
-	}
-}
-
-void	xwaitpid(pid_t pid, int *wstatus, int options)
-{
-	if (waitpid(pid, wstatus, options) == -1)
-	{
-		perror("waitpid");
-		exit(EXIT_FAILURE);
 	}
 }
 
