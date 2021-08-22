@@ -77,29 +77,6 @@ typedef struct s_execdata
 	struct s_execdata	*next;
 }   t_execdata;
 */
-/*
-void	to_cmd(t_execdata *edata)
-{
-	if (data->cmdline == NULL)
-		return ;
-	else if (ft_strncmp(data->cmdline[0], "echo", 10) == 0)
-		ft_echo(data);
-	else if (ft_strncmp(data->cmdline[0], "cd", 10) == 0)
-		ft_cd(data);
-	else if (ft_strncmp(data->cmdline[0], "pwd", 10) == 0)
-		ft_pwd(data);
-	else if (ft_strncmp(data->cmdline[0], "export", 10) == 0)
-		ft_export(data);
-	else if (ft_strncmp(data->cmdline[0], "unset", 10) == 0)
-		ft_unset(data);
-	else if (ft_strncmp(data->cmdline[0], "env", 10) == 0)
-		ft_unset(data);
-	else if (ft_strncmp(data->cmdline[0], "exit", 10) == 0)
-		ft_exit(data);
-	else
-		ft_execve(data);
-}
-*/
 
 void	free_2d_array(char **array)
 {
@@ -306,72 +283,72 @@ char	**convert_envlist_2dchar(t_envlist *elst)
 	return (array);
 }
 
-void	ft_execve(t_execdata *edata)
+void	ft_execve(t_execdata *data)
 {
 	char	*cmd_path;
 
-	*(edata->status) = 0;
-	cmd_path = set_cmd_path(edata->cmdline[0], ft_getenv(edata->elst, "PATH"));
+	*(data->status) = 0;
+	cmd_path = set_cmd_path(data->cmdline[0], ft_getenv(data->elst, "PATH"));
 	if (!cmd_path)
 	{
 		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		ft_putstr_fd(edata->cmdline[0], STDERR_FILENO);
+		ft_putstr_fd(data->cmdline[0], STDERR_FILENO);
 		ft_putstr_fd(": command not found\n", STDERR_FILENO);
 		exit(127);
 	}
-	if (execve(cmd_path, edata->cmdline, convert_envlist_2dchar(edata->elst)) == -1)
-		perror(edata->cmdline[0]);
-	*(edata->status) = 126;
+	if (execve(cmd_path, data->cmdline, convert_envlist_2dchar(data->elst)) == -1)
+		perror(data->cmdline[0]);
+	*(data->status) = 126;
 }
 
-void	ft_echo(t_execdata *edata)
+void	ft_echo(t_execdata *data)
 {
 	int	option;
 	int	arg_i;
 
 	option = 0;
 	arg_i = 1;
-	if (edata->cmdline[arg_i] && ft_strncmp(edata->cmdline[arg_i], "-n", 5) == 0)
+	if (data->cmdline[arg_i] && ft_strncmp(data->cmdline[arg_i], "-n", 5) == 0)
 	{
 		option++;
 		arg_i++;
 	}
-	while (edata->cmdline[arg_i])
+	while (data->cmdline[arg_i])
 	{
-		printf("%s", edata->cmdline[arg_i]);
+		printf("%s", data->cmdline[arg_i]);
 		arg_i++;
 	}
 	if (option == 0)
 		printf("\n");
-	*(edata->status) = 0;
+	*(data->status) = 0;
 }
 
-void	ft_cd(t_execdata *edata)
+void	ft_cd(t_execdata *data)
 {
 	char	*path;
 
-	if (edata->cmdline[1] == NULL)
+	if (data->cmdline[1] == NULL)
 	{
-		path = ft_getenv(edata->elst, "HOME");
+		path = ft_getenv(data->elst, "HOME");
 		if (path == NULL)
 		{
 			ft_putendl_fd("cd: HOME not set", STDERR_FILENO);
-			*(edata->status) = 1;
+			*(data->status) = 1;
 			return ;
 		}
 	}
 	else
-		path = edata->cmdline[1];
+		path = data->cmdline[1];
 	if (chdir(path) == -1)
 	{
 		perror("cd");
-		*(edata->status) = 1;
+		*(data->status) = 1;
 		return ;
 	}
-	*(edata->status) = 0;//change env? old pwd pwd
+	*(data->status) = 0;//change env? old pwd pwd
 }
 
-void	ft_pwd(t_execdata *edata)
+void	ft_pwd(t_execdata *data)
 {
 	char	*pathname;
 
@@ -379,56 +356,56 @@ void	ft_pwd(t_execdata *edata)
 	if (!pathname)
 	{
 		perror("pwd");
-		*(edata->status) = 1;
+		*(data->status) = 1;
 	}
 	else
 	{
 		printf("%s\n", pathname);
-		*(edata->status) = 0;
+		*(data->status) = 0;
 	}
 	free(pathname);
 }
 
-void	ft_export(t_execdata *edata)
+void	ft_export(t_execdata *data)
 {
 //	envlist_add_back();
 	return ;
 }
 
-void	ft_unset(t_execdata *edata)
+void	ft_unset(t_execdata *data)
 {
 	int i;
 
 	i = 1;
-	while (edata->cmdline[i])
+	while (data->cmdline[i])
 	{
-		ft_unsetenv(edata->elst, edata->cmdline[1]);
+		ft_unsetenv(data->elst, data->cmdline[1]);
 		i++;
 	}
-	*(edata->status) = 0;
+	*(data->status) = 0;
 }
 
-void	ft_env(t_execdata *edata)
+void	ft_env(t_execdata *data)
 {
 	t_envlist	*move;
 
-	move = edata->elst;
+	move = data->elst;
 	while(move)
 	{
 		printf("%s=%s\n", move->key, move->value);
 		move = move->next;
 	}
-	*(edata->status) = 0;
+	*(data->status) = 0;
 }
 
-void	ft_exit(t_execdata *edata)
+void	ft_exit(t_execdata *data)
 {
 	exit(0);
 }
 
-void	ft_non_cmd(t_execdata *edata)
+void	ft_non_cmd(t_execdata *data)
 {
-	*(edata->status) = 0;
+	*(data->status) = 0;
 }
 
 int	ft_open(int	old_fd, char *filepath, int flags, mode_t mode)
@@ -481,29 +458,29 @@ char	**convert_cmdlist_2dchar(t_cmdlist *clst)
 
 /*
 set
-edata->cmdline
-edata->in_fd
-edata->out_fd
+data->cmdline
+data->in_fd
+data->out_fd
 */
-int	set_execdata(t_execdata *edata)
+int	set_execdata(t_execdata *data)
 {
 	t_iolist	*move;
 
-	edata->cmdline = convert_cmdlist_2dchar(edata->clst);
-	move = edata->iolst;
+	data->cmdline = convert_cmdlist_2dchar(data->clst);
+	move = data->iolst;
 	while(move)
 	{
 		if (move->c_type == IN_REDIRECT)
-			edata->in_fd = ft_open(edata->in_fd, move->str, O_RDONLY, -1);//option ok?
+			data->in_fd = ft_open(data->in_fd, move->next->str, O_RDONLY, -1);//option ok?
 		else if (move->c_type == IN_HERE_DOC)
-			edata->in_fd = move->here_doc_fd;
+			data->in_fd = move->here_doc_fd;
 		else if (move->c_type == OUT_REDIRECT)
-			edata->out_fd = ft_open(edata->out_fd, move->str, O_RDWR | O_TRUNC | O_CREAT, S_IREAD | S_IWRITE);
+			data->out_fd = ft_open(data->out_fd, move->next->str, O_RDWR | O_TRUNC | O_CREAT, S_IREAD | S_IWRITE);
 		else if (move->c_type ==  OUT_HERE_DOC)
-			edata->out_fd = ft_open(edata->out_fd, move->str, O_RDWR | O_APPEND | O_CREAT, S_IREAD | S_IWRITE);
-		if (edata->in_fd < 0 || edata->out_fd < 0)
+			data->out_fd = ft_open(data->out_fd, move->next->str, O_RDWR | O_APPEND | O_CREAT, S_IREAD | S_IWRITE);
+		if (data->in_fd < 0 || data->out_fd < 0)
 		{
-			*(edata->status) = 1;
+			*(data->status) = 1;
 			return (-1);
 		}
 		move = move->next;
@@ -511,24 +488,24 @@ int	set_execdata(t_execdata *edata)
 	return (0);
 }
 
-int	dup_io(t_execdata *edata)
+int	dup_io(t_execdata *data)
 {
-	if (edata->in_fd != STDIN_FILENO)
+	if (data->in_fd != STDIN_FILENO)
 	{
-		xdup2(edata->in_fd, STDIN_FILENO);
-		xclose(edata->in_fd);
+		xdup2(data->in_fd, STDIN_FILENO);
+		xclose(data->in_fd);
 	}
-	if (edata->out_fd != STDOUT_FILENO)
+	if (data->out_fd != STDOUT_FILENO)
 	{
-		xdup2(edata->out_fd, STDOUT_FILENO);
-		xclose(edata->out_fd);
+		xdup2(data->out_fd, STDOUT_FILENO);
+		xclose(data->out_fd);
 	}
 	return (0);
 }
 
-void	to_cmd(t_execdata *edata)
+void	to_cmd(t_execdata *data)
 {
-	void	(*cmd_func[CMD_NUM])(t_execdata *edata);
+	void	(*cmd_func[CMD_NUM])(t_execdata *data);
 
 	cmd_func[ECHO] = ft_echo;
 	cmd_func[CD] = ft_cd;
@@ -539,37 +516,37 @@ void	to_cmd(t_execdata *edata)
 	cmd_func[EXIT] = ft_exit;
 	cmd_func[OTHER] = ft_execve;
 	cmd_func[NON_CMD] = ft_non_cmd;
-	cmd_func[edata->cmd_type](edata);
+	cmd_func[data->cmd_type](data);
 }
 
 /*
 if pipe exists in input,
 this loop execute each command and connect those input and output
 */
-int	execute_loop(t_execdata *edata)
+int	execute_loop(t_execdata *data)
 {
 	int	pid;
 
-	while (edata)
+	while (data)
 	{
-		xpipe(edata->pipefd);
+		xpipe(data->pipefd);
 		pid = xfork();
 		if (pid == 0)
 		{
-			xclose(edata->pipefd[READ]);
-			if (edata->next != NULL)
-				edata->out_fd = edata->pipefd[WRITE];
-			if (set_execdata(edata) == 0 && dup_io(edata) == 0)
-				to_cmd(edata);
-			exit(*(edata->status));
+			xclose(data->pipefd[READ]);
+			if (data->next != NULL)
+				data->out_fd = data->pipefd[WRITE];
+			if (set_execdata(data) == 0 && dup_io(data) == 0)
+				to_cmd(data);
+			exit(*(data->status));
 		}
 		else
 		{
-			xclose(edata->pipefd[WRITE]);
-			xdup2(edata->pipefd[READ], STDIN_FILENO);
-			xclose(edata->pipefd[READ]);
+			xclose(data->pipefd[WRITE]);
+			xdup2(data->pipefd[READ], STDIN_FILENO);
+			xclose(data->pipefd[READ]);
 		}
-		edata = edata->next;
+		data = data->next;
 	}
 	return (pid);
 }
@@ -628,7 +605,7 @@ t_envlist	*add_envlist(t_envlist *elst, char *k, char *v)
 	return (elst);
 }
 
-t_execdata	*add_execdata(t_execdata *edata, int *s, int c, t_cmdlist *clst, t_iolist *iolst, t_envlist *elst)
+t_execdata	*add_execdata(t_execdata *data, int *s, int c, t_cmdlist *clst, t_iolist *iolst, t_envlist *elst)
 {
 	t_execdata	*tmp;
 	t_execdata	*move;
@@ -638,106 +615,132 @@ t_execdata	*add_execdata(t_execdata *edata, int *s, int c, t_cmdlist *clst, t_io
 	tmp->in_fd = STDIN_FILENO;
 	tmp->out_fd = STDOUT_FILENO;
 	tmp->status = s;
-	tmp->cmd_type = c;
+//	tmp->cmd_type = c;
 	tmp->clst = clst;
 	tmp->iolst = iolst;
 	tmp->elst = elst;
 	tmp->next = NULL;
-	if (edata == NULL)
+	if (data == NULL)
 		return(tmp);
-	move = edata;
+	move = data;
 	while (move->next)
 		move = move->next;
 	move->next = tmp;
-	return (edata);
+	return (data);
 }
 
-void	put_edata(t_execdata *edata)
+void	put_data(t_execdata *data)
 {
 	t_cmdlist	*ctmp;
 	t_iolist	*iotmp;
 	t_envlist	*etmp;
 
-	while(edata)
+	while(data)
 	{
 		printf("--------------------------------------------\n");
-		printf("status:%d\n", *(edata->status));
-		ctmp = edata->clst;
+		printf("status:%d\n", *(data->status));
+		ctmp = data->clst;
 		while (ctmp)
 		{
 			printf("cmdlist:%s\n", ctmp->str);
 			ctmp = ctmp->next;
 		}
-		iotmp = edata->iolst;
+		iotmp = data->iolst;
 		while (iotmp)
 		{
 			printf("iolist:%s\n", iotmp->str);
 			iotmp = iotmp->next;
 		}
-		etmp = edata->elst;
+		etmp = data->elst;
 		while (etmp)
 		{
 			printf("env key:%s\n", etmp->key);
 			printf("env value:%s\n", etmp->value);
 			etmp = etmp->next;
 		}
-		edata = edata->next;
+		data = data->next;
 	}
 }
 
-void	free_edata(t_execdata *edata)
+void	free_data(t_execdata *data)
 {
 	void		*tmp;
 
-	free(edata->status);
-	while (edata->elst)
+	free(data->status);
+	while (data->elst)
 	{
-		tmp = edata->elst;
-		edata->elst = edata->elst->next;
+		tmp = data->elst;
+		data->elst = data->elst->next;
 		free(tmp);
 	}
-	while(edata)
+	while(data)
 	{
-		while (edata->clst)
+		while (data->clst)
 		{
-			tmp = edata->clst;
-			edata->clst = edata->clst->next;
+			tmp = data->clst;
+			data->clst = data->clst->next;
 			free(tmp);
 		}
-		while (edata->iolst)
+		while (data->iolst)
 		{
-			tmp = edata->iolst;
-			edata->iolst = edata->iolst->next;
+			tmp = data->iolst;
+			data->iolst = data->iolst->next;
 			free(tmp);
 		}
-		tmp = edata;
-		edata = edata->next;
+		tmp = data;
+		data = data->next;
 		free(tmp);
 	}
 }
 
-void	execute_start(t_execdata *edata)
+void	execute_start(t_execdata *data)
 {
 	int			lastchild_pid;
 	int			wstatus;
 
-	if (edata->next == NULL && 
-		(edata->cmd_type == CD || edata->cmd_type == EXPORT || edata->cmd_type == UNSET || edata->cmd_type == EXIT))
+	if (data->next == NULL && 
+		(data->cmd_type == CD || data->cmd_type == EXPORT || data->cmd_type == UNSET || data->cmd_type == EXIT))
 	{
-		if (set_execdata(edata) == 0)
-			to_cmd(edata);
-		free_2d_array(edata->cmdline);
+		if (set_execdata(data) == 0)
+			to_cmd(data);
+		free_2d_array(data->cmdline);
 	}
 	else
 	{
-		lastchild_pid = execute_loop(edata);
+		lastchild_pid = execute_loop(data);
 		xwaitpid(lastchild_pid, &wstatus, 0);
-		*(edata->status) = WEXITSTATUS(wstatus);//confirm WIFEXITED and WIFSIGNALED etc..
-		while(edata->next)
+		*(data->status) = WEXITSTATUS(wstatus);//confirm WIFEXITED and WIFSIGNALED etc..
+		while(data->next)
 		{
 			xwaitpid(0, NULL, 0);
-			edata = edata->next;
+			data = data->next;
 		}
+	}
+}
+
+void	set_cmd_type(t_execdata *data)
+{
+	while (data)
+	{
+		if (data->clst == NULL)
+			data->cmd_type = NON_CMD;
+		else if (ft_strncmp(data->clst->str, "echo", 10) == 0)
+			data->cmd_type = ECHO;
+		else if (ft_strncmp(data->clst->str, "cd", 10) == 0)
+			data->cmd_type = CD;
+		else if (ft_strncmp(data->clst->str, "pwd", 10) == 0)
+			data->cmd_type = PWD;
+		else if (ft_strncmp(data->clst->str, "export", 10) == 0)
+			data->cmd_type = EXPORT;
+		else if (ft_strncmp(data->clst->str, "unset", 10) == 0)
+			data->cmd_type = UNSET;
+		else if (ft_strncmp(data->clst->str, "env", 10) == 0)
+			data->cmd_type = ENV;
+		else if (ft_strncmp(data->clst->str, "exit", 10) == 0)
+			data->cmd_type = EXIT;
+		else
+			data->cmd_type = OTHER;
+		data = data->next;
 	}
 }
 
@@ -746,12 +749,12 @@ int	main(int ac, char **av, char **envp)
 	t_cmdlist	*clst;
 	t_iolist	*iolst;
 	t_envlist	*elst;
-	t_execdata	*edata;
+	t_execdata	*data;
 	int			*status;
 	t_envlist	*etmp;
 
 /*
-	edata = NULL;
+	data = NULL;
 	//elst
 	elst = NULL;
 	elst = add_envlist(elst, "HOME", "/Users/ryojiroakiyama");
@@ -760,45 +763,45 @@ int	main(int ac, char **av, char **envp)
 	//status
 	status = (int *)malloc(sizeof(int));
 	*status = 0;
-	//edata
+	//data
 	clst = NULL;
 	clst = add_cmdlist(clst, "env");
 	iolst = NULL;
 	iolst = add_iolist(iolst, IN_REDIRECT, "hello.txt", -1);
-	edata = add_execdata(edata, status, ENV, clst, iolst, elst);
-	execute_start(edata);
+	data = add_execdata(data, status, ENV, clst, iolst, elst);
+	execute_start(data);
 
-	etmp = edata->elst;
+	etmp = data->elst;
 
 	//elst
 	elst = etmp;
-	//edata
-	edata = NULL;
+	//data
+	data = NULL;
 	clst = NULL;
 	clst = add_cmdlist(clst, "unset");
 	clst = add_cmdlist(clst, "akiyama");
 	iolst = NULL;
 	iolst = add_iolist(iolst, IN_REDIRECT, "hello.txt", -1);
-	edata = add_execdata(edata, status, UNSET, clst, iolst, etmp);
+	data = add_execdata(data, status, UNSET, clst, iolst, etmp);
 	//execute
-	execute_start(edata);
+	execute_start(data);
 
-	etmp = edata->elst;
+	etmp = data->elst;
 
 	//elst
 	elst = etmp;
-	//edata
-	edata = NULL;
+	//data
+	data = NULL;
 	clst = NULL;
 	clst = add_cmdlist(clst, "env");
 	iolst = NULL;
 	iolst = add_iolist(iolst, IN_REDIRECT, "hello.txt", -1);
-	edata = add_execdata(edata, status, ENV, clst, iolst, etmp);
-	execute_start(edata);
-	free_edata(edata);
+	data = add_execdata(data, status, ENV, clst, iolst, etmp);
+	execute_start(data);
+	free_data(data);
 */
 
-	edata = NULL;
+	data = NULL;
 	//elst
 	elst = NULL;
 	elst = add_envlist(elst, "HOME", "/Users/ryojiroakiyama");
@@ -806,37 +809,42 @@ int	main(int ac, char **av, char **envp)
 	//status
 	status = (int *)malloc(sizeof(int));
 	*status = 0;
-	//edata
-	clst = NULL;
-	clst = add_cmdlist(clst, "cat");
-	clst = add_cmdlist(clst, "-e");
-	iolst = NULL;
-	iolst = add_iolist(iolst, IN_REDIRECT, "hello.txt", -1);
-	iolst = add_iolist(iolst, OUT_REDIRECT, "outfile", -1);
-	edata = add_execdata(edata, status, OTHER, clst, iolst, elst);
-
+	//data
 	clst = NULL;
 	clst = add_cmdlist(clst, "echo");
 	clst = add_cmdlist(clst, "-n");
+	clst = add_cmdlist(clst, "akiyama");
 	iolst = NULL;
-	iolst = add_iolist(iolst, IN_REDIRECT, "hello.txt", -1);
-	edata = add_execdata(edata, status, ECHO, clst, iolst, elst);
+	iolst = add_iolist(iolst, IN_REDIRECT, "<", -1);
+	iolst = add_iolist(iolst, ELSE, "hello.txt", -1);
+	iolst = add_iolist(iolst, OUT_REDIRECT, ">", -1);
+	iolst = add_iolist(iolst, ELSE, "outfile", -1);
+	data = add_execdata(data, status, ECHO, clst, iolst, elst);
+
+	clst = NULL;
+	clst = add_cmdlist(clst, "echo");
+	clst = add_cmdlist(clst, " ryojiro");
+	iolst = NULL;
+	iolst = add_iolist(iolst, OUT_HERE_DOC, ">>", -1);
+	iolst = add_iolist(iolst, ELSE, "outfile", -1);
+	data = add_execdata(data, status, ECHO, clst, iolst, elst);
 
 	clst = NULL;
 	clst = add_cmdlist(clst, "env");
 	iolst = NULL;
-	edata = add_execdata(edata, status, ENV, clst, iolst, elst);
+	data = add_execdata(data, status, ENV, clst, iolst, elst);
 
 	clst = NULL;
 	clst = add_cmdlist(clst, "cat");
 	clst = add_cmdlist(clst, "-e");
 	iolst = NULL;
-	edata = add_execdata(edata, status, OTHER, clst, iolst, elst);
+	data = add_execdata(data, status, OTHER, clst, iolst, elst);
 	//execute
-	execute_start(edata);
-	free_edata(edata);
+	set_cmd_type(data);
+	execute_start(data);
+	free_data(data);
 
-//	put_edata(edata);
+//	put_data(data);
 
 //	system("leaks a.out");
 	return (0);
