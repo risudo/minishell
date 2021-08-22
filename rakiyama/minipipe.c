@@ -105,20 +105,6 @@ void	put_2d_array(char **a)
 	}
 }
 
-//from rsudo
-void	*ft_xcalloc(size_t count, size_t size)
-{
-	void	*ptr;
-
-	ptr = ft_calloc(count, size);
-	if (!ptr)
-	{
-		perror("malloc");
-		exit(EXIT_FAILURE);
-	}
-	return (ptr);
-}
-
 int	envlist_size(t_envlist *elst)
 {
 	t_envlist	*move;
@@ -254,7 +240,25 @@ t_envlist	*ft_unsetenv(t_envlist *elst, char *rm_key)
 
 void	ft_setenv(t_envlist *elst, char *add)
 {
-	return ;
+	t_envlist	*new;
+
+	new = ft_xcalloc(1, sizeof(*new));
+	set_key_and_value(add, new);
+	while(elst)
+	{
+		if (ft_strncmp(elst->key, new->key, ft_strlen(new->key) + 1) == 0)
+		{
+			//free(elst->value)
+			elst->value = new->value;
+			free(new->key);
+			free(new);
+			return ;
+		}
+		if (elst->next == NULL)
+			break ;
+		elst = elst->next;
+	}
+	elst->next = new;
 }
 
 /*
@@ -366,10 +370,45 @@ void	ft_pwd(t_execdata *data)
 	free(pathname);
 }
 
+int	check_envname_rules(char *str)
+{
+	int	cnt_equal;
+	int	i;
+
+	cnt_equal = 0;
+	i = 0;
+	while(str[i])
+	{
+		if (str[i])
+			/*rules*/;
+		if (i == 0 && ('0' <=  str[i] || str[i] <= '9'))
+			return (1);
+		if (str[i] == '=')
+			cnt_equal++;
+	}
+	if (cnt_equal == 0)
+		return (1);
+	return (0);
+}
+
 void	ft_export(t_execdata *data)
 {
-//	envlist_add_back();
-	return ;
+	int	arg_i;
+
+	arg_i = 1;
+	if (data->cmdline[arg_i] == NULL)
+		printf("no argument\n");//
+	while (data->cmdline[arg_i])
+	{
+		if (check_envname_rules(data->cmdline[arg_i]) == 0)
+			ft_setenv(data->elst, data->cmdline[arg_i]);
+		else
+		{
+			printf("error\n");//tmp
+		}
+		arg_i++;
+	}
+	*(data->status) = 0;
 }
 
 void	ft_unset(t_execdata *data)
