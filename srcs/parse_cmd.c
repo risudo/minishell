@@ -8,8 +8,6 @@ int	parse_tokenlist(t_token *list)
 	head = list;
 	while (list)
 	{
-		if (is_space_after_quot(list))
-			list = trim_list(list);
 		if (is_consecutive_redirect(list))
 			list = join_redirect(list);
 		prev = list;
@@ -19,7 +17,7 @@ int	parse_tokenlist(t_token *list)
 	if (prev->special == PIPE)
 	{
 		clear_tokenlist(head);
-		ft_putendl_fd("Error: ", STDERR_FILENO);
+		put_syntax_error("|");
 		return (-1);
 	}
 	else
@@ -37,9 +35,8 @@ t_execdata	*parse_cmd(char *command, char **envp)
 		return (NULL);
 	if (split_operater(tokenlist) == -1 || parse_tokenlist(tokenlist) == -1)
 		return (NULL);
-	put_tokenlist(tokenlist);
 	envlist = create_envlist(envp);
 	data = create_execdata(tokenlist, envlist);
 	clear_tokenlist(tokenlist);
-	return (data);
+	return (check_syntax(data));
 }

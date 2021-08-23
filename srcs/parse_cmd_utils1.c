@@ -18,18 +18,18 @@ static t_token	*new_token(t_token *cur, char **cmd,
 	t_token	*tok;
 	int		len;
 
-	if (*flag_quot == D_QUOT || *flag_quot == S_QUOT)
-	{
-		ft_putendl_fd("Error: Quotes are not closed", STDERR_FILENO);
-		return (NULL);
-	}
 	tok = ft_xcalloc(1, sizeof(*tok));
 	len = *cmd - *start;
 	tok->str = ft_xsubstr(*start, 0, len);
 	tok->type = *flag_quot;
 	cur->next = tok;
 	tok->prev = cur;
-	while (ft_isspace(**cmd) && *flag_quot == DEFAULT)
+	if (*flag_quot == D_QUOT || *flag_quot == S_QUOT)
+	{
+		put_syntax_error(tok->str);
+		return (NULL);
+	}
+	while (ft_isspace(**cmd))
 		(*cmd)++;
 	*start = *cmd;
 	return (tok);
