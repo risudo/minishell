@@ -1,5 +1,6 @@
 #ifndef PARSE_H
 # define PARSE_H
+//# define DEBUG printf("debug\n")
 
 # include "minishell.h"
 # include "../libft/libft.h"
@@ -33,6 +34,8 @@ t_token		*trim_list(t_token *list);
 bool		is_space_after_quot(t_token *list);
 void		set_special_c(t_token *list);
 
+t_execdata	*check_syntax(t_execdata *data);
+void		put_syntax_error(char *str);
 
 // *test
 void		put_execdata(t_execdata *data);
