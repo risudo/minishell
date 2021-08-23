@@ -372,43 +372,85 @@ void	ft_pwd(t_execdata *data)
 
 int	check_envname_rules(char *str)
 {
-	int	cnt_equal;
 	int	i;
 
-	cnt_equal = 0;
 	i = 0;
 	while(str[i])
 	{
-		if (str[i])
-			/*rules*/;
-		if (i == 0 && ('0' <=  str[i] || str[i] <= '9'))
+		if (i != 0 && str[i] == '=')
+			return (0);
+		if (!(str[i] == '_' || ft_isalnum(str[i])))
 			return (1);
-		if (str[i] == '=')
-			cnt_equal++;
+		if (i == 0 && ft_isdigit(str[i]))
+			return (1);
 	}
-	if (cnt_equal == 0)
+	return (1);
+}
+
+int	ft_strcmp(char *s1, char *s2)
+{
+	if (s1 == NULL)
+		return (-1);
+	if (s2 == NULL)
 		return (1);
-	return (0);
+	while (1)
+	{
+		if (*s1 != *s2)
+			return (*s1 - *s2);
+		s1++;
+		s2++;
+	}
+}
+
+void	put_env_asciiorder(t_envlist *head, t_envlist *min_node)
+{
+	t_envlist	*put_node;
+	t_envlist	*move;
+
+	put_node = NULL;
+	move = head;
+	while (move)
+	{
+		if (min_node == NULL || ft_strcmp(min_node->key, move->key) < 0)
+		{
+			if (put_node == NULL)
+				put_node = move;
+			else if (ft_strcmp(move->key, put_node->key < 0))
+				put_node = move;
+		}
+		move = move->next;
+	}
+	if (put_node)
+	{
+		printf("declare -x %s=\"%s\"", put_node->key, put_node->value);
+		put_env_asciiorder(head, put_node);
+	}
 }
 
 void	ft_export(t_execdata *data)
 {
 	int	arg_i;
 
+	*(data->status) = 0;
 	arg_i = 1;
 	if (data->cmdline[arg_i] == NULL)
-		printf("no argument\n");//
-	while (data->cmdline[arg_i])
+		put_env_asciiorder(data->elst);
+	else
 	{
-		if (check_envname_rules(data->cmdline[arg_i]) == 0)
-			ft_setenv(data->elst, data->cmdline[arg_i]);
-		else
+		while (data->cmdline[arg_i])
 		{
-			printf("error\n");//tmp
+			if (check_envname_rules(data->cmdline[arg_i]) == 0)
+				ft_setenv(data->elst, data->cmdline[arg_i]);
+			else
+			{
+				ft_putstr_fd("minishell: export: ", STDERR_FILENO);
+				ft_putstr_fd(data->cmdline[arg_i], STDERR_FILENO);
+				ft_putendl_fd(": not a valid identifier", STDERR_FILENO);
+				*(data->status) = 1;
+			}
+			arg_i++;
 		}
-		arg_i++;
 	}
-	*(data->status) = 0;
 }
 
 void	ft_unset(t_execdata *data)
@@ -738,7 +780,7 @@ void	execute_start(t_execdata *data)
 	int			wstatus;
 
 	if (data->next == NULL && 
-		(data->cmd_type == CD || data->cmd_type == EXPORT || data->cmd_type == UNSET || data->cmd_type == EXIT))
+		(data->cmd_type == CD || (data->cmd_type == EXPORT && data->clst->next) || data->cmd_type == UNSET || data->cmd_type == EXIT))
 	{
 		if (set_execdata(data) == 0)
 			to_cmd(data);
@@ -885,6 +927,7 @@ int	main(int ac, char **av, char **envp)
 
 //	put_data(data);
 
-//	system("leaks a.out");
+	if (system("leaks a.out > /dev/null"))
+		system("leaks a.out");
 	return (0);
 }
