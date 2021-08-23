@@ -434,7 +434,7 @@ void	ft_export(t_execdata *data)
 	*(data->status) = 0;
 	arg_i = 1;
 	if (data->cmdline[arg_i] == NULL)
-		put_env_asciiorder(data->elst);
+		put_env_asciiorder(data->elst, NULL);
 	else
 	{
 		while (data->cmdline[arg_i])
