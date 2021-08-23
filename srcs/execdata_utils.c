@@ -1,6 +1,6 @@
 #include "../includes/parse.h"
 
-t_cmdlist	*new_clst(t_cmdlist *cur, t_token *token)
+static t_cmdlist	*new_clst(t_cmdlist *cur, t_token *token)
 {
 	t_cmdlist	*new;
 
@@ -8,7 +8,19 @@ t_cmdlist	*new_clst(t_cmdlist *cur, t_token *token)
 	cur->next = new;
 	new->prev = cur;
 	new->str = ft_xstrdup(token->str);
+	new->quot = token->type;
 	return (new);
+}
+
+static bool	is_cmd(t_token *start)
+{
+	if (start->special == ELSE
+		&& (start->prev == NULL
+			|| start->prev->special == ELSE
+			|| start->prev->special == PIPE))
+		return (true);
+	else
+		return (false);
 }
 
 t_cmdlist	*get_clst(t_token *start, t_token *cur_token)
@@ -21,10 +33,7 @@ t_cmdlist	*get_clst(t_token *start, t_token *cur_token)
 		;
 	while (start != cur_token)
 	{
-		if (start->special == ELSE
-			&& (start->prev == NULL
-				|| start->prev->special == ELSE
-				|| start->prev->special == PIPE))
+		if (is_cmd(start))
 		{
 			cur = new_clst(cur, start);
 		}
@@ -35,7 +44,7 @@ t_cmdlist	*get_clst(t_token *start, t_token *cur_token)
 	return (cur);
 }
 
-t_iolist	*new_iolst(t_iolist *cur, t_token *token)
+static t_iolist	*new_iolst(t_iolist *cur, t_token *token)
 {
 	t_iolist	*new;
 
@@ -46,6 +55,7 @@ t_iolist	*new_iolst(t_iolist *cur, t_token *token)
 	cur->next = new;
 	new->prev = cur;
 	new->str = ft_xstrdup(token->str);
+	new->quot = token->type;
 	return (new);
 }
 
@@ -59,8 +69,7 @@ t_iolist	*get_iolst(t_token *start, t_token *cur_token)
 	cur = &head;
 	while (start != cur_token)
 	{
-		if ((start->special >= IN_REDIRECT && start->special <= OUT_HERE_DOC)
-			|| (start->prev && prev >= IN_REDIRECT && prev <= OUT_HERE_DOC))
+		if (!is_cmd(start))
 		{
 			cur = new_iolst(cur, start);
 		}
