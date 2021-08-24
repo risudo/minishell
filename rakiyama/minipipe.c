@@ -2,84 +2,6 @@
 
 void	set_key_and_value(char *env, t_envlist *new);
 
-/*
-enum e_special_c
-{
-	IN_REDIRECT,
-	OUT_REDIRECT,
-	IN_HERE_DOC,
-	OUT_HERE_DOC,
-	PIPE,
-	S_TYPE_NUM
-};
-
-enum e_cmd
-{
-	ECHO,
-	CD,
-	PWD,
-	EXPORT,
-	UNSET,
-	ENV,
-	EXIT,
-	OTHER,
-	NON_CMD,
-	CMD_NUM
-};
-
-enum e_pipefd
-{
-	READ,
-	WRITE,
-	PIPEFD_NUM
-};
-
-typedef struct s_token
-{
-	char				*str;
-	struct s_token		*next;
-	struct s_token		*prev;
-}   t_token;
-
-typedef struct s_cmdlist
-{
-	char				*str;
-	struct s_cmdlist	*next;
-	struct s_cmdlist	*prev;
-}   t_cmdlist;
-
-typedef struct s_iolist
-{
-	enum e_special_c	c_type;
-	char				*str;
-	int					here_doc_fd;
-	struct s_iolist		*next;
-	struct s_iolist		*prev;
-}   t_iolist;
-
-typedef struct s_envlist
-{
-	char				*key;
-	char				*value;
-	struct s_envlist	*next;
-	struct s_envlist	*prev;
-}   t_envlist;
-
-typedef struct s_execdata
-{
-	char			**cmdline;
-	int				in_fd;
-	int				out_fd;
-	int				*status;
-	int				pipefd[PIPEFD_NUM];
-	enum e_cmd		cmd_type;
-	t_cmdlist		*clst;
-	t_iolist		*iolst;
-	t_envlist		*elst;
-	struct s_execdata	*next;
-}   t_execdata;
-*/
-
 void	free_2d_array(char **array)
 {
 	int	i;
@@ -104,6 +26,23 @@ void	put_2d_array(char **a)
 	{
 		fprintf(stderr, "%s\n", *a);
 		a++;
+	}
+}
+
+int	ft_strcmp(char *s1, char *s2)
+{
+	if (s1 == NULL)
+		return (-1);
+	if (s2 == NULL)
+		return (1);
+	while (1)
+	{
+		if (*s1 != *s2)
+			return (*s1 - *s2);
+		if (*s1 == 0)
+			return (0);
+		s1++;
+		s2++;
 	}
 }
 
@@ -203,11 +142,11 @@ char	*set_cmd_path(char *cmd, char *path_env)
 	return (cmd_path);
 }
 
-char	*ft_getenv(t_envlist *elst, char *search)
+char	*ft_getenv(t_envlist *elst, char *search_key)
 {
 	while (elst)
 	{
-		if (ft_strncmp(elst->key, search, ft_strlen(search) + 1) == 0)
+		if (ft_strcmp(elst->key, search_key) == 0)
 			return (elst->value);
 		elst = elst->next;
 	}
@@ -223,14 +162,14 @@ t_envlist	*ft_unsetenv(t_envlist *elst, char *rm_key)
 	prev = NULL;
 	while (elst)
 	{
-		if (ft_strncmp(elst->key, rm_key, ft_strlen(rm_key) + 1) == 0)
+		if (ft_strcmp(elst->key, rm_key) == 0)
 		{
 			if (prev == NULL)
 				head = elst->next;
 			else
 				prev->next = elst->next;
-//			free(elst->key);
-//			free(elst->value);
+			free(elst->key);
+			free(elst->value);
 			free(elst);
 			break ;
 		}
@@ -254,11 +193,11 @@ void	ft_setenv(t_envlist *elst, char *add)
 		set_key_and_value(add, new);
 	while(elst)
 	{
-		if (ft_strncmp(elst->key, new->key, ft_strlen(new->key) + 1) == 0)
+		if (ft_strcmp(elst->key, new->key) == 0)
 		{
 			if (new->value)
 			{
-				//free(elst->value)
+				free(elst->value);
 				elst->value = new->value;
 			}
 			free(new->key);
@@ -323,7 +262,7 @@ void	ft_echo(t_execdata *data)
 
 	option = 0;
 	arg_i = 1;
-	if (data->cmdline[arg_i] && ft_strncmp(data->cmdline[arg_i], "-n", 5) == 0)
+	if (data->cmdline[arg_i] && ft_strcmp(data->cmdline[arg_i], "-n") == 0)
 	{
 		option++;
 		arg_i++;
@@ -336,6 +275,23 @@ void	ft_echo(t_execdata *data)
 	if (option == 0)
 		printf("\n");
 	*(data->status) = 0;
+}
+
+void	setenv_curpwd_oldpwd(t_envlist *head)
+{
+	char	*cur_path;
+	char	*joined_str;
+
+	joined_str = ft_strjoin("OLDPWD=", ft_getenv(head, "PWD"));
+	if (joined_str)
+		ft_setenv(head, joined_str);
+	free(joined_str);
+	cur_path = getcwd(NULL, 0);
+	joined_str = ft_strjoin("PWD=", cur_path);
+	if (joined_str)
+		ft_setenv(head, joined_str);
+	free(joined_str);
+	free(cur_path);
 }
 
 void	ft_cd(t_execdata *data)
@@ -354,13 +310,14 @@ void	ft_cd(t_execdata *data)
 	}
 	else
 		path = data->cmdline[1];
-	if (chdir(path) == -1)
+	if (chdir(path) == -1)//if path="" what happen
 	{
 		perror("cd");
 		*(data->status) = 1;
 		return ;
 	}
-	*(data->status) = 0;//change env? old pwd pwd
+	setenv_curpwd_oldpwd(data->elst);
+	*(data->status) = 0;
 }
 
 void	ft_pwd(t_execdata *data)
@@ -394,26 +351,11 @@ int	check_envname_rules(char *str)
 			return (1);
 		if (i == 0 && ft_isdigit(str[i]))
 			return (1);
+		i++;
 	}
 	return (0);
 }
 
-int	ft_strcmp(char *s1, char *s2)
-{
-	if (s1 == NULL)
-		return (-1);
-	if (s2 == NULL)
-		return (1);
-	while (1)
-	{
-		if (*s1 != *s2)
-			return (*s1 - *s2);
-		if (*s1 == 0)
-			return (0);
-		s1++;
-		s2++;
-	}
-}
 
 void	put_env_asciiorder(t_envlist *head, t_envlist *min_node)
 {
@@ -699,7 +641,7 @@ t_envlist	*add_envlist(t_envlist *elst, char *k, char *v)
 	return (elst);
 }
 
-t_execdata	*add_execdata(t_execdata *data, int *s, int c, t_cmdlist *clst, t_iolist *iolst, t_envlist *elst)
+t_execdata	*add_execdata(t_execdata *data, int *s, t_cmdlist *clst, t_iolist *iolst, t_envlist *elst)
 {
 	t_execdata	*tmp;
 	t_execdata	*move;
@@ -709,7 +651,6 @@ t_execdata	*add_execdata(t_execdata *data, int *s, int c, t_cmdlist *clst, t_iol
 	tmp->in_fd = STDIN_FILENO;
 	tmp->out_fd = STDOUT_FILENO;
 	tmp->status = s;
-//	tmp->cmd_type = c;
 	tmp->clst = clst;
 	tmp->iolst = iolst;
 	tmp->elst = elst;
@@ -756,16 +697,20 @@ void	put_data(t_execdata *data)
 	}
 }
 
-void	free_data(t_execdata *data)
+void	free_data(t_execdata *data, int status_free, int elst_free)
 {
 	void		*tmp;
+	t_envlist	*elst_tmp;
 
-	free(data->status);
-	while (data->elst)
+	if (status_free)
+		free(data->status);
+	while (elst_free && data->elst)
 	{
-		tmp = data->elst;
+		elst_tmp = data->elst;
 		data->elst = data->elst->next;
-		free(tmp);
+		free(elst_tmp->key);
+		free(elst_tmp->value);
+		free(elst_tmp);
 	}
 	while(data)
 	{
@@ -787,11 +732,38 @@ void	free_data(t_execdata *data)
 	}
 }
 
+void	set_cmd_type(t_execdata *data)
+{
+	while (data)
+	{
+		if (data->clst == NULL)
+			data->cmd_type = NON_CMD;
+		else if (ft_strcmp(data->clst->str, "echo") == 0)
+			data->cmd_type = ECHO;
+		else if (ft_strcmp(data->clst->str, "cd") == 0)
+			data->cmd_type = CD;
+		else if (ft_strcmp(data->clst->str, "pwd") == 0)
+			data->cmd_type = PWD;
+		else if (ft_strcmp(data->clst->str, "export") == 0)
+			data->cmd_type = EXPORT;
+		else if (ft_strcmp(data->clst->str, "unset") == 0)
+			data->cmd_type = UNSET;
+		else if (ft_strcmp(data->clst->str, "env") == 0)
+			data->cmd_type = ENV;
+		else if (ft_strcmp(data->clst->str, "exit") == 0)
+			data->cmd_type = EXIT;
+		else
+			data->cmd_type = OTHER;
+		data = data->next;
+	}
+}
+
 void	execute_start(t_execdata *data)
 {
 	int			lastchild_pid;
 	int			wstatus;
 
+	set_cmd_type(data);
 	if (data->next == NULL && 
 		(data->cmd_type == CD || (data->cmd_type == EXPORT && data->clst->next) || data->cmd_type == UNSET || data->cmd_type == EXIT))
 	{
@@ -812,32 +784,6 @@ void	execute_start(t_execdata *data)
 	}
 }
 
-void	set_cmd_type(t_execdata *data)
-{
-	while (data)
-	{
-		if (data->clst == NULL)
-			data->cmd_type = NON_CMD;
-		else if (ft_strncmp(data->clst->str, "echo", 10) == 0)
-			data->cmd_type = ECHO;
-		else if (ft_strncmp(data->clst->str, "cd", 10) == 0)
-			data->cmd_type = CD;
-		else if (ft_strncmp(data->clst->str, "pwd", 10) == 0)
-			data->cmd_type = PWD;
-		else if (ft_strncmp(data->clst->str, "export", 10) == 0)
-			data->cmd_type = EXPORT;
-		else if (ft_strncmp(data->clst->str, "unset", 10) == 0)
-			data->cmd_type = UNSET;
-		else if (ft_strncmp(data->clst->str, "env", 10) == 0)
-			data->cmd_type = ENV;
-		else if (ft_strncmp(data->clst->str, "exit", 10) == 0)
-			data->cmd_type = EXIT;
-		else
-			data->cmd_type = OTHER;
-		data = data->next;
-	}
-}
-
 int	main(int ac, char **av, char **envp)
 {
 	t_cmdlist	*clst;
@@ -846,14 +792,18 @@ int	main(int ac, char **av, char **envp)
 	t_execdata	*data;
 	int			*status;
 	t_envlist	*etmp;
+	int			exit_status;
 
-/*
+
 	data = NULL;
 	//elst
 	elst = NULL;
-	elst = add_envlist(elst, "HOME", "/Users/ryojiroakiyama");
-	elst = add_envlist(elst, "PATH", "/Users/ryojiroakiyama/.pyenv/shims:/Users/ryojiroakiyama/.pyenv/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands");
-	elst = add_envlist(elst, "akiyama", "akiyama");
+	elst = add_envlist(elst, ft_strdup("HOME"), ft_strdup("/Users/ryojiroakiyama"));
+	elst = add_envlist(elst, ft_strdup("PATH"), ft_strdup("/Users/ryojiroakiyama/.pyenv/shims:/Users/ryojiroakiyama/.pyenv/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands"));
+	elst = add_envlist(elst, ft_strdup("EEE"), ft_strdup("aaaaaaai"));
+	elst = add_envlist(elst, ft_strdup("PWD"), ft_strdup("/Users/ryojiroakiyama/Desktop/icloud/42_cursus/minishell/minishell/rakiyama"));
+	elst = add_envlist(elst, ft_strdup("RYOJIRO"), ft_strdup("ryojiro"));
+	elst = add_envlist(elst, ft_strdup("AKIYAMA"), ft_strdup("akiyama"));
 	//status
 	status = (int *)malloc(sizeof(int));
 	*status = 0;
@@ -861,92 +811,65 @@ int	main(int ac, char **av, char **envp)
 	clst = NULL;
 	clst = add_cmdlist(clst, "env");
 	iolst = NULL;
-	iolst = add_iolist(iolst, IN_REDIRECT, "hello.txt", -1);
-	data = add_execdata(data, status, ENV, clst, iolst, elst);
+	iolst = add_iolist(iolst, OUT_REDIRECT, ">", -1);
+	iolst = add_iolist(iolst, ELSE, "outfile1", -1);
+	data = add_execdata(data, status, clst, iolst, elst);
 	execute_start(data);
+	exit_status = *(data->status);
+	free_data(data, 0, 0);
 
-	etmp = data->elst;
-
-	//elst
-	elst = etmp;
-	//data
 	data = NULL;
+	//elst
+	//status
+	//data
 	clst = NULL;
-	clst = add_cmdlist(clst, "unset");
-	clst = add_cmdlist(clst, "akiyama");
+	clst = add_cmdlist(clst, "cd");
 	iolst = NULL;
-	iolst = add_iolist(iolst, IN_REDIRECT, "hello.txt", -1);
-	data = add_execdata(data, status, UNSET, clst, iolst, etmp);
-	//execute
+	data = add_execdata(data, status, clst, iolst, elst);
 	execute_start(data);
+	exit_status = *(data->status);
+	free_data(data, 0, 0);
 
-	etmp = data->elst;
-
-	//elst
-	elst = etmp;
-	//data
 	data = NULL;
+	//elst
+	//status
+	//data
 	clst = NULL;
 	clst = add_cmdlist(clst, "env");
 	iolst = NULL;
-	iolst = add_iolist(iolst, IN_REDIRECT, "hello.txt", -1);
-	data = add_execdata(data, status, ENV, clst, iolst, etmp);
+	data = add_execdata(data, status, clst, iolst, elst);
 	execute_start(data);
+	exit_status = *(data->status);
+	free_data(data, 1, 1);
+
+/*
+	clst = NULL;
+	clst = add_cmdlist(clst, "echo");
+	clst = add_cmdlist(clst, " ryojiro");
+	iolst = NULL;
+	iolst = add_iolist(iolst, OUT_HERE_DOC, ">>", -1);
+	iolst = add_iolist(iolst, ELSE, "outfile", -1);
+	data = add_execdata(data, status, clst, iolst, elst);
+
+	clst = NULL;
+	clst = add_cmdlist(clst, "export");
+	iolst = NULL;
+	data = add_execdata(data, status, clst, iolst, elst);
+
+	clst = NULL;
+	clst = add_cmdlist(clst, "cat");
+	clst = add_cmdlist(clst, "-e");
+	iolst = NULL;
+	data = add_execdata(data, status, clst, iolst, elst);
+	//execute
+	execute_start(data);
+	exit_status = *(data->status);
 	free_data(data);
 */
 
-	data = NULL;
-	//elst
-	elst = NULL;
-	elst = add_envlist(elst, "HOME", "/Users/ryojiroakiyama");
-	elst = add_envlist(elst, "PATH", "/Users/ryojiroakiyama/.pyenv/shims:/Users/ryojiroakiyama/.pyenv/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands");
-	elst = add_envlist(elst, "EEE", "/Users/ryojiroakiyama/.pyenv/shims:/Users/ryojiroakiyama/.pyenv/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands");
-	elst = add_envlist(elst, "EEEEEEEE", "/Users/ryojiroakiyama/.pyenv/shims:/Users/ryojiroakiyama/.pyenv/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands");
-	elst = add_envlist(elst, "EAE", "/Users/ryojiroakiyama/.pyenv/shims:/Users/ryojiroakiyama/.pyenv/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands");
-	elst = add_envlist(elst, "PA9t", "/Users/ryojiroakiyama/.pyenv/shims:/Users/ryojiroakiyama/.pyenv/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands");
-	put_env_asciiorder(elst, NULL);
-	// //status
-	// status = (int *)malloc(sizeof(int));
-	// *status = 0;
-	// //data
-	// clst = NULL;
-	// clst = add_cmdlist(clst, "echo");
-	// clst = add_cmdlist(clst, "-n");
-	// clst = add_cmdlist(clst, "akiyama");
-	// iolst = NULL;
-	// iolst = add_iolist(iolst, IN_REDIRECT, "<", -1);
-	// iolst = add_iolist(iolst, ELSE, "hello.txt", -1);
-	// iolst = add_iolist(iolst, OUT_REDIRECT, ">", -1);
-	// iolst = add_iolist(iolst, ELSE, "outfile", -1);
-	// data = add_execdata(data, status, ECHO, clst, iolst, elst);
-
-	// clst = NULL;
-	// clst = add_cmdlist(clst, "echo");
-	// clst = add_cmdlist(clst, " ryojiro");
-	// iolst = NULL;
-	// iolst = add_iolist(iolst, OUT_HERE_DOC, ">>", -1);
-	// iolst = add_iolist(iolst, ELSE, "outfile", -1);
-	// data = add_execdata(data, status, ECHO, clst, iolst, elst);
-
-	// clst = NULL;
-	// clst = add_cmdlist(clst, "env");
-	// iolst = NULL;
-	// data = add_execdata(data, status, ENV, clst, iolst, elst);
-
-	// clst = NULL;
-	// clst = add_cmdlist(clst, "cat");
-	// clst = add_cmdlist(clst, "-e");
-	// iolst = NULL;
-	// data = add_execdata(data, status, OTHER, clst, iolst, elst);
-	// //execute
-	// set_cmd_type(data);
-	// execute_start(data);
-
-	// free_data(data);
-
 //	put_data(data);
 
-	// if (system("leaks a.out > /dev/null"))
-	// 	system("leaks a.out");
-	return (0);
+	if (system("leaks a.out > /dev/null"))
+		system("leaks a.out");
+	return (exit_status);
 }
