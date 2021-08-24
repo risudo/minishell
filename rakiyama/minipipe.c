@@ -245,13 +245,22 @@ void	ft_setenv(t_envlist *elst, char *add)
 	t_envlist	*new;
 
 	new = ft_xcalloc(1, sizeof(*new));
-	set_key_and_value(add, new);
+	if (ft_strchr(add, '=') == NULL)//mod set_key_and_value
+	{
+		new->key = ft_xstrjoin(add, 0);
+		new->value = NULL;
+	}
+	else
+		set_key_and_value(add, new);
 	while(elst)
 	{
 		if (ft_strncmp(elst->key, new->key, ft_strlen(new->key) + 1) == 0)
 		{
-			//free(elst->value)
-			elst->value = new->value;
+			if (new->value)
+			{
+				//free(elst->value)
+				elst->value = new->value;
+			}
 			free(new->key);
 			free(new);
 			return ;
@@ -386,7 +395,7 @@ int	check_envname_rules(char *str)
 		if (i == 0 && ft_isdigit(str[i]))
 			return (1);
 	}
-	return (1);
+	return (0);
 }
 
 int	ft_strcmp(char *s1, char *s2)
