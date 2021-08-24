@@ -46,13 +46,28 @@ int	ft_strcmp(char *s1, char *s2)
 	}
 }
 
-int	envlist_size(t_envlist *elst)
+int	envlist_size(t_envlist *head)
 {
 	t_envlist	*move;
 	int			cnt;
 
 	cnt = 0;
-	move = elst;
+	move = head;
+	while (move)
+	{
+		cnt++;
+		move = move->next;
+	}
+	return (cnt);
+}
+
+int	cmdlist_size(t_cmdlist *head)
+{
+	t_cmdlist	*move;
+	int			cnt;
+
+	cnt = 0;
+	move = head;
 	while (move)
 	{
 		cnt++;
@@ -252,7 +267,7 @@ void	ft_execve(t_execdata *data)
 	}
 	if (execve(cmd_path, data->cmdline, convert_envlist_2dchar(data->elst)) == -1)
 		perror(data->cmdline[0]);
-	*(data->status) = 126;
+	*(data->status) = 126;//is ok?
 }
 
 void	ft_echo(t_execdata *data)
@@ -324,7 +339,7 @@ void	ft_pwd(t_execdata *data)
 {
 	char	*pathname;
 
-	pathname = getcwd(NULL, 0);
+	pathname = getcwd(NULL, 0);//if no authority to directory what happen
 	if (!pathname)
 	{
 		perror("pwd");
@@ -338,18 +353,18 @@ void	ft_pwd(t_execdata *data)
 	free(pathname);
 }
 
-int	check_envname_rules(char *str)
+int	check_envkey_rules(char *key)
 {
 	int	i;
 
 	i = 0;
-	while(str[i])
+	while(key[i])
 	{
-		if (i != 0 && str[i] == '=')
+		if (i != 0 && key[i] == '=')
 			return (0);
-		if (!(str[i] == '_' || ft_isalnum(str[i])))
+		if (!(key[i] == '_' || ft_isalnum(key[i])))
 			return (1);
-		if (i == 0 && ft_isdigit(str[i]))
+		if (i == 0 && ft_isdigit(key[i]))
 			return (1);
 		i++;
 	}
@@ -394,7 +409,7 @@ void	ft_export(t_execdata *data)
 	{
 		while (data->cmdline[arg_i])
 		{
-			if (check_envname_rules(data->cmdline[arg_i]) == 0)
+			if (check_envkey_rules(data->cmdline[arg_i]) == 0)
 				ft_setenv(data->elst, data->cmdline[arg_i]);
 			else
 			{
@@ -428,7 +443,8 @@ void	ft_env(t_execdata *data)
 	move = data->elst;
 	while(move)
 	{
-		printf("%s=%s\n", move->key, move->value);
+		if (move->value)
+			printf("%s=%s\n", move->key, move->value);
 		move = move->next;
 	}
 	*(data->status) = 0;
@@ -450,7 +466,7 @@ int	ft_open(int	old_fd, char *filepath, int flags, mode_t mode)
 
 	if (STDERR_FILENO < old_fd)
 		xclose(old_fd);
-	if (mode < 0)
+	if (mode == 0)
 		fd = open(filepath, flags);
 	else
 		fd = open(filepath, flags, mode);
@@ -473,13 +489,7 @@ char	**convert_cmdlist_2dchar(t_cmdlist *clst)
 	t_cmdlist	*move;
 	int			cnt;
 
-	cnt = 0;
-	move = clst;
-	while (move)
-	{
-		cnt++;
-		move = move->next;
-	}
+	cnt = cmdlist_size(clst);
 	array = (char **)ft_xcalloc((cnt + 1), sizeof(char *));
 	cnt = 0;
 	move = clst;
@@ -507,7 +517,7 @@ int	set_execdata(t_execdata *data)
 	while(move)
 	{
 		if (move->c_type == IN_REDIRECT)
-			data->in_fd = ft_open(data->in_fd, move->next->str, O_RDONLY, -1);//option ok?
+			data->in_fd = ft_open(data->in_fd, move->next->str, O_RDONLY, 0);//option ok?
 		else if (move->c_type == IN_HERE_DOC)
 			data->in_fd = move->here_doc_fd;
 		else if (move->c_type == OUT_REDIRECT)
@@ -539,7 +549,7 @@ int	dup_io(t_execdata *data)
 	return (0);
 }
 
-void	to_cmd(t_execdata *data)
+void	execute_command(t_execdata *data)
 {
 	void	(*cmd_func[CMD_NUM])(t_execdata *data);
 
@@ -573,7 +583,7 @@ int	execute_loop(t_execdata *data)
 			if (data->next != NULL)
 				data->out_fd = data->pipefd[WRITE];
 			if (set_execdata(data) == 0 && dup_io(data) == 0)
-				to_cmd(data);
+				execute_command(data);
 			exit(*(data->status));
 		}
 		else
@@ -768,7 +778,7 @@ void	execute_start(t_execdata *data)
 		(data->cmd_type == CD || (data->cmd_type == EXPORT && data->clst->next) || data->cmd_type == UNSET || data->cmd_type == EXIT))
 	{
 		if (set_execdata(data) == 0)
-			to_cmd(data);
+			execute_command(data);
 		free_2d_array(data->cmdline);
 	}
 	else
