@@ -11,6 +11,7 @@
 # include <string.h>
 # include <errno.h>
 # include "minishell.h"
+# include "parse.h"
 
 char	*ft_xstrjoin(char *str1, char *str2);
 char	**ft_xsplit(char *src_str, char cut_char);
