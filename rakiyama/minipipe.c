@@ -46,10 +46,10 @@ int	ft_strcmp(char *s1, char *s2)
 	}
 }
 
-int	envlist_size(t_envlist *head)
+size_t	envlist_size(t_envlist *head)
 {
 	t_envlist	*move;
-	int			cnt;
+	size_t		cnt;
 
 	cnt = 0;
 	move = head;
@@ -61,10 +61,10 @@ int	envlist_size(t_envlist *head)
 	return (cnt);
 }
 
-int	cmdlist_size(t_cmdlist *head)
+size_t	cmdlist_size(t_cmdlist *head)
 {
 	t_cmdlist	*move;
-	int			cnt;
+	size_t		cnt;
 
 	cnt = 0;
 	move = head;
@@ -110,7 +110,7 @@ char	**make_exec_pathlist(char *cmd, char *path_env)
 {
 	char	**pathlist;
 	char	*tmp;
-	int		i;
+	size_t	i;
 
 	pathlist = ft_xsplit(path_env, ':'); 
 	i = 0;
@@ -134,7 +134,7 @@ char	*set_cmd_path(char *cmd, char *path_env)
 {
 	char		**pathlist;
 	char		*cmd_path;
-	int			i;
+	size_t		i;
 
 	if (ft_stat(cmd))
 		return (cmd);
@@ -233,7 +233,7 @@ char	**convert_envlist_2dchar(t_envlist *elst)
 {
 	char 		**array;
 	t_envlist	*move;
-	int			cnt;
+	size_t		cnt;
 	char		*tmp;
 
 	cnt = envlist_size(elst);
@@ -272,8 +272,8 @@ void	ft_execve(t_execdata *data)
 
 void	ft_echo(t_execdata *data)
 {
-	int	option;
-	int	arg_i;
+	int		option;
+	size_t	arg_i;
 
 	option = 0;
 	arg_i = 1;
@@ -355,7 +355,7 @@ void	ft_pwd(t_execdata *data)
 
 int	check_envkey_rules(char *key)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
 	while(key[i])
@@ -399,7 +399,7 @@ void	put_env_asciiorder(t_envlist *head, t_envlist *min_node)
 
 void	ft_export(t_execdata *data)
 {
-	int	arg_i;
+	size_t	arg_i;
 
 	*(data->status) = 0;
 	arg_i = 1;
@@ -425,7 +425,7 @@ void	ft_export(t_execdata *data)
 
 void	ft_unset(t_execdata *data)
 {
-	int i;
+	size_t	i;
 
 	i = 1;
 	while (data->cmdline[i])
@@ -487,7 +487,7 @@ char	**convert_cmdlist_2dchar(t_cmdlist *clst)
 {
 	char 		**array;
 	t_cmdlist	*move;
-	int			cnt;
+	size_t		cnt;
 
 	cnt = cmdlist_size(clst);
 	array = (char **)ft_xcalloc((cnt + 1), sizeof(char *));
