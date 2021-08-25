@@ -192,31 +192,42 @@ t_envlist	*ft_unsetenv(t_envlist *elst, char *rm_key)
 	return (head);
 }
 
-void	ft_setenv(t_envlist *elst, char *new_key, char *new_value)
+t_envlist	*get_elst_node(char *new_key, char *new_value)
 {
-	t_envlist	*new;
+	t_envlist	*new_elst;
 
-	new = ft_xcalloc(1, sizeof(*new));
-	new->key = new_key;
-	new->value = new_value;
+	new_elst = ft_xcalloc(1, sizeof(*new_elst));
+	new_elst->key = new_key;
+	new_elst->value = new_value;
+	return (new_elst);
+}
+
+void	ft_setenv(t_envlist *elst, char *new_key, char *new_value, int append)
+{
+	char		*add_value;
+
 	while(elst)
 	{
-		if (ft_strcmp(elst->key, new->key) == 0)
+		if (ft_strcmp(elst->key, new_key) == 0)
 		{
-			if (new->value)
+			if (new_value)
 			{
+				if (append)
+					add_value = ft_xstrjoin(elst->value, new_value);
+				else
+					add_value = ft_xstrdup(new_value);
+				free(new_value);
 				free(elst->value);
-				elst->value = new->value;
+				elst->value = add_value;
 			}
-			free(new->key);
-			free(new);
+			free(new_key);
 			return ;
 		}
 		if (elst->next == NULL)
 			break ;
 		elst = elst->next;
 	}
-	elst->next = new;
+	elst->next = get_elst_node(new_key, new_value);
 }
 
 /*
@@ -293,7 +304,7 @@ void	setenv_curpwd_oldpwd(t_envlist *head)
 	pwd_key = ft_strdup("OLDPWD");
 	pwd_value = ft_strjoin(ft_getenv(head, "PWD"), 0);
 	if (pwd_key)
-		ft_setenv(head, pwd_key, pwd_value);
+		ft_setenv(head, pwd_key, pwd_value, 0);
 	else
 	{
 		free(pwd_key);
@@ -302,7 +313,7 @@ void	setenv_curpwd_oldpwd(t_envlist *head)
 	pwd_key = ft_strdup("PWD");
 	pwd_value = getcwd(NULL, 0);
 	if (pwd_key)
-		ft_setenv(head, pwd_key, pwd_value);
+		ft_setenv(head, pwd_key, pwd_value, 0);
 	else
 	{
 		free(pwd_key);
@@ -354,9 +365,9 @@ void	ft_pwd(t_execdata *data)
 	free(pathname);
 }
 
-int	check_and_set_keyvalue(char *src_str, char **key, char **value)
+ssize_t	check_name_rule(char *src_str)
 {
-	size_t	i;
+	ssize_t	i;
 
 	i = 0;
 	while(src_str[i])
@@ -364,23 +375,37 @@ int	check_and_set_keyvalue(char *src_str, char **key, char **value)
 		if (0 < i && ((src_str[i] == '+' && src_str[i + 1] == '=') || src_str[i] == '='))
 			break ;
 		if (!(src_str[i] == '_' || ft_isalnum(src_str[i])) || ft_isdigit(src_str[0]))
-			return (1);
+			return (-1);
 		i++;
 	}
-	*value = NULL;
+	return(i);
+}
+
+void	to_setenv(t_envlist *head, char *src_str, size_t i)
+{
+	char	*key;
+	char	*value;
+	int		mode;
+
 	if (src_str[i] == '+')
 	{
-		*key = ft_substr(src_str, 0, i);//xsubstr?
-		*value = ft_substr(src_str, i + 2, ft_strlen(src_str) - i - 2);
+		key = ft_substr(src_str, 0, i);//xsubstr?
+		value = ft_substr(src_str, i + 2, ft_strlen(src_str) - i - 2);
+		mode = 1;
 	}
 	else if (src_str[i] == '=')
 	{
-		*key = ft_substr(src_str, 0, i);//xsubstr?
-		*value = ft_substr(src_str, i + 1, ft_strlen(src_str) - i - 1);
+		key = ft_substr(src_str, 0, i);//xsubstr?
+		value = ft_substr(src_str, i + 1, ft_strlen(src_str) - i - 1);
+		mode = 0;
 	}
-	else if (src_str[i] == '\0')
-		*key = ft_xstrdup(src_str);
-	return (0);
+	else
+	{
+		key = ft_xstrdup(src_str);
+		value = NULL;
+		mode = 0;
+	}
+	ft_setenv(head, key, value, mode);
 }
 
 void	put_env_asciiorder(t_envlist *head, t_envlist *min_node)
@@ -411,8 +436,7 @@ void	put_env_asciiorder(t_envlist *head, t_envlist *min_node)
 void	ft_export(t_execdata *data)
 {
 	size_t	arg_i;
-	char	*env_key;
-	char	*env_value;
+	ssize_t	split_point;
 
 	*(data->status) = 0;
 	arg_i = 1;
@@ -422,8 +446,9 @@ void	ft_export(t_execdata *data)
 	{
 		while (data->cmdline[arg_i])
 		{
-			if (check_and_set_keyvalue(data->cmdline[arg_i], &env_key, &env_value) == 0)
-				ft_setenv(data->elst, env_key, env_value);
+			split_point = check_name_rule(data->cmdline[arg_i]);
+			if (split_point != -1)
+				to_setenv(data->elst, data->cmdline[arg_i], split_point);
 			else
 			{
 				ft_putstr_fd("minishell: export: ", STDERR_FILENO);
@@ -834,8 +859,6 @@ int	main(int ac, char **av, char **envp)
 	clst = NULL;
 	clst = add_cmdlist(clst, "env");
 	iolst = NULL;
-	iolst = add_iolist(iolst, OUT_REDIRECT, ">", -1);
-	iolst = add_iolist(iolst, ELSE, "outfile1", -1);
 	data = add_execdata(data, status, clst, iolst, elst);
 	execute_start(data);
 	exit_status = *(data->status);
@@ -859,6 +882,31 @@ int	main(int ac, char **av, char **envp)
 	//data
 	clst = NULL;
 	clst = add_cmdlist(clst, "env");
+	iolst = NULL;
+	data = add_execdata(data, status, clst, iolst, elst);
+	execute_start(data);
+	exit_status = *(data->status);
+	free_data(data, 0, 0);
+
+	data = NULL;
+	//elst
+	//status
+	//data
+	clst = NULL;
+	clst = add_cmdlist(clst, "export");
+	clst = add_cmdlist(clst, "EEE+=uuuuuuuui");	
+	iolst = NULL;
+	data = add_execdata(data, status, clst, iolst, elst);
+	execute_start(data);
+	exit_status = *(data->status);
+	free_data(data, 0, 0);
+
+	data = NULL;
+	//elst
+	//status
+	//data
+	clst = NULL;
+	clst = add_cmdlist(clst, "export");	
 	iolst = NULL;
 	data = add_execdata(data, status, clst, iolst, elst);
 	execute_start(data);
