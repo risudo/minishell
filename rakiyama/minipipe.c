@@ -134,7 +134,7 @@ char	*set_cmd_path(char *cmd, char *path_env)
 	char		*cmd_path;
 	size_t		i;
 
-	if (ft_stat(cmd))
+	if (ft_stat(cmd))//replace back
 		return (cmd);
 	if (path_env == NULL)
 		pathlist = NULL;
@@ -206,7 +206,7 @@ void	ft_setenv(t_envlist *elst, char *new_key, char *new_value, int append)
 {
 	char		*add_value;
 
-	while(elst)
+	while(1)
 	{
 		if (ft_strcmp(elst->key, new_key) == 0)
 		{
@@ -389,14 +389,14 @@ void	to_setenv(t_envlist *head, char *src_str, size_t i)
 
 	if (src_str[i] == '+')
 	{
-		key = ft_substr(src_str, 0, i);//xsubstr?
-		value = ft_substr(src_str, i + 2, ft_strlen(src_str) - i - 2);
+		key = ft_xsubstr(src_str, 0, i);
+		value = ft_xsubstr(src_str, i + 2, ft_strlen(src_str) - i - 2);
 		mode = 1;
 	}
 	else if (src_str[i] == '=')
 	{
-		key = ft_substr(src_str, 0, i);//xsubstr?
-		value = ft_substr(src_str, i + 1, ft_strlen(src_str) - i - 1);
+		key = ft_xsubstr(src_str, 0, i);
+		value = ft_xsubstr(src_str, i + 1, ft_strlen(src_str) - i - 1);
 		mode = 0;
 	}
 	else
@@ -468,7 +468,7 @@ void	ft_unset(t_execdata *data)
 	i = 1;
 	while (data->cmdline[i])
 	{
-		ft_unsetenv(data->elst, data->cmdline[1]);
+		ft_unsetenv(data->elst, data->cmdline[i]);
 		i++;
 	}
 	*(data->status) = 0;
