@@ -110,6 +110,8 @@ char	**make_exec_pathlist(char *cmd, char *path_env)
 	char	*tmp;
 	size_t	i;
 
+	if (!path_env)
+		return (NULL);
 	pathlist = ft_xsplit(path_env, ':'); 
 	i = 0;
 	while (pathlist[i])
@@ -134,12 +136,7 @@ char	*set_cmd_path(char *cmd, char *path_env)
 	char		*cmd_path;
 	size_t		i;
 
-	if (ft_stat(cmd))//replace back
-		return (cmd);
-	if (path_env == NULL)
-		pathlist = NULL;
-	else
-		pathlist = make_exec_pathlist(cmd, path_env);
+	pathlist = make_exec_pathlist(cmd, path_env);
 	cmd_path = NULL;
 	i = 0;
 	while(pathlist && pathlist[i])
@@ -151,6 +148,8 @@ char	*set_cmd_path(char *cmd, char *path_env)
 		}
 		i++;
 	}
+	if (!pathlist && ft_stat(cmd))
+		cmd_path = cmd;
 	free_2d_array(pathlist);
 	return (cmd_path);
 }
@@ -296,54 +295,17 @@ void	ft_echo(t_execdata *data)
 	*(data->status) = 0;
 }
 
-void	setenv_curpwd_oldpwd(t_envlist *head)
-{
-	char	*pwd_key;
-	char	*pwd_value;
-
-	pwd_key = ft_strdup("OLDPWD");
-	pwd_value = ft_strjoin(ft_getenv(head, "PWD"), 0);
-	if (pwd_key)
-		ft_setenv(head, pwd_key, pwd_value, 0);
-	else
-	{
-		free(pwd_key);
-		free(pwd_value);
-	}
-	pwd_key = ft_strdup("PWD");
-	pwd_value = getcwd(NULL, 0);
-	if (pwd_key)
-		ft_setenv(head, pwd_key, pwd_value, 0);
-	else
-	{
-		free(pwd_key);
-		free(pwd_value);
-	}
-}
-
 void	ft_cd(t_execdata *data)
 {
-	char	*path;
-
-	if (data->cmdline[1] == NULL)
-	{
-		path = ft_getenv(data->elst, "HOME");
-		if (path == NULL)
-		{
-			ft_putendl_fd("cd: HOME not set", STDERR_FILENO);
-			*(data->status) = 1;
-			return ;
-		}
-	}
-	else
-		path = data->cmdline[1];
-	if (chdir(path) == -1)//if path="" what happen
+	ft_setenv(data->elst, ft_xstrdup("OLDPWD"), getcwd(NULL, 0), 0);
+	if (data->cmdline[1] && data->cmdline[1][0] && chdir(data->cmdline[1]) == -1)
 	{
 		perror("cd");
 		*(data->status) = 1;
 		return ;
 	}
-	setenv_curpwd_oldpwd(data->elst);
+	if (ft_getenv(data->elst, "PWD"))
+		ft_setenv(data->elst, ft_xstrdup("PWD"), getcwd(NULL, 0), 0);
 	*(data->status) = 0;
 }
 
@@ -555,7 +517,7 @@ int	set_execdata(t_execdata *data)
 	while(move)
 	{
 		if (move->c_type == IN_REDIRECT)
-			data->in_fd = ft_open(data->in_fd, move->next->str, O_RDONLY, 0);//option ok?
+			data->in_fd = ft_open(data->in_fd, move->next->str, O_RDONLY, 0);
 		else if (move->c_type == IN_HERE_DOC)
 			data->in_fd = move->here_doc_fd;
 		else if (move->c_type == OUT_REDIRECT)
@@ -857,19 +819,8 @@ int	main(int ac, char **av, char **envp)
 	*status = 0;
 	//data
 	clst = NULL;
-	clst = add_cmdlist(clst, "env");
-	iolst = NULL;
-	data = add_execdata(data, status, clst, iolst, elst);
-	execute_start(data);
-	exit_status = *(data->status);
-	free_data(data, 0, 0);
-
-	data = NULL;
-	//elst
-	//status
-	//data
-	clst = NULL;
 	clst = add_cmdlist(clst, "cd");
+	clst = add_cmdlist(clst, "../");
 	iolst = NULL;
 	data = add_execdata(data, status, clst, iolst, elst);
 	execute_start(data);
@@ -886,31 +837,43 @@ int	main(int ac, char **av, char **envp)
 	data = add_execdata(data, status, clst, iolst, elst);
 	execute_start(data);
 	exit_status = *(data->status);
-	free_data(data, 0, 0);
+	// free_data(data, 0, 0);
 
-	data = NULL;
-	//elst
-	//status
-	//data
-	clst = NULL;
-	clst = add_cmdlist(clst, "export");
-	clst = add_cmdlist(clst, "EEE+=uuuuuuuui");	
-	iolst = NULL;
-	data = add_execdata(data, status, clst, iolst, elst);
-	execute_start(data);
-	exit_status = *(data->status);
-	free_data(data, 0, 0);
+	// data = NULL;
+	// //elst
+	// //status
+	// //data
+	// clst = NULL;
+	// clst = add_cmdlist(clst, "env");
+	// iolst = NULL;
+	// data = add_execdata(data, status, clst, iolst, elst);
+	// execute_start(data);
+	// exit_status = *(data->status);
+	// free_data(data, 0, 0);
 
-	data = NULL;
-	//elst
-	//status
-	//data
-	clst = NULL;
-	clst = add_cmdlist(clst, "export");	
-	iolst = NULL;
-	data = add_execdata(data, status, clst, iolst, elst);
-	execute_start(data);
-	exit_status = *(data->status);
+	// data = NULL;
+	// //elst
+	// //status
+	// //data
+	// clst = NULL;
+	// clst = add_cmdlist(clst, "export");
+	// clst = add_cmdlist(clst, "EEE+=uuuuuuuui");	
+	// iolst = NULL;
+	// data = add_execdata(data, status, clst, iolst, elst);
+	// execute_start(data);
+	// exit_status = *(data->status);
+	// free_data(data, 0, 0);
+
+	// data = NULL;
+	// //elst
+	// //status
+	// //data
+	// clst = NULL;
+	// clst = add_cmdlist(clst, "export");	
+	// iolst = NULL;
+	// data = add_execdata(data, status, clst, iolst, elst);
+	// execute_start(data);
+	// exit_status = *(data->status);
 	free_data(data, 1, 1);
 
 /*
