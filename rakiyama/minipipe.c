@@ -1,7 +1,5 @@
 #include "rakiyama.h"
 
-void	set_key_and_value(char *env, t_envlist *new);
-
 void	free_2d_array(char **array)
 {
 	int	i;
@@ -194,18 +192,13 @@ t_envlist	*ft_unsetenv(t_envlist *elst, char *rm_key)
 	return (head);
 }
 
-void	ft_setenv(t_envlist *elst, char *add)
+void	ft_setenv(t_envlist *elst, char *new_key, char *new_value)
 {
 	t_envlist	*new;
 
 	new = ft_xcalloc(1, sizeof(*new));
-	if (ft_strchr(add, '=') == NULL)//mod set_key_and_value
-	{
-		new->key = ft_xstrjoin(add, 0);
-		new->value = NULL;
-	}
-	else
-		set_key_and_value(add, new);
+	new->key = new_key;
+	new->value = new_value;
 	while(elst)
 	{
 		if (ft_strcmp(elst->key, new->key) == 0)
@@ -294,19 +287,27 @@ void	ft_echo(t_execdata *data)
 
 void	setenv_curpwd_oldpwd(t_envlist *head)
 {
-	char	*cur_path;
-	char	*joined_str;
+	char	*pwd_key;
+	char	*pwd_value;
 
-	joined_str = ft_strjoin("OLDPWD=", ft_getenv(head, "PWD"));
-	if (joined_str)
-		ft_setenv(head, joined_str);
-	free(joined_str);
-	cur_path = getcwd(NULL, 0);
-	joined_str = ft_strjoin("PWD=", cur_path);
-	if (joined_str)
-		ft_setenv(head, joined_str);
-	free(joined_str);
-	free(cur_path);
+	pwd_key = ft_strdup("OLDPWD");
+	pwd_value = ft_strjoin(ft_getenv(head, "PWD"), 0);
+	if (pwd_key)
+		ft_setenv(head, pwd_key, pwd_value);
+	else
+	{
+		free(pwd_key);
+		free(pwd_value);
+	}
+	pwd_key = ft_strdup("PWD");
+	pwd_value = getcwd(NULL, 0);
+	if (pwd_key)
+		ft_setenv(head, pwd_key, pwd_value);
+	else
+	{
+		free(pwd_key);
+		free(pwd_value);
+	}
 }
 
 void	ft_cd(t_execdata *data)
@@ -353,24 +354,34 @@ void	ft_pwd(t_execdata *data)
 	free(pathname);
 }
 
-int	check_envkey_rules(char *key)
+int	check_and_set_keyvalue(char *src_str, char **key, char **value)
 {
 	size_t	i;
 
 	i = 0;
-	while(key[i])
+	while(src_str[i])
 	{
-		if (i != 0 && key[i] == '=')
-			return (0);
-		if (!(key[i] == '_' || ft_isalnum(key[i])))
-			return (1);
-		if (i == 0 && ft_isdigit(key[i]))
+		if (0 < i && ((src_str[i] == '+' && src_str[i + 1] == '=') || src_str[i] == '='))
+			break ;
+		if (!(src_str[i] == '_' || ft_isalnum(src_str[i])) || ft_isdigit(src_str[0]))
 			return (1);
 		i++;
 	}
+	*value = NULL;
+	if (src_str[i] == '+')
+	{
+		*key = ft_substr(src_str, 0, i);//xsubstr?
+		*value = ft_substr(src_str, i + 2, ft_strlen(src_str) - i - 2);
+	}
+	else if (src_str[i] == '=')
+	{
+		*key = ft_substr(src_str, 0, i);//xsubstr?
+		*value = ft_substr(src_str, i + 1, ft_strlen(src_str) - i - 1);
+	}
+	else if (src_str[i] == '\0')
+		*key = ft_xstrdup(src_str);
 	return (0);
 }
-
 
 void	put_env_asciiorder(t_envlist *head, t_envlist *min_node)
 {
@@ -400,6 +411,8 @@ void	put_env_asciiorder(t_envlist *head, t_envlist *min_node)
 void	ft_export(t_execdata *data)
 {
 	size_t	arg_i;
+	char	*env_key;
+	char	*env_value;
 
 	*(data->status) = 0;
 	arg_i = 1;
@@ -409,8 +422,8 @@ void	ft_export(t_execdata *data)
 	{
 		while (data->cmdline[arg_i])
 		{
-			if (check_envkey_rules(data->cmdline[arg_i]) == 0)
-				ft_setenv(data->elst, data->cmdline[arg_i]);
+			if (check_and_set_keyvalue(data->cmdline[arg_i], &env_key, &env_value) == 0)
+				ft_setenv(data->elst, env_key, env_value);
 			else
 			{
 				ft_putstr_fd("minishell: export: ", STDERR_FILENO);
