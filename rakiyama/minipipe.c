@@ -521,9 +521,9 @@ int	set_execdata(t_execdata *data)
 		else if (move->c_type == IN_HERE_DOC)
 			data->in_fd = move->here_doc_fd;
 		else if (move->c_type == OUT_REDIRECT)
-			data->out_fd = ft_open(data->out_fd, move->next->str, O_RDWR | O_TRUNC | O_CREAT, S_IREAD | S_IWRITE);
+			data->out_fd = ft_open(data->out_fd, move->next->str, O_WRONLY | O_CREAT | O_TRUNC, 0666);
 		else if (move->c_type ==  OUT_HERE_DOC)
-			data->out_fd = ft_open(data->out_fd, move->next->str, O_RDWR | O_APPEND | O_CREAT, S_IREAD | S_IWRITE);
+			data->out_fd = ft_open(data->out_fd, move->next->str, O_WRONLY | O_CREAT | O_APPEND, 0666);
 		if (data->in_fd < 0 || data->out_fd < 0)
 		{
 			*(data->status) = 1;
