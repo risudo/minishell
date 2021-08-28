@@ -2,6 +2,7 @@
 # define MINISHELL_H
 
 # include "../libft/libft.h"
+# include "parse.h"
 
 typedef enum e_quottype
 {
@@ -48,8 +49,8 @@ typedef struct s_iolist
 	t_special_c		c_type;
 	char			*str;
 	int				here_doc_fd;
+	char			*quot;
 	struct s_iolist	*next;
-	struct s_iolist	*prev;
 }	t_iolist;
 
 typedef struct s_token
@@ -64,8 +65,8 @@ typedef struct s_token
 typedef struct s_cmdlist
 {
 	char				*str;
+	char				*quot;
 	struct s_cmdlist	*next;
-	struct s_cmdlist	*prev;
 }	t_cmdlist;
 
 typedef struct s_envlist
@@ -80,7 +81,7 @@ typedef struct s_execdata
 	char				**cmdline;
 	int					in_fd;
 	int					out_fd;
-	int					*status;
+	unsigned char		*status;
 	int					pipefd[PIPEFD_NUM];
 	enum e_cmd			cmd_type;
 	t_cmdlist			*clst;
@@ -89,6 +90,6 @@ typedef struct s_execdata
 	struct s_execdata	*next;
 }	t_execdata;
 
-t_execdata	*parse_cmd(char *command, char **envp);
+t_execdata	*parse_cmd(char *command, t_envlist *envlist, int *status);
 
 #endif
