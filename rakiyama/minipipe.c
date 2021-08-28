@@ -136,6 +136,8 @@ char	*set_cmd_path(char *cmd, char *path_env)
 	char		*cmd_path;
 	size_t		i;
 
+	if (ft_strchr(cmd, '/') && ft_stat(cmd))
+		return (cmd);
 	pathlist = make_exec_pathlist(cmd, path_env);
 	cmd_path = NULL;
 	i = 0;
@@ -148,8 +150,6 @@ char	*set_cmd_path(char *cmd, char *path_env)
 		}
 		i++;
 	}
-	if (!pathlist && ft_stat(cmd))
-		cmd_path = cmd;
 	free_2d_array(pathlist);
 	return (cmd_path);
 }
@@ -460,12 +460,30 @@ void	ft_non_cmd(t_execdata *data)
 	*(data->status) = 0;
 }
 
-int	ft_open(int	old_fd, char *filepath, int flags, mode_t mode)
+// int	ft_open(int	old_fd, char *filepath, int flags, mode_t mode)
+// {
+// 	int	fd;
+
+// 	if (STDERR_FILENO < old_fd)
+// 		xclose(old_fd);
+// 	if (mode == 0)
+// 		fd = open(filepath, flags);
+// 	else
+// 		fd = open(filepath, flags, mode);
+// 	if (fd == -1)
+// 	{
+// 		ft_putstr_fd("open: ", STDERR_FILENO);
+// 		ft_putstr_fd(filepath, STDERR_FILENO);
+// 		ft_putstr_fd(": ", STDERR_FILENO);
+// 		perror("");
+// 	}
+// 	return (fd);
+// }
+
+int	ft_open(char *filepath, int flags, mode_t mode)
 {
 	int	fd;
 
-	if (STDERR_FILENO < old_fd)
-		xclose(old_fd);
 	if (mode == 0)
 		fd = open(filepath, flags);
 	else
@@ -508,45 +526,73 @@ data->cmdline
 data->in_fd
 data->out_fd
 */
-int	set_execdata(t_execdata *data)
-{
-	t_iolist	*move;
+// int	set_execdata(t_execdata *data)
+// {
+// 	t_iolist	*move;
 
-	data->cmdline = convert_cmdlist_2dchar(data->clst);
-	move = data->iolst;
-	while(move)
+// 	data->cmdline = convert_cmdlist_2dchar(data->clst);
+// 	move = data->iolst;
+// 	while(move)
+// 	{
+// 		if (move->c_type == IN_REDIRECT)
+// 			data->in_fd = ft_open(data->in_fd, move->next->str, O_RDONLY, 0);
+// 		else if (move->c_type == IN_HERE_DOC)
+// 			data->in_fd = move->here_doc_fd;
+// 		else if (move->c_type == OUT_REDIRECT)
+// 			data->out_fd = ft_open(data->out_fd, move->next->str, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+// 		else if (move->c_type ==  OUT_HERE_DOC)
+// 			data->out_fd = ft_open(data->out_fd, move->next->str, O_WRONLY | O_CREAT | O_APPEND, 0666);
+// 		if (data->in_fd < 0 || data->out_fd < 0)
+// 		{
+// 			*(data->status) = 1;
+// 			return (-1);
+// 		}
+// 		move = move->next;
+// 	}
+// 	xdup2(data->in_fd, STDIN_FILENO);
+// 	xdup2(data->out_fd, STDOUT_FILENO);
+// 	return (0);
+// }
+
+
+int	ft_dup2(int oldfd, int newfd)
+{
+	if (oldfd < 0 || newfd < 0)
+		return (-1);
+	if (oldfd != newfd)
 	{
-		if (move->c_type == IN_REDIRECT)
-			data->in_fd = ft_open(data->in_fd, move->next->str, O_RDONLY, 0);
-		else if (move->c_type == IN_HERE_DOC)
-			data->in_fd = move->here_doc_fd;
-		else if (move->c_type == OUT_REDIRECT)
-			data->out_fd = ft_open(data->out_fd, move->next->str, O_WRONLY | O_CREAT | O_TRUNC, 0666);
-		else if (move->c_type ==  OUT_HERE_DOC)
-			data->out_fd = ft_open(data->out_fd, move->next->str, O_WRONLY | O_CREAT | O_APPEND, 0666);
-		if (data->in_fd < 0 || data->out_fd < 0)
-		{
-			*(data->status) = 1;
-			return (-1);
-		}
-		move = move->next;
+		xdup2(oldfd, newfd);
+		xclose(oldfd);
 	}
 	return (0);
 }
 
-int	dup_io(t_execdata *data)
+int	set_execdata(t_execdata *data)
 {
-	if (data->in_fd != STDIN_FILENO)
+	int			ret;
+	t_iolist	*move;
+
+	data->cmdline = convert_cmdlist_2dchar(data->clst);
+	ret = 0;
+	move = data->iolst;
+	while(move)
 	{
-		xdup2(data->in_fd, STDIN_FILENO);
-		xclose(data->in_fd);
+		if (move->c_type == IN_REDIRECT)
+			ret = ft_dup2(ft_open(move->next->str, O_RDONLY, 0), STDIN_FILENO);
+		else if (move->c_type == IN_HERE_DOC)
+			ret = ft_dup2(move->here_doc_fd, STDIN_FILENO);
+		else if (move->c_type == OUT_REDIRECT)
+			ret = ft_dup2(ft_open(move->next->str, O_WRONLY | O_CREAT | O_TRUNC, 0666), STDOUT_FILENO);
+		else if (move->c_type ==  OUT_HERE_DOC)
+			ret = ft_dup2(ft_open(move->next->str, O_WRONLY | O_CREAT | O_APPEND, 0666), STDOUT_FILENO);
+		if (ret == -1)
+		{
+			*(data->status) = 1;
+			break ;
+		}
+		move = move->next;
 	}
-	if (data->out_fd != STDOUT_FILENO)
-	{
-		xdup2(data->out_fd, STDOUT_FILENO);
-		xclose(data->out_fd);
-	}
-	return (0);
+	return (ret);
 }
 
 void	execute_command(t_execdata *data)
@@ -581,16 +627,16 @@ int	execute_loop(t_execdata *data)
 		{
 			xclose(data->pipefd[READ]);
 			if (data->next != NULL)
-				data->out_fd = data->pipefd[WRITE];
-			if (set_execdata(data) == 0 && dup_io(data) == 0)
+				ft_dup2(data->pipefd[WRITE], STDOUT_FILENO);
+				// data->out_fd = data->pipefd[WRITE];
+			if (set_execdata(data) == 0)
 				execute_command(data);
 			exit(*(data->status));
 		}
 		else
 		{
 			xclose(data->pipefd[WRITE]);
-			xdup2(data->pipefd[READ], STDIN_FILENO);
-			xclose(data->pipefd[READ]);
+			ft_dup2(data->pipefd[READ], STDIN_FILENO);
 		}
 		data = data->next;
 	}
@@ -808,18 +854,49 @@ void	set_heredocfd_cmdtype(t_execdata *data)
 	}
 }
 
+// void	execute_start(t_execdata *data)
+// {
+// 	int			lastchild_pid;
+// 	int			wstatus;
+
+// 	set_heredocfd_cmdtype(data);
+// 	if (data->next == NULL && 
+// 		(data->cmd_type == CD || (data->cmd_type == EXPORT && data->clst->next) || data->cmd_type == UNSET || data->cmd_type == EXIT))
+// 	{
+// 		if (set_execdata(data) == 0)
+// 			execute_command(data);
+// 		free_2d_array(data->cmdline);
+// 	}
+// 	else
+// 	{
+// 		lastchild_pid = execute_loop(data);
+// 		xwaitpid(lastchild_pid, &wstatus, 0);
+// 		*(data->status) = WEXITSTATUS(wstatus);//confirm WIFEXITED and WIFSIGNALED etc..
+// 		while(data->next)
+// 		{
+// 			xwaitpid(0, NULL, 0);
+// 			data = data->next;
+// 		}
+// 	}
+// }
+
 void	execute_start(t_execdata *data)
 {
+	int			ori_stdin;
+	int			ori_stdout;
 	int			lastchild_pid;
 	int			wstatus;
 
 	set_heredocfd_cmdtype(data);
-	if (data->next == NULL && 
-		(data->cmd_type == CD || (data->cmd_type == EXPORT && data->clst->next) || data->cmd_type == UNSET || data->cmd_type == EXIT))
+	if (data->next == NULL && data->cmd_type != OTHER)
 	{
+		ori_stdin = xdup(STDIN_FILENO);
+		ori_stdout = xdup(STDOUT_FILENO);
 		if (set_execdata(data) == 0)
 			execute_command(data);
 		free_2d_array(data->cmdline);
+		ft_dup2(ori_stdin, STDIN_FILENO);
+		ft_dup2(ori_stdout, STDOUT_FILENO);
 	}
 	else
 	{
@@ -834,6 +911,7 @@ void	execute_start(t_execdata *data)
 	}
 }
 
+
 int	main(int ac, char **av, char **envp)
 {
 	t_cmdlist	*clst;
@@ -846,7 +924,6 @@ int	main(int ac, char **av, char **envp)
 
 
 	data = NULL;
-	//elst
 	elst = NULL;
 	elst = add_envlist(elst, ft_strdup("HOME"), ft_strdup("/Users/ryojiroakiyama"));
 	elst = add_envlist(elst, ft_strdup("PATH"), ft_strdup("/Users/ryojiroakiyama/.pyenv/shims:/Users/ryojiroakiyama/.pyenv/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands"));
@@ -854,93 +931,66 @@ int	main(int ac, char **av, char **envp)
 	elst = add_envlist(elst, ft_strdup("PWD"), ft_strdup("/Users/ryojiroakiyama/Desktop/icloud/42_cursus/minishell/minishell/rakiyama"));
 	elst = add_envlist(elst, ft_strdup("RYOJIRO"), ft_strdup("ryojiro"));
 	elst = add_envlist(elst, ft_strdup("AKIYAMA"), ft_strdup("akiyama"));
-	//status
 	status = (int *)malloc(sizeof(int));
 	*status = 0;
-	//data
 	clst = NULL;
-	clst = add_cmdlist(clst, "cat");
+	clst = add_cmdlist(clst, "echo");
+	clst = add_cmdlist(clst, "akiyama");
 	iolst = NULL;
 	iolst = add_iolist(iolst, IN_HERE_DOC, "<<", -1);
 	iolst = add_iolist(iolst, ELSE, "limit", -1);
+	iolst = add_iolist(iolst, OUT_REDIRECT, ">", -1);
+	iolst = add_iolist(iolst, ELSE, "outfile", -1);
 	data = add_execdata(data, status, clst, iolst, elst);
 	execute_start(data);
 	exit_status = *(data->status);
-	// free_data(data, 0, 0);
+	free_data(data, 0, 0);
 
-	// data = NULL;
-	// //elst
-	// //status
-	// //data
-	// clst = NULL;
-	// clst = add_cmdlist(clst, "env");
-	// iolst = NULL;
-	// data = add_execdata(data, status, clst, iolst, elst);
-	// execute_start(data);
-	// exit_status = *(data->status);
-	// free_data(data, 0, 0);
-
-	// data = NULL;
-	// //elst
-	// //status
-	// //data
-	// clst = NULL;
-	// clst = add_cmdlist(clst, "env");
-	// iolst = NULL;
-	// data = add_execdata(data, status, clst, iolst, elst);
-	// execute_start(data);
-	// exit_status = *(data->status);
-	// free_data(data, 0, 0);
-
-	// data = NULL;
-	// //elst
-	// //status
-	// //data
-	// clst = NULL;
-	// clst = add_cmdlist(clst, "export");
-	// clst = add_cmdlist(clst, "EEE+=uuuuuuuui");	
-	// iolst = NULL;
-	// data = add_execdata(data, status, clst, iolst, elst);
-	// execute_start(data);
-	// exit_status = *(data->status);
-	// free_data(data, 0, 0);
-
-	// data = NULL;
-	// //elst
-	// //status
-	// //data
-	// clst = NULL;
-	// clst = add_cmdlist(clst, "export");	
-	// iolst = NULL;
-	// data = add_execdata(data, status, clst, iolst, elst);
-	// execute_start(data);
-	// exit_status = *(data->status);
-	free_data(data, 1, 1);
-
-/*
+	data = NULL;
 	clst = NULL;
-	clst = add_cmdlist(clst, "echo");
-	clst = add_cmdlist(clst, " ryojiro");
+	clst = add_cmdlist(clst, "cat");
+	clst = add_cmdlist(clst, "-n");	
 	iolst = NULL;
+	iolst = add_iolist(iolst, IN_REDIRECT, "<", -1);
+	iolst = add_iolist(iolst, ELSE, "outfile", -1);
 	iolst = add_iolist(iolst, OUT_HERE_DOC, ">>", -1);
 	iolst = add_iolist(iolst, ELSE, "outfile", -1);
 	data = add_execdata(data, status, clst, iolst, elst);
-
-	clst = NULL;
-	clst = add_cmdlist(clst, "export");
-	iolst = NULL;
-	data = add_execdata(data, status, clst, iolst, elst);
-
-	clst = NULL;
-	clst = add_cmdlist(clst, "cat");
-	clst = add_cmdlist(clst, "-e");
-	iolst = NULL;
-	data = add_execdata(data, status, clst, iolst, elst);
-	//execute
 	execute_start(data);
 	exit_status = *(data->status);
-	free_data(data);
-*/
+	free_data(data, 0, 0);
+
+	data = NULL;
+	clst = NULL;
+	clst = add_cmdlist(clst, "env");
+	iolst = NULL;
+	iolst = add_iolist(iolst, OUT_REDIRECT, ">", -1);
+	iolst = add_iolist(iolst, ELSE, "envoutfile", -1);
+	data = add_execdata(data, status, clst, iolst, elst);
+	execute_start(data);
+	exit_status = *(data->status);
+	free_data(data, 0, 0);
+
+	data = NULL;
+	clst = NULL;
+	clst = add_cmdlist(clst, "export");
+	clst = add_cmdlist(clst, "EEE+=uuuuuuuui");	
+	iolst = NULL;
+	data = add_execdata(data, status, clst, iolst, elst);
+	execute_start(data);
+	exit_status = *(data->status);
+	free_data(data, 0, 0);
+
+	data = NULL;
+	clst = NULL;
+	clst = add_cmdlist(clst, "export");	
+	iolst = NULL;
+	iolst = add_iolist(iolst, OUT_HERE_DOC, ">>", -1);
+	iolst = add_iolist(iolst, ELSE, "envoutfile", -1);
+	data = add_execdata(data, status, clst, iolst, elst);
+	execute_start(data);
+	exit_status = *(data->status);
+	free_data(data, 1, 1);
 
 //	put_data(data);
 
