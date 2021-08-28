@@ -742,28 +742,68 @@ void	free_data(t_execdata *data, int status_free, int elst_free)
 	}
 }
 
-void	set_cmd_type(t_execdata *data)
+int	is_cmd_type(t_cmdlist *clst)
 {
+	if (clst == NULL)
+		return (NON_CMD);
+	else if (ft_strcmp(clst->str, "echo") == 0)
+		return(ECHO);
+	else if (ft_strcmp(clst->str, "cd") == 0)
+		return(CD);
+	else if (ft_strcmp(clst->str, "pwd") == 0)
+		return(PWD);
+	else if (ft_strcmp(clst->str, "export") == 0)
+		return(EXPORT);
+	else if (ft_strcmp(clst->str, "unset") == 0)
+		return(UNSET);
+	else if (ft_strcmp(clst->str, "env") == 0)
+		return(ENV);
+	else if (ft_strcmp(clst->str, "exit") == 0)
+		return(EXIT);
+	else
+		return(OTHER);
+}
+
+enum e_cmd	get_here_doc(char *limiter)
+{
+	char*	line;
+	int		pipefd[PIPEFD_NUM];
+
+	xpipe(pipefd);
+	while (1)
+	{
+		line = readline("> ");
+		if (!line)
+			exit(1);//tmp
+		if (ft_strcmp(line, limiter) == 0)
+		{
+			free(line);
+			break ;
+		}
+		else if (line[0] == '\0')
+			ft_putstr_fd("\n", pipefd[WRITE]);
+		else
+			ft_putendl_fd(line, pipefd[WRITE]);
+		free(line);
+	}
+	xclose(pipefd[WRITE]);
+	return (pipefd[READ]);
+}
+
+void	set_heredocfd_cmdtype(t_execdata *data)
+{
+	t_iolist	*move;
+
 	while (data)
 	{
-		if (data->clst == NULL)
-			data->cmd_type = NON_CMD;
-		else if (ft_strcmp(data->clst->str, "echo") == 0)
-			data->cmd_type = ECHO;
-		else if (ft_strcmp(data->clst->str, "cd") == 0)
-			data->cmd_type = CD;
-		else if (ft_strcmp(data->clst->str, "pwd") == 0)
-			data->cmd_type = PWD;
-		else if (ft_strcmp(data->clst->str, "export") == 0)
-			data->cmd_type = EXPORT;
-		else if (ft_strcmp(data->clst->str, "unset") == 0)
-			data->cmd_type = UNSET;
-		else if (ft_strcmp(data->clst->str, "env") == 0)
-			data->cmd_type = ENV;
-		else if (ft_strcmp(data->clst->str, "exit") == 0)
-			data->cmd_type = EXIT;
-		else
-			data->cmd_type = OTHER;
+		move = data->iolst;
+		while (move)
+		{
+			if (move->c_type == IN_HERE_DOC)
+				move->here_doc_fd = get_here_doc(move->next->str);
+			move = move->next;
+		}
+		data->cmd_type = is_cmd_type(data->clst);
 		data = data->next;
 	}
 }
@@ -773,7 +813,7 @@ void	execute_start(t_execdata *data)
 	int			lastchild_pid;
 	int			wstatus;
 
-	set_cmd_type(data);
+	set_heredocfd_cmdtype(data);
 	if (data->next == NULL && 
 		(data->cmd_type == CD || (data->cmd_type == EXPORT && data->clst->next) || data->cmd_type == UNSET || data->cmd_type == EXIT))
 	{
@@ -819,24 +859,25 @@ int	main(int ac, char **av, char **envp)
 	*status = 0;
 	//data
 	clst = NULL;
-	clst = add_cmdlist(clst, "cd");
-	clst = add_cmdlist(clst, "../");
+	clst = add_cmdlist(clst, "cat");
 	iolst = NULL;
+	iolst = add_iolist(iolst, IN_HERE_DOC, "<<", -1);
+	iolst = add_iolist(iolst, ELSE, "limit", -1);
 	data = add_execdata(data, status, clst, iolst, elst);
 	execute_start(data);
 	exit_status = *(data->status);
-	free_data(data, 0, 0);
+	// free_data(data, 0, 0);
 
-	data = NULL;
-	//elst
-	//status
-	//data
-	clst = NULL;
-	clst = add_cmdlist(clst, "env");
-	iolst = NULL;
-	data = add_execdata(data, status, clst, iolst, elst);
-	execute_start(data);
-	exit_status = *(data->status);
+	// data = NULL;
+	// //elst
+	// //status
+	// //data
+	// clst = NULL;
+	// clst = add_cmdlist(clst, "env");
+	// iolst = NULL;
+	// data = add_execdata(data, status, clst, iolst, elst);
+	// execute_start(data);
+	// exit_status = *(data->status);
 	// free_data(data, 0, 0);
 
 	// data = NULL;
