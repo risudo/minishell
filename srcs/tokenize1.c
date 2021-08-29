@@ -16,9 +16,9 @@ static t_token	*new_token(t_token *cur, char **cmd,
 			 char **start, t_quottype *flag_quot)
 {
 	t_token	*tok;
-	int		len;
+	size_t	len;
 
-	tok = ft_xcalloc(1, sizeof(*tok));
+	tok = (t_token *)ft_xcalloc(1, sizeof(*tok));
 	len = *cmd - *start;
 	tok->str = ft_xsubstr(*start, 0, len);
 	tok->type = *flag_quot;
@@ -60,9 +60,10 @@ static char	*skip_space(char **cmd)
 	return (*cmd);
 }
 // split by space if it is out of quot.
-// return : t_token list that has splited str.
+// return : t_token list that has splited str by space.
+// If quot is not closed, return NULL
 
-t_token	*tokenize_cmd_by_space(char *cmd)
+t_token	*tokenize_cmd_by_space(char *cmd, unsigned char *status)
 {
 	t_token		head;
 	t_token		*cur;
@@ -82,8 +83,8 @@ t_token	*tokenize_cmd_by_space(char *cmd)
 		cur = new_token(cur, &cmd, &start, &flag_quot);
 	if (cur == NULL)
 	{
-		clear_tokenlist(head.next);
-		return (NULL);
+		*status = (unsigned char)258;
+		return (head.next);
 	}
 	cur = head.next;
 	cur->prev = NULL;

@@ -44,3 +44,16 @@ void	xfree(void *ptr)
 	free(ptr);
 	ptr = NULL;
 }
+
+char	*ft_xitoa(int n)
+{
+	char	*ret;
+
+	ret = ft_itoa(n);
+	if (ret == NULL)
+	{
+		perror("malloc");
+		exit(EXIT_FAILURE);
+	}
+	return (ret);
+}

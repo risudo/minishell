@@ -1,42 +1,42 @@
 #include "../includes/parse.h"
 
-int	parse_tokenlist(t_token *list)
+t_execdata	*expansion(t_execdata *data)
 {
-	t_token	*head;
-	t_token	*prev;
+	t_execdata	*head;
 
-	head = list;
-	while (list)
+	head = data;
+	while (data)
 	{
-		if (is_consecutive_redirect(list))
-			list = join_redirect(list);
-		prev = list;
-		list = list->next;
+		serch_env_cmdlist(data->clst, data->elst);
+		serch_env_iolist(data->iolst, data->elst);
+		data = data->next;
 	}
-	set_special_c(head);
-	if (prev->special == PIPE)
-	{
-		clear_tokenlist(head);
-		put_syntax_error("|");
-		return (-1);
-	}
-	else
-		return (0);
+	return (data);
 }
 
-t_execdata	*parse_cmd(char *command, char **envp)
+t_execdata	*create_error_execdata(t_token *tokenlist, unsigned char *status)
+{
+	t_execdata	*data;
+
+	data = (t_execdata *)ft_calloc(1, sizeof(*data));
+	clear_tokenlist(tokenlist);
+	data->status = status;
+	return (data);
+}
+
+t_execdata	*parse_cmd(char *command, t_envlist *envlist, unsigned char *status)
 {
 	t_token		*tokenlist;
 	t_execdata	*data;
-	t_envlist	*envlist;
 
-	tokenlist = tokenize_cmd_by_space(command);
-	if (tokenlist == NULL)
-		return (NULL);
-	if (split_operater(tokenlist) == -1 || parse_tokenlist(tokenlist) == -1)
-		return (NULL);
-	envlist = create_envlist(envp);
-	data = create_execdata(tokenlist, envlist);
+	tokenlist = tokenize_cmd_by_space(command, status);
+	if (*status != 0)
+		return (create_error_execdata(tokenlist, status));
+	split_operater(tokenlist);
+	if (parse_tokenlist(tokenlist, status) == -1)
+		return (create_error_execdata(tokenlist, status));
+	data = create_execdata(tokenlist, envlist, status);
 	clear_tokenlist(tokenlist);
+	expansion(data);
 	return (check_syntax(data));
 }
