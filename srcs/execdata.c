@@ -5,7 +5,7 @@ t_execdata	*new_execdata(t_execdata *cur, t_token *start,
 {
 	t_execdata	*new;
 
-	new = ft_xcalloc(1, sizeof(*new));
+	new = (t_execdata *)ft_xcalloc(1, sizeof(*new));
 	new->cmdline = NULL;
 	new->in_fd = STDIN_FILENO;
 	new->out_fd = STDOUT_FILENO;
@@ -17,15 +17,15 @@ t_execdata	*new_execdata(t_execdata *cur, t_token *start,
 	return (new);
 }
 
-t_execdata	*create_execdata(t_token *tokenlist, t_envlist *envlist)
+t_execdata	*create_execdata(t_token *tokenlist, t_envlist *envlist, unsigned char *status)
 {
 	t_execdata	head;
 	t_execdata	*cur;
 	t_token		*start;
 	t_execarg	arg;
 
-	arg.status = ft_xcalloc(1, sizeof(int));
 	arg.envlist = envlist;
+	arg.status = status;
 	cur = &head;
 	start = tokenlist;
 	while (tokenlist)

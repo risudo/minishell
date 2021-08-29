@@ -11,25 +11,6 @@ static char *ft_getenv(t_envlist *elst, char *search) //あきやまさんのを
 	return (NULL);
 }
 
-bool	is_delimiter(char c)
-{
-	if (c == ' ' || c == '$' || c == '\"' || c == '\0')
-		return (true);
-	else
-		return (false);
-}
-
-char	*ft_strjoin_three(char *str1, char *str2, char *str3)
-{
-	char	*tmp;
-	char	*ret;
-
-	tmp = ft_strjoin(str1, str2);
-	ret = ft_strjoin(tmp, str3);
-	xfree(tmp);
-	return (ret);
-}
-
 // Expand env_variable and set iolist->str it.
 // key : env_variable's key
 // value : env_variable's value
@@ -43,7 +24,7 @@ void	expansion_key_iolist(t_iolist *iolist,
 	char	*value;
 	char	*front;
 	char	*back;
-	int		len;
+	size_t	len;
 
 	len = 1;
 	while (!is_delimiter(doll_ptr[len]))
@@ -61,18 +42,16 @@ void	expansion_key_iolist(t_iolist *iolist,
 void	clear_quot_iolist(t_iolist *iolist)
 {
 	char	*new_str;
-	int		i;
-	int		j;
+	size_t		i;
+	size_t		j;
 
 	i = 0;
 	j = 0;
-	iolist->quot = get_removed_endflag(&iolist->quot, '1');
-	iolist->quot = get_removed_endflag(&iolist->quot, '2');
-	new_str = ft_xcalloc(ft_strlen_excluded_quot(iolist->str) + 1,
+	new_str = ft_xcalloc(ft_strlen_excluded_quot(iolist->str, iolist->quot) + 1,
 			sizeof(char));
 	while (iolist->str[i])
 	{
-		if (iolist->str[i] == '\'' || iolist->str[i] == '\"')
+		if (is_delimiter_quot(iolist->str[i], iolist->quot[i]))
 		{
 			i++;
 			continue ;
@@ -81,22 +60,20 @@ void	clear_quot_iolist(t_iolist *iolist)
 	}
 	xfree(iolist->str);
 	iolist->str = new_str;
+	iolist->quot = get_removed_endflag(&iolist->quot, '1');
+	iolist->quot = get_removed_endflag(&iolist->quot, '2');
 }
 
-void	insert_new_iolist(t_iolist *iolist, int i)
+void	insert_new_iolist(t_iolist *iolist, size_t i)
 {
 	t_iolist	*new;
-	char		*str;
-	int			len;
+	size_t		len;
 
-	new = ft_xcalloc(1, sizeof(*new));
-	len = 0;
+	new = (t_iolist *)ft_xcalloc(1, sizeof(*new));
 	while (iolist->str[i] == ' ')
 		i++;
-	while (iolist->str[i + len] != '\0')
-		len++;
-	str = ft_xsubstr(iolist->str, i, len);
-	new->str = str;
+	len = ft_strlen(iolist->str + i);
+	new->str = ft_xsubstr(iolist->str, i, len);
 	new->quot = get_quot_flag(new->str);
 	new->next = iolist->next;
 	iolist->next = new;
@@ -105,7 +82,7 @@ void	insert_new_iolist(t_iolist *iolist, int i)
 // If there are spaces, trim the stirng and insert new iolist.
 void	serch_new_space_iolist(t_iolist *iolist)
 {
-	int		i;
+	size_t	i;
 	char	*str;
 
 	i = 0;
@@ -125,17 +102,31 @@ void	serch_new_space_iolist(t_iolist *iolist)
 	}
 }
 
+bool	is_env_iolist(char flag, t_iolist *prev)
+{
+	if (flag != 'S' && (prev == NULL || prev->c_type != IN_HERE_DOC))
+	{
+		return (true);
+	}
+	else
+		return (false);
+}
+
 // Serch env_variable and enpand it.
 // Delete quot.
 // If there are spaces after exnpanding, insert new iolist.
 void	serch_env_iolist(t_iolist *iolist, t_envlist *envlist)
 {
-	char	*doll_ptr;
+	t_iolist	*prev;
+	char		*doll_ptr;
+
+	prev = NULL;
 
 	while (iolist)
 	{
 		doll_ptr = ft_strchr(iolist->str, '$');
-		while (doll_ptr != NULL && iolist->quot[doll_ptr - iolist->str] != 'S')
+			// while (doll_ptr != NULL && iolist->quot[doll_ptr - iolist->str] != 'S')//prevがhere_docではないとき
+		while (doll_ptr && is_env_iolist(iolist->quot[doll_ptr - iolist->str], prev))
 		{
 			expansion_key_iolist(iolist, envlist, doll_ptr);
 			xfree(iolist->quot);
@@ -145,6 +136,7 @@ void	serch_env_iolist(t_iolist *iolist, t_envlist *envlist)
 		if (ft_strchr(iolist->quot, '1') || ft_strchr(iolist->quot, '2'))
 			clear_quot_iolist(iolist);
 		serch_new_space_iolist(iolist);
+		prev = iolist;
 		iolist = iolist->next;
 	}
 }
