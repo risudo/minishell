@@ -1,0 +1,617 @@
+command: [echo aaa|cat]
+[41mexecdata[0][49m
+	*status: 0
+	in_fd: 0
+	out_fd: 1
+
+	[32mcmdlist[0][39m
+	  str: "echo"
+	  quot: 0000
+	[32mcmdlist[1][39m
+	  str: "aaa"
+	  quot: 000
+
+
+[41mexecdata[1][49m
+	*status: 0
+	in_fd: 0
+	out_fd: 1
+
+	[32mcmdlist[0][39m
+	  str: "cat"
+	  quot: 000
+
+
+command: [echo aaa |cat]
+[41mexecdata[0][49m
+	*status: 0
+	in_fd: 0
+	out_fd: 1
+
+	[32mcmdlist[0][39m
+	  str: "echo"
+	  quot: 0000
+	[32mcmdlist[1][39m
+	  str: "aaa"
+	  quot: 000
+
+
+[41mexecdata[1][49m
+	*status: 0
+	in_fd: 0
+	out_fd: 1
+
+	[32mcmdlist[0][39m
+	  str: "cat"
+	  quot: 000
+
+
+command: [echo aaa| cat]
+[41mexecdata[0][49m
+	*status: 0
+	in_fd: 0
+	out_fd: 1
+
+	[32mcmdlist[0][39m
+	  str: "echo"
+	  quot: 0000
+	[32mcmdlist[1][39m
+	  str: "aaa"
+	  quot: 000
+
+
+[41mexecdata[1][49m
+	*status: 0
+	in_fd: 0
+	out_fd: 1
+
+	[32mcmdlist[0][39m
+	  str: "cat"
+	  quot: 000
+
+
+command: [<file cat]
+[41mexecdata[0][49m
+	*status: 0
+	in_fd: 0
+	out_fd: 1
+
+	[32mcmdlist[0][39m
+	  str: "cat"
+	  quot: 000
+
+	[35miolist[0][39m
+	  str: "<"
+	  quot: 0
+	  c_type: IN_REDIRECT
+	  here_doc_fd: -1
+
+	[35miolist[1][39m
+	  str: "file"
+	  quot: 0000
+	  c_type: ELSE
+	  here_doc_fd: -1
+
+
+command: [echo "aaa | bbb"]
+[41mexecdata[0][49m
+	*status: 0
+	in_fd: 0
+	out_fd: 1
+
+	[32mcmdlist[0][39m
+	  str: "echo"
+	  quot: 0000
+	[32mcmdlist[1][39m
+	  str: "aaa | bbb"
+	  quot: DDDDDDDDD
+
+
+command: [echo "aaa > bbb"]
+[41mexecdata[0][49m
+	*status: 0
+	in_fd: 0
+	out_fd: 1
+
+	[32mcmdlist[0][39m
+	  str: "echo"
+	  quot: 0000
+	[32mcmdlist[1][39m
+	  str: "aaa > bbb"
+	  quot: DDDDDDDDD
+
+
+command: [echo "aaa << bbb"]
+[41mexecdata[0][49m
+	*status: 0
+	in_fd: 0
+	out_fd: 1
+
+	[32mcmdlist[0][39m
+	  str: "echo"
+	  quot: 0000
+	[32mcmdlist[1][39m
+	  str: "aaa << bbb"
+	  quot: DDDDDDDDDD
+
+
+command: [echo $?]
+[41mexecdata[0][49m
+	*status: 0
+	in_fd: 0
+	out_fd: 1
+
+	[32mcmdlist[0][39m
+	  str: "echo"
+	  quot: 0000
+	[32mcmdlist[1][39m
+	  str: "0"
+	  quot: 0
+
+
+command: [echo "$?"]
+[41mexecdata[0][49m
+	*status: 0
+	in_fd: 0
+	out_fd: 1
+
+	[32mcmdlist[0][39m
+	  str: "echo"
+	  quot: 0000
+	[32mcmdlist[1][39m
+	  str: "0"
+	  quot: D
+
+
+command: [echo '$?']
+[41mexecdata[0][49m
+	*status: 0
+	in_fd: 0
+	out_fd: 1
+
+	[32mcmdlist[0][39m
+	  str: "echo"
+	  quot: 0000
+	[32mcmdlist[1][39m
+	  str: "$?"
+	  quot: SS
+
+
+command: [echo $?$?]
+[41mexecdata[0][49m
+	*status: 0
+	in_fd: 0
+	out_fd: 1
+
+	[32mcmdlist[0][39m
+	  str: "echo"
+	  quot: 0000
+	[32mcmdlist[1][39m
+	  str: "00"
+	  quot: 00
+
+
+command: [echo $?aa]
+[41mexecdata[0][49m
+	*status: 0
+	in_fd: 0
+	out_fd: 1
+
+	[32mcmdlist[0][39m
+	  str: "echo"
+	  quot: 0000
+	[32mcmdlist[1][39m
+	  str: "0aa"
+	  quot: 000
+
+
+command: [echo >$?aa]
+[41mexecdata[0][49m
+	*status: 0
+	in_fd: 0
+	out_fd: 1
+
+	[32mcmdlist[0][39m
+	  str: "echo"
+	  quot: 0000
+
+	[35miolist[0][39m
+	  str: ">"
+	  quot: 0
+	  c_type: OUT_REDIRECT
+	  here_doc_fd: -1
+
+	[35miolist[1][39m
+	  str: "0aa"
+	  quot: 000
+	  c_type: ELSE
+	  here_doc_fd: -1
+
+
+command: [echo $USER]
+[41mexecdata[0][49m
+	*status: 0
+	in_fd: 0
+	out_fd: 1
+
+	[32mcmdlist[0][39m
+	  str: "echo"
+	  quot: 0000
+	[32mcmdlist[1][39m
+	  str: "sudourio"
+	  quot: 00000000
+
+
+command: [echo "$USER"]
+[41mexecdata[0][49m
+	*status: 0
+	in_fd: 0
+	out_fd: 1
+
+	[32mcmdlist[0][39m
+	  str: "echo"
+	  quot: 0000
+	[32mcmdlist[1][39m
+	  str: "sudourio"
+	  quot: DDDDDDDD
+
+
+command: [echo '"$USER"']
+[41mexecdata[0][49m
+	*status: 0
+	in_fd: 0
+	out_fd: 1
+
+	[32mcmdlist[0][39m
+	  str: "echo"
+	  quot: 0000
+	[32mcmdlist[1][39m
+	  str: ""$USER""
+	  quot: SSSSSSS
+
+
+command: [echo ''$USER'']
+[41mexecdata[0][49m
+	*status: 0
+	in_fd: 0
+	out_fd: 1
+
+	[32mcmdlist[0][39m
+	  str: "echo"
+	  quot: 0000
+	[32mcmdlist[1][39m
+	  str: "sudourio"
+	  quot: 00000000
+
+
+command: [echo ""$USER""]
+[41mexecdata[0][49m
+	*status: 0
+	in_fd: 0
+	out_fd: 1
+
+	[32mcmdlist[0][39m
+	  str: "echo"
+	  quot: 0000
+	[32mcmdlist[1][39m
+	  str: "sudourio"
+	  quot: 00000000
+
+
+command: [echo "'"$USER"'"]
+[41mexecdata[0][49m
+	*status: 0
+	in_fd: 0
+	out_fd: 1
+
+	[32mcmdlist[0][39m
+	  str: "echo"
+	  quot: 0000
+	[32mcmdlist[1][39m
+	  str: "'sudourio'"
+	  quot: D00000000D
+
+
+command: [echo "aa$VAR"]
+[41mexecdata[0][49m
+	*status: 0
+	in_fd: 0
+	out_fd: 1
+
+	[32mcmdlist[0][39m
+	  str: "echo"
+	  quot: 0000
+	[32mcmdlist[1][39m
+	  str: "aa   ramen"
+	  quot: DDDDDDDDDD
+
+
+command: [echo aa$VAR]
+[41mexecdata[0][49m
+	*status: 0
+	in_fd: 0
+	out_fd: 1
+
+	[32mcmdlist[0][39m
+	  str: "echo"
+	  quot: 0000
+	[32mcmdlist[1][39m
+	  str: "aa"
+	  quot: 00
+	[32mcmdlist[2][39m
+	  str: "ramen"
+	  quot: 00000
+
+
+command: [echo >$USER]
+[41mexecdata[0][49m
+	*status: 0
+	in_fd: 0
+	out_fd: 1
+
+	[32mcmdlist[0][39m
+	  str: "echo"
+	  quot: 0000
+
+	[35miolist[0][39m
+	  str: ">"
+	  quot: 0
+	  c_type: OUT_REDIRECT
+	  here_doc_fd: -1
+
+	[35miolist[1][39m
+	  str: "sudourio"
+	  quot: 00000000
+	  c_type: ELSE
+	  here_doc_fd: -1
+
+
+command: [echo >"$USER"]
+[41mexecdata[0][49m
+	*status: 0
+	in_fd: 0
+	out_fd: 1
+
+	[32mcmdlist[0][39m
+	  str: "echo"
+	  quot: 0000
+
+	[35miolist[0][39m
+	  str: ">"
+	  quot: 0
+	  c_type: OUT_REDIRECT
+	  here_doc_fd: -1
+
+	[35miolist[1][39m
+	  str: "sudourio"
+	  quot: DDDDDDDD
+	  c_type: ELSE
+	  here_doc_fd: -1
+
+
+command: [echo >'"$USER"']
+[41mexecdata[0][49m
+	*status: 0
+	in_fd: 0
+	out_fd: 1
+
+	[32mcmdlist[0][39m
+	  str: "echo"
+	  quot: 0000
+
+	[35miolist[0][39m
+	  str: ">"
+	  quot: 0
+	  c_type: OUT_REDIRECT
+	  here_doc_fd: -1
+
+	[35miolist[1][39m
+	  str: ""$USER""
+	  quot: SSSSSSS
+	  c_type: ELSE
+	  here_doc_fd: -1
+
+
+command: [echo >''$USER'']
+[41mexecdata[0][49m
+	*status: 0
+	in_fd: 0
+	out_fd: 1
+
+	[32mcmdlist[0][39m
+	  str: "echo"
+	  quot: 0000
+
+	[35miolist[0][39m
+	  str: ">"
+	  quot: 0
+	  c_type: OUT_REDIRECT
+	  here_doc_fd: -1
+
+	[35miolist[1][39m
+	  str: "sudourio"
+	  quot: 00000000
+	  c_type: ELSE
+	  here_doc_fd: -1
+
+
+command: [echo >""$USER""]
+[41mexecdata[0][49m
+	*status: 0
+	in_fd: 0
+	out_fd: 1
+
+	[32mcmdlist[0][39m
+	  str: "echo"
+	  quot: 0000
+
+	[35miolist[0][39m
+	  str: ">"
+	  quot: 0
+	  c_type: OUT_REDIRECT
+	  here_doc_fd: -1
+
+	[35miolist[1][39m
+	  str: "sudourio"
+	  quot: 00000000
+	  c_type: ELSE
+	  here_doc_fd: -1
+
+
+command: [echo >"'"$USER"'"]
+[41mexecdata[0][49m
+	*status: 0
+	in_fd: 0
+	out_fd: 1
+
+	[32mcmdlist[0][39m
+	  str: "echo"
+	  quot: 0000
+
+	[35miolist[0][39m
+	  str: ">"
+	  quot: 0
+	  c_type: OUT_REDIRECT
+	  here_doc_fd: -1
+
+	[35miolist[1][39m
+	  str: "'sudourio'"
+	  quot: D00000000D
+	  c_type: ELSE
+	  here_doc_fd: -1
+
+
+command: [echo >"aa$VAR"]
+[41mexecdata[0][49m
+	*status: 0
+	in_fd: 0
+	out_fd: 1
+
+	[32mcmdlist[0][39m
+	  str: "echo"
+	  quot: 0000
+
+	[35miolist[0][39m
+	  str: ">"
+	  quot: 0
+	  c_type: OUT_REDIRECT
+	  here_doc_fd: -1
+
+	[35miolist[1][39m
+	  str: "aa   ramen"
+	  quot: DDDDDDDDDD
+	  c_type: ELSE
+	  here_doc_fd: -1
+
+
+minishell: ambiguous redirect
+command: [echo >aa$VAR]
+[41mexecdata[0][49m
+	*status: 1
+	in_fd: 0
+	out_fd: 1
+
+	[32mcmdlist[0][39m
+	  str: "echo"
+	  quot: 0000
+
+	[35miolist[0][39m
+	  str: ">"
+	  quot: 0
+	  c_type: OUT_REDIRECT
+	  here_doc_fd: -1
+
+	[35miolist[1][39m
+	  str: "aa"
+	  quot: 00
+	  c_type: ELSE
+	  here_doc_fd: -1
+
+	[35miolist[2][39m
+	  str: "ramen"
+	  quot: 00000
+	  c_type: ELSE
+	  here_doc_fd: 0
+
+
+minishell: syntax error near unexpected token |
+command: [| echo aaa]
+[41mexecdata[0][49m
+	*status: 2
+	in_fd: 0
+	out_fd: 0
+
+
+
+minishell: syntax error near unexpected token |
+command: [echo aaa |]
+[41mexecdata[0][49m
+	*status: 2
+	in_fd: 0
+	out_fd: 0
+
+
+
+minishell: syntax error near unexpected token >
+command: [echo aaa >]
+[41mexecdata[0][49m
+	*status: 2
+	in_fd: 0
+	out_fd: 0
+
+
+
+minishell: syntax error near unexpected token <
+command: [echo aaa <]
+[41mexecdata[0][49m
+	*status: 2
+	in_fd: 0
+	out_fd: 0
+
+
+
+minishell: syntax error near unexpected token >>
+command: [echo aaa >>]
+[41mexecdata[0][49m
+	*status: 2
+	in_fd: 0
+	out_fd: 0
+
+
+
+minishell: syntax error near unexpected token <<
+command: [echo aaa <<]
+[41mexecdata[0][49m
+	*status: 2
+	in_fd: 0
+	out_fd: 0
+
+
+
+minishell: syntax error near unexpected token >
+command: [echo aaa >>>]
+[41mexecdata[0][49m
+	*status: 2
+	in_fd: 0
+	out_fd: 0
+
+
+
+minishell: syntax error near unexpected token "aa
+command: [echo "aa]
+[41mexecdata[0][49m
+	*status: 2
+	in_fd: 0
+	out_fd: 0
+
+
+
+minishell: syntax error near unexpected token 'aa
+command: [echo 'aa]
+[41mexecdata[0][49m
+	*status: 2
+	in_fd: 0
+	out_fd: 0
+
+
+
