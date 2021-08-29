@@ -32,40 +32,11 @@ bool	is_consecutive_redirect(t_token *list)
 {
 	if (list->next
 		&& ((list->str[0] == '>' && list->next->str[0] == '>')
-		|| (list->str[0] == '<' && list->next->str[0] == '<')))
+			|| (list->str[0] == '<' && list->next->str[0] == '<')))
 		return (true);
 	else
 		return (false);
 }
-
-// t_token	*trim_list(t_token *list)
-// {
-// 	t_token	*next;
-// 	t_token	*prev;
-
-// 	next = list->next;
-// 	prev = list->prev;
-// 	xfree(list->str);
-// 	xfree(list);
-// 	prev->next = next;
-// 	next->prev = prev;
-// 	return (next);
-// }
-
-// bool	is_space_after_quot(t_token *list)
-// {
-// 	if (!list->prev || !list->next)
-// 		return (false);
-// 	if (ft_strchr(list->str, ' ')
-// 		&& (ft_strchr(list->prev->str, '\'')
-// 			|| ft_strchr(list->prev->str, '\"'))
-// 		&& !(ft_strchr(list->next->str, '\'')
-// 			|| ft_strchr(list->next->str, '\"')))
-// 		return (true);
-// 	else
-// 		return (false);
-//}//
-
 
 void	set_special_c(t_token *list)
 {

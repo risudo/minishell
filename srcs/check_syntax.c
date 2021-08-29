@@ -1,5 +1,10 @@
 #include "../includes/parse.h"
 
+/*
+** Check iolist if it has multiple redirection destinations.
+** If it has erorr, set the status 1.
+*/
+
 void	put_syntax_error(char *str)
 {
 	ft_putstr_fd("minishell: syntax error near unexpected token ",
@@ -14,10 +19,10 @@ int	check_iolist(t_iolist *list)
 	prev = NULL;
 	while (list)
 	{
-		if (prev && prev->c_type <= OUT_HERE_DOC
-			&& list->c_type <= OUT_HERE_DOC)
+		if (prev && prev->c_type == ELSE
+			&& list->c_type == ELSE)
 		{
-			put_syntax_error(list->str);
+			ft_putendl_fd("minishell: ambiguous redirect", STDERR_FILENO);
 			return (-1);
 		}
 		prev = list;
@@ -35,8 +40,8 @@ t_execdata	*check_syntax(t_execdata *data)
 	{
 		if (check_iolist(data->iolst) == -1)
 		{
-			clear_execdata(head);
-			return (NULL);
+			*(data->status) = 1;
+			return (head);
 		}
 		data = data->next;
 	}

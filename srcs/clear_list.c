@@ -35,6 +35,7 @@ void	clear_cmdlist(t_cmdlist *list)
 	{
 		next = list->next;
 		xfree(list->str);
+		xfree(list->quot);
 		xfree(list);
 		list = next;
 	}
@@ -48,6 +49,7 @@ void	clear_iolist(t_iolist *list)
 	{
 		next = list->next;
 		xfree(list->str);
+		xfree(list->quot);
 		xfree(list);
 		list = next;
 	}
@@ -57,8 +59,6 @@ void	clear_execdata(t_execdata *data)
 {
 	t_execdata	*next;
 
-	clear_envlist(data->elst);
-	xfree(data->status);
 	while (data)
 	{
 		next = data->next;

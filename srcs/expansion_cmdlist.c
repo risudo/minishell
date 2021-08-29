@@ -1,17 +1,7 @@
 #include "../includes/parse.h"
 
-static char *ft_getenv(t_envlist *elst, char *search)//あきやまさんのを使う
-{
-	while (elst)
-	{
-		if (ft_strncmp(elst->key, search, ft_strlen(search) + 1) == 0)
-			return (elst->value);
-		elst = elst->next;
-	}
-	return (NULL);
-}
-
-void	expansion_key_cmdlist(t_cmdlist *clist, t_envlist *envlist, char *doll_ptr)
+void	expansion_key_cmdlist(t_cmdlist *clist,
+		t_envlist *envlist, char *doll_ptr)
 {
 	char	*key;
 	char	*value;
@@ -113,6 +103,5 @@ void	serch_env_cmdlist(t_cmdlist *clist, t_envlist *envlist)
 			clear_quot_cmdlist(clist);
 		serch_new_space_cmdlist(clist);
 		clist = clist->next;
-			(void)envlist;
 	}
 }

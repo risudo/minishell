@@ -1,16 +1,5 @@
 #include "../includes/parse.h"
 
-static char *ft_getenv(t_envlist *elst, char *search) //あきやまさんのを使う
-{
-	while (elst)
-	{
-		if (ft_strncmp(elst->key, search, ft_strlen(search) + 1) == 0)
-			return (elst->value);
-		elst = elst->next;
-	}
-	return (NULL);
-}
-
 // Expand env_variable and set iolist->str it.
 // key : env_variable's key
 // value : env_variable's value
@@ -42,8 +31,8 @@ void	expansion_key_iolist(t_iolist *iolist,
 void	clear_quot_iolist(t_iolist *iolist)
 {
 	char	*new_str;
-	size_t		i;
-	size_t		j;
+	size_t	i;
+	size_t	j;
 
 	i = 0;
 	j = 0;
@@ -75,6 +64,7 @@ void	insert_new_iolist(t_iolist *iolist, size_t i)
 	len = ft_strlen(iolist->str + i);
 	new->str = ft_xsubstr(iolist->str, i, len);
 	new->quot = get_quot_flag(new->str);
+	new->c_type = ELSE;
 	new->next = iolist->next;
 	iolist->next = new;
 }
@@ -102,16 +92,6 @@ void	serch_new_space_iolist(t_iolist *iolist)
 	}
 }
 
-bool	is_env_iolist(char flag, t_iolist *prev)
-{
-	if (flag != 'S' && (prev == NULL || prev->c_type != IN_HERE_DOC))
-	{
-		return (true);
-	}
-	else
-		return (false);
-}
-
 // Serch env_variable and enpand it.
 // Delete quot.
 // If there are spaces after exnpanding, insert new iolist.
@@ -121,12 +101,11 @@ void	serch_env_iolist(t_iolist *iolist, t_envlist *envlist)
 	char		*doll_ptr;
 
 	prev = NULL;
-
 	while (iolist)
 	{
 		doll_ptr = ft_strchr(iolist->str, '$');
-			// while (doll_ptr != NULL && iolist->quot[doll_ptr - iolist->str] != 'S')//prevがhere_docではないとき
-		while (doll_ptr && is_env_iolist(iolist->quot[doll_ptr - iolist->str], prev))
+		while (doll_ptr
+			&& is_env_iolist(iolist->quot[doll_ptr - iolist->str], prev))
 		{
 			expansion_key_iolist(iolist, envlist, doll_ptr);
 			xfree(iolist->quot);

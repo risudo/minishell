@@ -1,38 +1,5 @@
 #include "../includes/parse.h"
 
-
-
-int	parse_tokenlist(t_token *list, unsigned char *status)
-{
-	t_token	*head;
-	t_token	*prev;
-
-	head = list;
-	while (list)
-	{
-		if (is_consecutive_redirect(list))
-			list = join_redirect(list);
-		// if (ft_strnstr(list->str, "$?", 2));
-		// 	expand_status(list);
-		prev = list;
-		list = list->next;
-	}
-	set_special_c(head);
-	if (prev->special == PIPE || head->special == PIPE)
-	{
-		*status = (unsigned char)258;
-		put_syntax_error("|");
-		return (-1);
-	}
-	if (prev->special >= IN_REDIRECT && prev->special <= OUT_HERE_DOC)
-	{
-		*status = (unsigned char)258;
-		put_syntax_error(prev->str);
-		return(-1);
-	}
-	return (0);
-}
-
 t_execdata	*expansion(t_execdata *data)
 {
 	t_execdata	*head;
@@ -47,8 +14,6 @@ t_execdata	*expansion(t_execdata *data)
 	return (data);
 }
 
-//? envlistいる？
-//TODO: test
 t_execdata	*create_error_execdata(t_token *tokenlist, unsigned char *status)
 {
 	t_execdata	*data;
