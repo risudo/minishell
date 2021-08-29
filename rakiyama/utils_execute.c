@@ -33,26 +33,6 @@ int	ft_dup2(int oldfd, int newfd)
 	return (0);
 }
 
-// int	ft_open(int	old_fd, char *filepath, int flags, mode_t mode)
-// {
-// 	int	fd;
-
-// 	if (STDERR_FILENO < old_fd)
-// 		xclose(old_fd);
-// 	if (mode == 0)
-// 		fd = open(filepath, flags);
-// 	else
-// 		fd = open(filepath, flags, mode);
-// 	if (fd == -1)
-// 	{
-// 		ft_putstr_fd("open: ", STDERR_FILENO);
-// 		ft_putstr_fd(filepath, STDERR_FILENO);
-// 		ft_putstr_fd(": ", STDERR_FILENO);
-// 		perror("");
-// 	}
-// 	return (fd);
-// }
-
 int	ft_open(char *filepath, int flags, mode_t mode)
 {
 	int	fd;

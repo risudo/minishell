@@ -1,6 +1,7 @@
 #ifndef RAKIYAMA_H
 # define RAKIYAMA_H
 
+# include "minishell.h"
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -11,19 +12,19 @@
 # include <string.h>
 # include <errno.h>
 # include <stdbool.h>
-# include "minishell.h"
-# include "parse.h"
 # include <readline/readline.h>
 # include <readline/history.h>
 
 //execute_start.c
-int		set_execdata(t_execdata *data);
 void	execute_command(t_execdata *data);
 int		execute_loop(t_execdata *data);
+void	execute_start(t_execdata *data);
+
+//setdata.c
+int		setdata_cmdline_redirect(t_execdata *data);
 int		is_cmd_type(t_cmdlist *clst);
 enum e_cmd	get_here_doc(char *limiter);
-void	set_heredocfd_cmdtype(t_execdata *data);
-void	execute_start(t_execdata *data);
+void	setdata_heredoc_cmdtype(t_execdata *data);
 
 //command.c
 void	builtin_echo(t_execdata *data);
@@ -66,7 +67,5 @@ int		xdup(int oldfd);
 void	xwaitpid(pid_t pid, int *wstatus, int options);
 void	xpipe(int *pipefd);
 pid_t	xfork(void);
-
-
 
 #endif

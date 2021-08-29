@@ -68,7 +68,7 @@ t_envlist	*add_envlist(t_envlist *elst, char *k, char *v)
 	return (elst);
 }
 
-t_execdata	*add_execdata(t_execdata *data, int *s, t_cmdlist *clst, t_iolist *iolst, t_envlist *elst)
+t_execdata	*add_execdata(t_execdata *data, unsigned char *s, t_cmdlist *clst, t_iolist *iolst, t_envlist *elst)
 {
 	t_execdata	*tmp;
 	t_execdata	*move;
@@ -165,7 +165,7 @@ int	main(int ac, char **av, char **envp)
 	t_iolist	*iolst;
 	t_envlist	*elst;
 	t_execdata	*data;
-	int			*status;
+	unsigned char	*status;
 	t_envlist	*etmp;
 	int			exit_status;
 
@@ -178,7 +178,7 @@ int	main(int ac, char **av, char **envp)
 	elst = add_envlist(elst, ft_strdup("PWD"), ft_strdup("/Users/ryojiroakiyama/Desktop/icloud/42_cursus/minishell/minishell/rakiyama"));
 	elst = add_envlist(elst, ft_strdup("RYOJIRO"), ft_strdup("ryojiro"));
 	elst = add_envlist(elst, ft_strdup("AKIYAMA"), ft_strdup("akiyama"));
-	status = (int *)malloc(sizeof(int));
+	status = (unsigned char *)malloc(sizeof(unsigned char));
 	*status = 0;
 	clst = NULL;
 	clst = add_cmdlist(clst, "echo");

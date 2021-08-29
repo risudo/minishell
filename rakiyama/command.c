@@ -1,5 +1,9 @@
 # include "rakiyama.h"
 
+/*
+** all command functions
+*/
+
 //echo
 void	builtin_echo(t_execdata *data)
 {
