@@ -4,7 +4,9 @@ t_token	*join_redirect(t_token *list)
 {
 	t_token	*next;
 
-	next = list->next->next;
+	next = NULL;
+	if (list->next)
+		next = list->next->next;
 	if (list->next->str[0] == '>')
 	{
 		xfree(list->str);
@@ -15,47 +17,22 @@ t_token	*join_redirect(t_token *list)
 		xfree(list->str);
 		list->str = ft_xstrdup("<<");
 	}
-	if (list->str == NULL)
-		return (NULL);
-	xfree(list->next->str);
-	xfree(list->next);
-	list->next = next;
-	next->prev = list;
+	if (list->next)
+	{
+		xfree(list->next->str);
+		xfree(list->next);
+		list->next = next;
+	}
+	if (next)
+		next->prev = list;
 	return (list);
 }
 
 bool	is_consecutive_redirect(t_token *list)
 {
-	if ((list->str[0] == '>' && list->next->str[0] == '>')
-		|| (list->str[0] == '<' && list->next->str[0] == '<'))
-		return (true);
-	else
-		return (false);
-}
-
-t_token	*trim_list(t_token *list)
-{
-	t_token	*next;
-	t_token	*prev;
-
-	next = list->next;
-	prev = list->prev;
-	xfree(list->str);
-	xfree(list);
-	prev->next = next;
-	next->prev = prev;
-	return (next);
-}
-
-bool	is_space_after_quot(t_token *list)
-{
-	if (!list->prev || !list->next)
-		return (false);
-	if (ft_strchr(list->str, ' ')
-		&& (ft_strchr(list->prev->str, '\'')
-			|| ft_strchr(list->prev->str, '\"'))
-		&& !(ft_strchr(list->next->str, '\'')
-			|| ft_strchr(list->next->str, '\"')))
+	if (list->next
+		&& ((list->str[0] == '>' && list->next->str[0] == '>')
+			|| (list->str[0] == '<' && list->next->str[0] == '<')))
 		return (true);
 	else
 		return (false);

@@ -5,7 +5,7 @@ void	set_key_and_value(char *env, t_envlist *new)
 	char	*key;
 	char	*value;
 	char	*p_equal;
-	int		key_len;
+	size_t	key_len;
 
 	p_equal = ft_strchr(env, '=');
 	key_len = p_equal - env;
@@ -29,7 +29,7 @@ t_envlist	*create_envlist(char **envp)
 {
 	t_envlist	head;
 	t_envlist	*cur;
-	int			i;
+	size_t		i;
 
 	i = 0;
 	cur = &head;
