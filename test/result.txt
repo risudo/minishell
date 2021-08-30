@@ -312,6 +312,48 @@ command: [echo "'"$USER"'"]
 	  quot: D00000000D
 
 
+command: [echo $USER?]
+[41mexecdata[0][49m
+	*status: 0
+	in_fd: 0
+	out_fd: 1
+
+	[32mcmdlist[0][39m
+	  str: "echo"
+	  quot: 0000
+	[32mcmdlist[1][39m
+	  str: "sudourio?"
+	  quot: 000000000
+
+
+command: [echo $USER_]
+[41mexecdata[0][49m
+	*status: 0
+	in_fd: 0
+	out_fd: 1
+
+	[32mcmdlist[0][39m
+	  str: "echo"
+	  quot: 0000
+	[32mcmdlist[1][39m
+	  str: ""
+	  quot: 
+
+
+command: [echo $USER!]
+[41mexecdata[0][49m
+	*status: 0
+	in_fd: 0
+	out_fd: 1
+
+	[32mcmdlist[0][39m
+	  str: "echo"
+	  quot: 0000
+	[32mcmdlist[1][39m
+	  str: "sudourio!"
+	  quot: 000000000
+
+
 command: [echo "aa$VAR"]
 [41mexecdata[0][49m
 	*status: 0
@@ -504,10 +546,9 @@ command: [echo >"aa$VAR"]
 	  here_doc_fd: -1
 
 
-minishell: ambiguous redirect
 command: [echo >aa$VAR]
 [41mexecdata[0][49m
-	*status: 1
+	*status: 0
 	in_fd: 0
 	out_fd: 1
 

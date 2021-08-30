@@ -2,7 +2,7 @@
 
 bool	is_delimiter(char c)
 {
-	if (c == ' ' || c == '$' || c == '\"' || c == '\'' || c == '\0')
+	if (!(ft_isalnum(c) || c == '_'))
 		return (true);
 	else
 		return (false);
