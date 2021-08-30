@@ -1,6 +1,5 @@
 #include "execute.h"
 
-
 int	setdata_cmdline_redirect(t_execdata *data)
 {
 	int			ret;
@@ -9,51 +8,50 @@ int	setdata_cmdline_redirect(t_execdata *data)
 	data->cmdline = convert_cmdlist_2dchar(data->clst);
 	ret = 0;
 	move = data->iolst;
-	while(move)
+	while (ret == 0 && move)
 	{
 		if (move->c_type == IN_REDIRECT)
 			ret = ft_dup2(ft_open(move->next->str, O_RDONLY, 0), STDIN_FILENO);
 		else if (move->c_type == IN_HERE_DOC)
 			ret = ft_dup2(move->here_doc_fd, STDIN_FILENO);
 		else if (move->c_type == OUT_REDIRECT)
-			ret = ft_dup2(ft_open(move->next->str, O_WRONLY | O_CREAT | O_TRUNC, 0666), STDOUT_FILENO);
-		else if (move->c_type ==  OUT_HERE_DOC)
-			ret = ft_dup2(ft_open(move->next->str, O_WRONLY | O_CREAT | O_APPEND, 0666), STDOUT_FILENO);
+			ret = ft_dup2(ft_open(move->next->str, O_WRONLY | O_CREAT | O_TRUNC, 0666), \
+							STDOUT_FILENO);
+		else if (move->c_type == OUT_HERE_DOC)
+			ret = ft_dup2(ft_open(move->next->str, O_WRONLY | O_CREAT | O_APPEND, 0666), \
+							STDOUT_FILENO);
 		if (ret == -1)
-		{
 			*(data->status) = 1;
-			break ;
-		}
 		move = move->next;
 	}
 	return (ret);
 }
 
-int	is_cmd_type(t_cmdlist *clst)
+static int	is_cmd_type(t_cmdlist *clst)
 {
 	if (clst == NULL)
 		return (NON_CMD);
 	else if (ft_strcmp(clst->str, "echo") == 0)
-		return(ECHO);
+		return (ECHO);
 	else if (ft_strcmp(clst->str, "cd") == 0)
-		return(CD);
+		return (CD);
 	else if (ft_strcmp(clst->str, "pwd") == 0)
-		return(PWD);
+		return (PWD);
 	else if (ft_strcmp(clst->str, "export") == 0)
-		return(EXPORT);
+		return (EXPORT);
 	else if (ft_strcmp(clst->str, "unset") == 0)
-		return(UNSET);
+		return (UNSET);
 	else if (ft_strcmp(clst->str, "env") == 0)
-		return(ENV);
+		return (ENV);
 	else if (ft_strcmp(clst->str, "exit") == 0)
-		return(EXIT);
+		return (EXIT);
 	else
-		return(OTHER);
+		return (OTHER);
 }
 
-t_cmd	get_here_doc(char *limiter)
+static t_cmd	get_here_doc(char *limiter)
 {
-	char*	line;
+	char	*line;
 	int		pipefd[PIPEFD_NUM];
 
 	xpipe(pipefd);
@@ -61,7 +59,7 @@ t_cmd	get_here_doc(char *limiter)
 	{
 		line = readline("> ");
 		if (!line)
-			exit(1);//tmp
+			exit(1);
 		if (ft_strcmp(line, limiter) == 0)
 		{
 			free(line);

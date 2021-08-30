@@ -1,4 +1,4 @@
-# include "execute.h"
+#include "execute.h"
 
 static size_t	envlist_size(t_envlist *head)
 {
@@ -35,7 +35,7 @@ convert t_envlist type list -> char type 2d array
 */
 char	**convert_envlist_2dchar(t_envlist *elst)
 {
-	char 		**array;
+	char		**array;
 	t_envlist	*move;
 	size_t		cnt;
 	char		*tmp;
@@ -61,7 +61,7 @@ convert t_cmdlist type list -> char type 2d array
 */
 char	**convert_cmdlist_2dchar(t_cmdlist *clst)
 {
-	char 		**array;
+	char		**array;
 	t_cmdlist	*move;
 	size_t		cnt;
 

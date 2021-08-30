@@ -1,9 +1,9 @@
-# include "execute.h"
+#include "execute.h"
 
 /*check if the file exists*/
 int	ft_stat(char *pathname)
 {
-	struct stat sb;
+	struct stat	sb;
 
 	if (stat(pathname, &sb) == -1)
 		return (0);
