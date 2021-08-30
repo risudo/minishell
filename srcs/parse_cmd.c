@@ -1,6 +1,6 @@
-#include "../includes/parse.h"
+#include "minishell.h"
 
-t_execdata	*expansion(t_execdata *data)
+static t_execdata	*expand_variable(t_execdata *data)
 {
 	t_execdata	*head;
 
@@ -14,7 +14,8 @@ t_execdata	*expansion(t_execdata *data)
 	return (data);
 }
 
-t_execdata	*create_error_execdata(t_token *tokenlist, unsigned char *status)
+static t_execdata	*create_error_execdata(t_token *tokenlist,
+		unsigned char *status)
 {
 	t_execdata	*data;
 
@@ -37,6 +38,6 @@ t_execdata	*parse_cmd(char *command, t_envlist *envlist, unsigned char *status)
 		return (create_error_execdata(tokenlist, status));
 	data = create_execdata(tokenlist, envlist, status);
 	clear_tokenlist(tokenlist);
-	expansion(data);
+	expand_variable(data);
 	return (data);
 }

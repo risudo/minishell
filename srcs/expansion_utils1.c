@@ -1,4 +1,4 @@
-#include "../includes/parse.h"
+#include "minishell.h"
 
 bool	is_env_iolist(char flag, t_iolist *prev)
 {
@@ -32,7 +32,6 @@ char	*get_new_flag(char **quot, char *end_quot)
 	return (ret);
 }
 
-// return : the new flag
 char	*get_removed_endflag(char **quot, char flag)
 {
 	char	*end_quot;

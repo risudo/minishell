@@ -1,6 +1,6 @@
 #ifndef PARSE_H
 # define PARSE_H
-# define DEBUG printf("debug\n")
+// # define DEBUG printf("debug\n")
 
 # include "minishell.h"
 # include "../libft/libft.h"
@@ -35,13 +35,14 @@ int			parse_tokenlist(t_token *list, unsigned char *status);
 void		set_special_c(t_token *list);
 
 // execdata
-t_execdata	*create_execdata(t_token *tokenlist, t_envlist *envlist, unsigned char *status);
+t_execdata	*create_execdata(t_token *tokenlist,
+				t_envlist *envlist, unsigned char *status);
 t_iolist	*new_iolst(t_iolist *cur, t_token *token);
 t_cmdlist	*new_clst(t_cmdlist *cur, t_token *token);
 bool		is_cmd(t_token *start);
 
-	// clear list
-	void clear_tokenlist(t_token *list);
+// clear list
+void		clear_tokenlist(t_token *list);
 void		clear_envlist(t_envlist *envlist);
 
 // check syntax
@@ -49,7 +50,6 @@ t_execdata	*check_syntax(t_execdata *data);
 void		put_syntax_error(char *str);
 
 // expansion
-t_execdata	*expansion(t_execdata *data);
 void		serch_env_iolist(t_iolist *iolist, t_envlist *envlist);
 void		serch_env_cmdlist(t_cmdlist *clist, t_envlist *envlist);
 char		*get_quot_flag(char *str);

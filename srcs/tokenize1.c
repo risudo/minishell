@@ -1,4 +1,8 @@
-#include "../includes/parse.h"
+#include "minishell.h"
+
+/*
+** Tokenize command and create t_token list.
+*/
 
 static bool	ft_isspace(char c)
 {
@@ -7,10 +11,6 @@ static bool	ft_isspace(char c)
 	else
 		return (false);
 }
-
-// create a new list
-// use xcalloc not to set tok->next = NULL
-// return : new list
 
 static t_token	*new_token(t_token *cur, char **cmd,
 			 char **start, t_quottype *flag_quot)
@@ -59,9 +59,6 @@ static char	*skip_space(char **cmd)
 		(*cmd)++;
 	return (*cmd);
 }
-// split by space if it is out of quot.
-// return : t_token list that has splited str by space.
-// If quot is not closed, return NULL
 
 t_token	*tokenize_cmd_by_space(char *cmd, unsigned char *status)
 {

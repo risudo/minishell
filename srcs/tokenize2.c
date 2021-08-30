@@ -1,4 +1,9 @@
-#include "../includes/parse.h"
+#include "minishell.h"
+
+/*
+** Split tokenlist that have special character like pipe.
+** Example: ls|cat
+*/
 
 static t_token	*insert_new_token(t_token *list, char *str)
 {
@@ -15,9 +20,6 @@ static t_token	*insert_new_token(t_token *list, char *str)
 		next->prev = new;
 	return (new);
 }
-
-// allocate new str removed operater.
-// insert new token that has remaining str
 
 static t_token	*get_newstr_list(t_token *list, char *delimiter_ptr)
 {
@@ -37,7 +39,6 @@ static t_token	*get_newstr_list(t_token *list, char *delimiter_ptr)
 	return (list);
 }
 
-// どこで切り取るかのポインタを返して、切り取る時にそのポインタを使うが良さそう
 char	*is_delimiter_operater(char *str)
 {
 	static int	flag;
@@ -56,8 +57,6 @@ char	*is_delimiter_operater(char *str)
 	}
 	return (NULL);
 }
-// Find pipe or ridirect that is not splited and insert new token
-// that have splited operater.
 
 int	split_operater(t_token *list)
 {

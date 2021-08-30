@@ -1,6 +1,13 @@
-#include "../includes/parse.h"
+#include "minishell.h"
 
-void	expansion_key_cmdlist(t_cmdlist *clist,
+/*
+** Serch cmdlist and do the following.
+** 1 Expand environment valiables.
+** 2 Clear quotation.
+** 3 If there are spaces after expanding, insert new list.
+*/
+
+static void	expansion_key_cmdlist(t_cmdlist *clist,
 		t_envlist *envlist, char *doll_ptr)
 {
 	char	*key;
@@ -21,7 +28,7 @@ void	expansion_key_cmdlist(t_cmdlist *clist,
 	xfree(front_key), xfree(key), xfree(back_key);
 }
 
-void	clear_quot_cmdlist(t_cmdlist *clist)
+static void	clear_quot_cmdlist(t_cmdlist *clist)
 {
 	char	*new_str;
 	size_t	i;
@@ -47,7 +54,7 @@ void	clear_quot_cmdlist(t_cmdlist *clist)
 	clist->quot = get_removed_endflag(&clist->quot, '2');
 }
 
-t_cmdlist	*insert_new_cmdlist(t_cmdlist *clist, int i)
+static t_cmdlist	*insert_new_cmdlist(t_cmdlist *clist, int i)
 {
 	t_cmdlist	*new;
 	size_t		len;
@@ -63,7 +70,7 @@ t_cmdlist	*insert_new_cmdlist(t_cmdlist *clist, int i)
 	return (clist);
 }
 
-void	serch_new_space_cmdlist(t_cmdlist *clist)
+static void	serch_new_space_cmdlist(t_cmdlist *clist)
 {
 	size_t	i;
 	char	*str;

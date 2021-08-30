@@ -1,12 +1,13 @@
-#include "../includes/parse.h"
+#include "minishell.h"
 
-// Expand env_variable and set iolist->str it.
-// key : env_variable's key
-// value : env_variable's value
-// front : the iolist's string before env_variable
-// back : the iolist's string after env_variable
-// len : env_variable's length
-void	expansion_key_iolist(t_iolist *iolist,
+/*
+** Serch iolist and do the following.
+** 1 Expand environment valiables.
+** 2 Clear quotation.
+** 3 If there are spaces after expanding, insert new list.
+*/
+
+static void	expansion_key_iolist(t_iolist *iolist,
 		t_envlist *envlist, char *doll_ptr)
 {
 	char	*key;
@@ -27,8 +28,7 @@ void	expansion_key_iolist(t_iolist *iolist,
 	xfree(front), xfree(key), xfree(back);
 }
 
-// Set iolist->str new string that quot is removed.
-void	clear_quot_iolist(t_iolist *iolist)
+static void	clear_quot_iolist(t_iolist *iolist)
 {
 	char	*new_str;
 	size_t	i;
@@ -53,7 +53,7 @@ void	clear_quot_iolist(t_iolist *iolist)
 	iolist->quot = get_removed_endflag(&iolist->quot, '2');
 }
 
-void	insert_new_iolist(t_iolist *iolist, size_t i)
+static void	insert_new_iolist(t_iolist *iolist, size_t i)
 {
 	t_iolist	*new;
 	size_t		len;
@@ -69,8 +69,7 @@ void	insert_new_iolist(t_iolist *iolist, size_t i)
 	iolist->next = new;
 }
 
-// If there are spaces, trim the stirng and insert new iolist.
-void	serch_new_space_iolist(t_iolist *iolist)
+static void	serch_new_space_iolist(t_iolist *iolist)
 {
 	size_t	i;
 	char	*str;
@@ -92,9 +91,6 @@ void	serch_new_space_iolist(t_iolist *iolist)
 	}
 }
 
-// Serch env_variable and enpand it.
-// Delete quot.
-// If there are spaces after exnpanding, insert new iolist.
 void	serch_env_iolist(t_iolist *iolist, t_envlist *envlist)
 {
 	t_iolist	*prev;
