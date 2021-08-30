@@ -23,10 +23,12 @@ void		builtin_exit(t_execdata *data);
 void		non_builtin(t_execdata *data);
 void		non_command(t_execdata *data);
 
-//execution_utils_wrapper.c
+//execution_utils.c
 int			ft_stat(char *pathname);
 int			ft_dup2(int oldfd, int newfd);
-int			ft_open(char *filepath, int flags, mode_t mode);
+int			ft_open(t_iolist *filenode, int flags, mode_t mode);
+void		expansion_key_heredoc(char **line, \
+				t_envlist *envlist, char *doll_ptr);
 
 //env_functions.c
 char		*ft_getenv(t_envlist *elst, char *search_key);

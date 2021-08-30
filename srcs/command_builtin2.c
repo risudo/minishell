@@ -1,4 +1,4 @@
-#include "execute.h"
+#include "minishell.h"
 
 //export
 static ssize_t	check_name_rule(char *src_str)

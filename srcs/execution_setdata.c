@@ -1,4 +1,4 @@
-#include "execute.h"
+#include "minishell.h"
 
 int	setdata_cmdline_redirect(t_execdata *data)
 {
@@ -11,14 +11,14 @@ int	setdata_cmdline_redirect(t_execdata *data)
 	while (ret == 0 && move)
 	{
 		if (move->c_type == IN_REDIRECT)
-			ret = ft_dup2(ft_open(move->next->str, O_RDONLY, 0), STDIN_FILENO);
+			ret = ft_dup2(ft_open(move->next, O_RDONLY, 0), STDIN_FILENO);
 		else if (move->c_type == IN_HERE_DOC)
 			ret = ft_dup2(move->here_doc_fd, STDIN_FILENO);
 		else if (move->c_type == OUT_REDIRECT)
-			ret = ft_dup2(ft_open(move->next->str, O_WRONLY | O_CREAT | O_TRUNC, 0666), \
+			ret = ft_dup2(ft_open(move->next, O_WRONLY | O_CREAT | O_TRUNC, 0666), \
 							STDOUT_FILENO);
 		else if (move->c_type == OUT_HERE_DOC)
-			ret = ft_dup2(ft_open(move->next->str, O_WRONLY | O_CREAT | O_APPEND, 0666), \
+			ret = ft_dup2(ft_open(move->next, O_WRONLY | O_CREAT | O_APPEND, 0666), \
 							STDOUT_FILENO);
 		if (ret == -1)
 			*(data->status) = 1;
@@ -49,26 +49,25 @@ static int	is_cmd_type(t_cmdlist *clst)
 		return (OTHER);
 }
 
-static t_cmd	get_here_doc(char *limiter)
+static t_cmd	get_here_doc(char *limiter, t_envlist *elst)
 {
 	char	*line;
 	int		pipefd[PIPEFD_NUM];
+	int		no_limit;
 
 	xpipe(pipefd);
-	while (1)
+	no_limit = 1;
+	while (no_limit)
 	{
 		line = readline("> ");
 		if (!line)
 			exit(1);
-		if (ft_strcmp(line, limiter) == 0)
+		no_limit = ft_strcmp(line, limiter);
+		if (no_limit)
 		{
-			free(line);
-			break ;
-		}
-		else if (line[0] == '\0')
-			ft_putstr_fd("\n", pipefd[WRITE]);
-		else
+			expansion_key_heredoc(&line, elst, ft_strchr(line, '$'));
 			ft_putendl_fd(line, pipefd[WRITE]);
+		}
 		free(line);
 	}
 	xclose(pipefd[WRITE]);
@@ -85,7 +84,7 @@ void	setdata_heredoc_cmdtype(t_execdata *data)
 		while (move)
 		{
 			if (move->c_type == IN_HERE_DOC)
-				move->here_doc_fd = get_here_doc(move->next->str);
+				move->here_doc_fd = get_here_doc(move->next->str, data->elst);
 			move = move->next;
 		}
 		data->cmd_type = is_cmd_type(data->clst);
