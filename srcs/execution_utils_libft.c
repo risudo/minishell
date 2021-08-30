@@ -1,9 +1,10 @@
-# include "execute.h"
+#include "execute.h"
 
-static bool check_nonnum_overflow(unsigned long num, char *str, int sign, size_t i)
+static bool	check_nonnum_overflow(unsigned long num, \
+						char *str, int sign, size_t i)
 {
-	if (ft_isdigit(str[i]) == 0 ||
-		(sign == 1 && LONG_MAX < num) ||
+	if (ft_isdigit(str[i]) == 0 || \
+		(sign == 1 && LONG_MAX < num) || \
 		(sign == -1 && LONG_MAX < num - 1))
 		return (true);
 	return (false);

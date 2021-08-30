@@ -1,4 +1,4 @@
-# include "execute.h"
+#include "execute.h"
 
 char	*ft_getenv(t_envlist *elst, char *search_key)
 {
@@ -51,7 +51,7 @@ void	ft_setenv(t_envlist *elst, char *new_key, char *new_value, int append)
 {
 	char		*add_value;
 
-	while(1)
+	while (1)
 	{
 		if (ft_strcmp(elst->key, new_key) == 0)
 		{
