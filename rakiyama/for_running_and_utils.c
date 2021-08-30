@@ -14,6 +14,40 @@ void	put_2d_array(char **a)
 	}
 }
 
+void	put_data(t_execdata *data)
+{
+	t_cmdlist	*ctmp;
+	t_iolist	*iotmp;
+	t_envlist	*etmp;
+
+	while(data)
+	{
+		printf("--------------------------------------------\n");
+		printf("status:%d\n", *(data->status));
+		ctmp = data->clst;
+		while (ctmp)
+		{
+			printf("cmdlist:%s\n", ctmp->str);
+			ctmp = ctmp->next;
+		}
+		iotmp = data->iolst;
+		while (iotmp)
+		{
+			printf("iolist:%s\n", iotmp->str);
+			iotmp = iotmp->next;
+		}
+		etmp = data->elst;
+		while (etmp)
+		{
+			printf("env key:%s\n", etmp->key);
+			printf("env value:%s\n", etmp->value);
+			etmp = etmp->next;
+		}
+		data = data->next;
+	}
+}
+
+
 t_cmdlist	*add_cmdlist(t_cmdlist *clst, char *s)
 {
 	t_cmdlist	*tmp;
@@ -89,38 +123,6 @@ t_execdata	*add_execdata(t_execdata *data, unsigned char *s, t_cmdlist *clst, t_
 	return (data);
 }
 
-void	put_data(t_execdata *data)
-{
-	t_cmdlist	*ctmp;
-	t_iolist	*iotmp;
-	t_envlist	*etmp;
-
-	while(data)
-	{
-		printf("--------------------------------------------\n");
-		printf("status:%d\n", *(data->status));
-		ctmp = data->clst;
-		while (ctmp)
-		{
-			printf("cmdlist:%s\n", ctmp->str);
-			ctmp = ctmp->next;
-		}
-		iotmp = data->iolst;
-		while (iotmp)
-		{
-			printf("iolist:%s\n", iotmp->str);
-			iotmp = iotmp->next;
-		}
-		etmp = data->elst;
-		while (etmp)
-		{
-			printf("env key:%s\n", etmp->key);
-			printf("env value:%s\n", etmp->value);
-			etmp = etmp->next;
-		}
-		data = data->next;
-	}
-}
 
 void	free_data(t_execdata *data, int status_free, int elst_free)
 {
@@ -159,105 +161,106 @@ void	free_data(t_execdata *data, int status_free, int elst_free)
 
 int	main(int ac, char **av, char **envp)
 {
-	t_cmdlist	*clst;
-	t_iolist	*iolst;
-	t_envlist	*elst;
-	t_execdata	*data;
-	unsigned char	*status;
-	t_envlist	*etmp;
-	int			exit_status;
+	// t_cmdlist	*clst;
+	// t_iolist	*iolst;
+	// t_envlist	*elst;
+	// t_execdata	*data;
+	// unsigned char	*status;
+	// t_envlist	*etmp;
+	// int			exit_status;
 
 
-	data = NULL;
-	elst = NULL;
-	elst = add_envlist(elst, ft_strdup("HOME"), ft_strdup("/Users/ryojiroakiyama"));
-	elst = add_envlist(elst, ft_strdup("PATH"), ft_strdup("/Users/ryojiroakiyama/.pyenv/shims:/Users/ryojiroakiyama/.pyenv/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands"));
-	elst = add_envlist(elst, ft_strdup("EEE"), ft_strdup("aaaaaaai"));
-	elst = add_envlist(elst, ft_strdup("PWD"), ft_strdup("/Users/ryojiroakiyama/Desktop/icloud/42_cursus/minishell/minishell/rakiyama"));
-	elst = add_envlist(elst, ft_strdup("RYOJIRO"), ft_strdup("ryojiro"));
-	elst = add_envlist(elst, ft_strdup("AKIYAMA"), ft_strdup("akiyama"));
-	status = (unsigned char *)malloc(sizeof(unsigned char));
-	*status = 0;
-	clst = NULL;
-	clst = add_cmdlist(clst, "cat");
-	clst = add_cmdlist(clst, "-e");
-	iolst = NULL;
-	iolst = add_iolist(iolst, IN_HERE_DOC, "<<", -1);
-	iolst = add_iolist(iolst, ELSE, "limit", -1);
-	iolst = add_iolist(iolst, OUT_REDIRECT, ">", -1);
-	iolst = add_iolist(iolst, ELSE, "outfile", -1);
-	data = add_execdata(data, status, clst, iolst, elst);
-	execute_start(data);
-	exit_status = *(data->status);
-	free_data(data, 0, 0);
+	// data = NULL;
+	// elst = NULL;
+	// elst = add_envlist(elst, ft_strdup("HOME"), ft_strdup("/Users/ryojiroakiyama"));
+	// elst = add_envlist(elst, ft_strdup("PATH"), ft_strdup("/Users/ryojiroakiyama/.pyenv/shims:/Users/ryojiroakiyama/.pyenv/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands"));
+	// elst = add_envlist(elst, ft_strdup("EEE"), ft_strdup("aaaaaaai"));
+	// elst = add_envlist(elst, ft_strdup("PWD"), ft_strdup("/Users/ryojiroakiyama/Desktop/icloud/42_cursus/minishell/minishell/rakiyama"));
+	// elst = add_envlist(elst, ft_strdup("RYOJIRO"), ft_strdup("ryojiro"));
+	// elst = add_envlist(elst, ft_strdup("AKIYAMA"), ft_strdup("akiyama"));
+	// status = (unsigned char *)malloc(sizeof(unsigned char));
+	// *status = 0;
+	// clst = NULL;
+	// clst = add_cmdlist(clst, "cat");
+	// clst = add_cmdlist(clst, "-e");
+	// iolst = NULL;
+	// iolst = add_iolist(iolst, IN_HERE_DOC, "<<", -1);
+	// iolst = add_iolist(iolst, ELSE, "limit", -1);
+	// iolst = add_iolist(iolst, OUT_REDIRECT, ">", -1);
+	// iolst = add_iolist(iolst, ELSE, "outfile", -1);
+	// data = add_execdata(data, status, clst, iolst, elst);
+	// execute_start(data);
+	// exit_status = *(data->status);
+	// free_data(data, 0, 0);
 
-	data = NULL;
-	clst = NULL;
-	clst = add_cmdlist(clst, "cat");
-	clst = add_cmdlist(clst, "-n");	
-	iolst = NULL;
-	iolst = add_iolist(iolst, IN_REDIRECT, "<", -1);
-	iolst = add_iolist(iolst, ELSE, "outfile", -1);
-	iolst = add_iolist(iolst, OUT_HERE_DOC, ">>", -1);
-	iolst = add_iolist(iolst, ELSE, "outfile", -1);
-	data = add_execdata(data, status, clst, iolst, elst);
-	execute_start(data);
-	exit_status = *(data->status);
-	free_data(data, 0, 0);
+	// data = NULL;
+	// clst = NULL;
+	// clst = add_cmdlist(clst, "cat");
+	// clst = add_cmdlist(clst, "-n");	
+	// iolst = NULL;
+	// iolst = add_iolist(iolst, IN_REDIRECT, "<", -1);
+	// iolst = add_iolist(iolst, ELSE, "outfile", -1);
+	// iolst = add_iolist(iolst, OUT_HERE_DOC, ">>", -1);
+	// iolst = add_iolist(iolst, ELSE, "outfile", -1);
+	// data = add_execdata(data, status, clst, iolst, elst);
+	// execute_start(data);
+	// exit_status = *(data->status);
+	// free_data(data, 0, 0);
 
-	data = NULL;
-	clst = NULL;
-	clst = add_cmdlist(clst, "env");
-	iolst = NULL;
-	data = add_execdata(data, status, clst, iolst, elst);
-	execute_start(data);
-	exit_status = *(data->status);
-	free_data(data, 0, 0);
+	// data = NULL;
+	// clst = NULL;
+	// clst = add_cmdlist(clst, "env");
+	// iolst = NULL;
+	// data = add_execdata(data, status, clst, iolst, elst);
+	// execute_start(data);
+	// exit_status = *(data->status);
+	// free_data(data, 0, 0);
 
-	data = NULL;
-	clst = NULL;
-	clst = add_cmdlist(clst, "export");
-	clst = add_cmdlist(clst, "EEE+=uuuuuuuui");	
-	iolst = NULL;
-	data = add_execdata(data, status, clst, iolst, elst);
-	execute_start(data);
-	exit_status = *(data->status);
-	free_data(data, 0, 0);
+	// data = NULL;
+	// clst = NULL;
+	// clst = add_cmdlist(clst, "export");
+	// clst = add_cmdlist(clst, "EEE+=uuuuuuuui");	
+	// iolst = NULL;
+	// data = add_execdata(data, status, clst, iolst, elst);
+	// execute_start(data);
+	// exit_status = *(data->status);
+	// free_data(data, 0, 0);
 
-	data = NULL;
-	clst = NULL;
-	clst = add_cmdlist(clst, "echo");
-	clst = add_cmdlist(clst, "---------------");
-	clst = add_cmdlist(clst, "---env    export---");
-	clst = add_cmdlist(clst, "---------------");
-	iolst = NULL;
-	data = add_execdata(data, status, clst, iolst, elst);
-	execute_start(data);
-	exit_status = *(data->status);
-	free_data(data, 0, 0);
+	// data = NULL;
+	// clst = NULL;
+	// clst = add_cmdlist(clst, "echo");
+	// clst = add_cmdlist(clst, "---------------");
+	// clst = add_cmdlist(clst, "---env    export---");
+	// clst = add_cmdlist(clst, "---------------");
+	// iolst = NULL;
+	// data = add_execdata(data, status, clst, iolst, elst);
+	// execute_start(data);
+	// exit_status = *(data->status);
+	// free_data(data, 0, 0);
 
-	data = NULL;
-	clst = NULL;
-	clst = add_cmdlist(clst, "export");
-	iolst = NULL;
-	data = add_execdata(data, status, clst, iolst, elst);
-	execute_start(data);
-	exit_status = *(data->status);
-	free_data(data, 0, 0);
+	// data = NULL;
+	// clst = NULL;
+	// clst = add_cmdlist(clst, "export");
+	// iolst = NULL;
+	// data = add_execdata(data, status, clst, iolst, elst);
+	// execute_start(data);
+	// exit_status = *(data->status);
+	// free_data(data, 0, 0);
 
-	data = NULL;
-	clst = NULL;
-	clst = add_cmdlist(clst, "exit");
-	clst = add_cmdlist(clst, "5829039");
-	iolst = NULL;
-	data = add_execdata(data, status, clst, iolst, elst);
-	execute_start(data);
-	exit_status = *(data->status);
-	free_data(data, 1, 1);
+	// data = NULL;
+	// clst = NULL;
+	// clst = add_cmdlist(clst, "exit");
+	// clst = add_cmdlist(clst, "5829039");
+	// iolst = NULL;
+	// data = add_execdata(data, status, clst, iolst, elst);
+	// execute_start(data);
+	// exit_status = *(data->status);
+	// free_data(data, 1, 1);
 
-//	put_data(data);
+	minishell_loop(envp);
 
 	if (system("leaks a.out > /dev/null"))
 		system("leaks a.out");
-	return (exit_status);
+//	return (exit_status);
+	return (0);
 }
