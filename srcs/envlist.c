@@ -1,6 +1,10 @@
-#include "../includes/parse.h"
+#include "minishell.h"
 
-void	set_key_and_value(char *env, t_envlist *new)
+/*
+** Create envlist from envp. Return the list.
+*/
+
+static void	set_key_and_value(char *env, t_envlist *new)
 {
 	char	*key;
 	char	*value;
@@ -15,7 +19,7 @@ void	set_key_and_value(char *env, t_envlist *new)
 	new->value = value;
 }
 
-t_envlist	*new_envlist(t_envlist *cur, char *env)
+static t_envlist	*new_envlist(t_envlist *cur, char *env)
 {
 	t_envlist	*new;
 

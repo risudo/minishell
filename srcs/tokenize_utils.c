@@ -1,4 +1,4 @@
-#include "../includes/parse.h"
+#include "minishell.h"
 
 t_token	*join_redirect(t_token *list)
 {

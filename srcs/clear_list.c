@@ -1,4 +1,8 @@
-#include "../includes/parse.h"
+#include "minishell.h"
+
+/*
+** Clear lists that is defined in minishell.h
+*/
 
 void	clear_envlist(t_envlist *envlist)
 {

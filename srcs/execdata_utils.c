@@ -1,7 +1,7 @@
-#include "../includes/parse.h"
+#include "minishell.h"
 
 /*
-** iolist->str and cmdlist->str have flag corresponding to each character.
+** iolist and cmdlist have flag corresponding to each character of string.
 ** The flag meaning:
 ** D: begginning of or inside the double quot
 ** S: begginning of or inside the single quot

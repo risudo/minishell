@@ -1,13 +1,13 @@
-#include "../includes/parse.h"
+#include "minishell.h"
 
 /*
 ** Split tokenlist by pipe, and create execdata list.
-** execdata has cmdlist and iolist.
+** execdata has cmdlist, iolist, envlist, and status.
 ** iolist has the token related redirect.
 ** cmdlist has other token.
 */
 
-t_iolist	*get_iolst(t_token *start, t_token *cur_token)
+static t_iolist	*get_iolst(t_token *start, t_token *cur_token)
 {
 	t_iolist	head;
 	t_iolist	*cur;
@@ -27,7 +27,7 @@ t_iolist	*get_iolst(t_token *start, t_token *cur_token)
 	return (head.next);
 }
 
-t_cmdlist	*get_clst(t_token *start, t_token *cur_token)
+static t_cmdlist	*get_clst(t_token *start, t_token *cur_token)
 {
 	t_cmdlist	head;
 	t_cmdlist	*cur;
@@ -45,7 +45,7 @@ t_cmdlist	*get_clst(t_token *start, t_token *cur_token)
 	return (head.next);
 }
 
-t_execdata	*new_execdata(t_execdata *cur, t_token *start,
+static t_execdata	*new_execdata(t_execdata *cur, t_token *start,
 		t_token *cur_token, t_execarg *arg)
 {
 	t_execdata	*new;
@@ -59,6 +59,16 @@ t_execdata	*new_execdata(t_execdata *cur, t_token *start,
 	cur->next = new;
 	return (new);
 }
+
+/*
+** @(tokenlist)
+**  command list splited by space or other operater like pipe.
+** @(envlist)
+**  list that has environment variable's key and value
+** @(status)
+**  exit status
+** Create execdata from token list. Return the execdata.
+*/
 
 t_execdata	*create_execdata(t_token *tokenlist,
 		t_envlist *envlist, unsigned char *status)

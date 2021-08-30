@@ -1,6 +1,20 @@
-#include "../includes/minishell.h"
+#include "minishell.h"
 
-void	expand_status(t_token *list, char *doll_ptr, unsigned char *status)
+/*
+** Parse token list do following
+** 1 If the character of redirects are consecutive, join these.
+** 2 Expand "$?".
+** 3 Check syntax error.
+*/
+
+void	put_syntax_error(char *str)
+{
+	ft_putstr_fd("minishell: syntax error near unexpected token ",
+		 STDERR_FILENO);
+	ft_putendl_fd(str, STDERR_FILENO);
+}
+
+static void	expand_status(t_token *list, char *doll_ptr, unsigned char *status)
 {
 	char	*front;
 	char	*back;
@@ -14,7 +28,7 @@ void	expand_status(t_token *list, char *doll_ptr, unsigned char *status)
 	xfree(front), xfree(back), xfree(value);
 }
 
-bool	is_in_squot(char *str, char *doll_ptr)
+static bool	is_in_squot(char *str, char *doll_ptr)
 {
 	int		flag;
 	size_t	i;
@@ -34,7 +48,8 @@ bool	is_in_squot(char *str, char *doll_ptr)
 	return (false);
 }
 
-int	check_token_syntax(t_token *head, t_token *last, unsigned char *status)
+static int	check_token_syntax(t_token *head,
+		t_token *last, unsigned char *status)
 {
 	int	ret;
 

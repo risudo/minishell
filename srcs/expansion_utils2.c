@@ -1,4 +1,4 @@
-#include "../includes/minishell.h"
+#include "minishell.h"
 
 bool	is_delimiter(char c)
 {
