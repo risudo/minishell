@@ -1,4 +1,4 @@
-# include "rakiyama.h"
+# include "execute.h"
 
 /*
 ** all command functions
@@ -12,14 +12,13 @@ void	builtin_echo(t_execdata *data)
 
 	option = 0;
 	arg_i = 1;
-	if (data->cmdline[arg_i] && ft_strcmp(data->cmdline[arg_i], "-n") == 0)
-	{
+	if (data->cmdline[arg_i] && ft_strcmp(data->cmdline[arg_i], "-n") == 0 && arg_i++)
 		option++;
-		arg_i++;
-	}
 	while (data->cmdline[arg_i])
 	{
 		printf("%s", data->cmdline[arg_i]);
+		if (data->cmdline[arg_i + 1] != NULL)
+			printf(" ");
 		arg_i++;
 	}
 	if (option == 0)
@@ -200,7 +199,7 @@ void	builtin_exit(t_execdata *data)
 		*(data->status) = 1;
 		return ;
 	}
-	*(data->status) = (unsigned char)ft_atolong(data->cmdline[1], &nonnum_check);
+	*(data->status) = (unsigned char)ft_atol(data->cmdline[1], &nonnum_check);
 	ft_putendl_fd("exit", STDERR_FILENO);
 	if (nonnum_check)
 	{

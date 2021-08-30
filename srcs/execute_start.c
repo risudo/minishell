@@ -1,5 +1,10 @@
-#include "rakiyama.h"
+# include "execute.h"
 
+enum stdfd_mode
+{
+	SAVE,
+	RESTORE
+};
 /*
 ** all execution starts with execute_start().
 ** if there are multiple execution separate by '|',
@@ -52,23 +57,35 @@ int	execute_loop(t_execdata *data)
 	return (pid);
 }
 
+static void	stdfd_handler(t_execdata *data, int mode)
+{
+	if (mode == SAVE)
+	{
+		data->ori_stdin = xdup(STDIN_FILENO);
+		data->ori_stdout = xdup(STDOUT_FILENO);
+		data->ori_stderr = xdup(STDERR_FILENO);
+	}
+	if (mode == RESTORE)
+	{
+		ft_dup2(data->ori_stdin, STDIN_FILENO);
+		ft_dup2(data->ori_stdout, STDOUT_FILENO);
+		ft_dup2(data->ori_stderr, STDERR_FILENO);
+	}
+}
+
 void	execute_start(t_execdata *data)
 {
-	int			ori_stdin;
-	int			ori_stdout;
 	int			lastchild_pid;
 	int			wstatus;
 
 	setdata_heredoc_cmdtype(data);
 	if (data->next == NULL && data->cmd_type != OTHER)
 	{
-		ori_stdin = xdup(STDIN_FILENO);
-		ori_stdout = xdup(STDOUT_FILENO);
+		stdfd_handler(data, SAVE);
 		if (setdata_cmdline_redirect(data) == 0)
 			execute_command(data);
 		free_2d_array(data->cmdline);
-		ft_dup2(ori_stdin, STDIN_FILENO);
-		ft_dup2(ori_stdout, STDOUT_FILENO);
+		stdfd_handler(data, RESTORE);
 	}
 	else
 	{

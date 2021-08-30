@@ -1,4 +1,4 @@
-#include "rakiyama.h"
+#include "execute.h"
 
 void	put_2d_array(char **a)
 {
@@ -75,8 +75,6 @@ t_execdata	*add_execdata(t_execdata *data, unsigned char *s, t_cmdlist *clst, t_
 
 	tmp = (t_execdata *)malloc(sizeof(t_execdata));
 	tmp->cmdline = NULL;
-	tmp->in_fd = STDIN_FILENO;
-	tmp->out_fd = STDOUT_FILENO;
 	tmp->status = s;
 	tmp->clst = clst;
 	tmp->iolst = iolst;
@@ -181,8 +179,8 @@ int	main(int ac, char **av, char **envp)
 	status = (unsigned char *)malloc(sizeof(unsigned char));
 	*status = 0;
 	clst = NULL;
-	clst = add_cmdlist(clst, "echo");
-	clst = add_cmdlist(clst, "akiyama");
+	clst = add_cmdlist(clst, "cat");
+	clst = add_cmdlist(clst, "-e");
 	iolst = NULL;
 	iolst = add_iolist(iolst, IN_HERE_DOC, "<<", -1);
 	iolst = add_iolist(iolst, ELSE, "limit", -1);
@@ -211,8 +209,6 @@ int	main(int ac, char **av, char **envp)
 	clst = NULL;
 	clst = add_cmdlist(clst, "env");
 	iolst = NULL;
-	iolst = add_iolist(iolst, OUT_REDIRECT, ">", -1);
-	iolst = add_iolist(iolst, ELSE, "envoutfile", -1);
 	data = add_execdata(data, status, clst, iolst, elst);
 	execute_start(data);
 	exit_status = *(data->status);
@@ -222,6 +218,27 @@ int	main(int ac, char **av, char **envp)
 	clst = NULL;
 	clst = add_cmdlist(clst, "export");
 	clst = add_cmdlist(clst, "EEE+=uuuuuuuui");	
+	iolst = NULL;
+	data = add_execdata(data, status, clst, iolst, elst);
+	execute_start(data);
+	exit_status = *(data->status);
+	free_data(data, 0, 0);
+
+	data = NULL;
+	clst = NULL;
+	clst = add_cmdlist(clst, "echo");
+	clst = add_cmdlist(clst, "---------------");
+	clst = add_cmdlist(clst, "---env    export---");
+	clst = add_cmdlist(clst, "---------------");
+	iolst = NULL;
+	data = add_execdata(data, status, clst, iolst, elst);
+	execute_start(data);
+	exit_status = *(data->status);
+	free_data(data, 0, 0);
+
+	data = NULL;
+	clst = NULL;
+	clst = add_cmdlist(clst, "export");
 	iolst = NULL;
 	data = add_execdata(data, status, clst, iolst, elst);
 	execute_start(data);
