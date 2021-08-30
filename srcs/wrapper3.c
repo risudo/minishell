@@ -1,4 +1,4 @@
-#include "execute.h"
+#include "minishell.h"
 
 void	xwaitpid(pid_t pid, int *wstatus, int options)
 {

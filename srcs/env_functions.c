@@ -1,4 +1,8 @@
-#include "execute.h"
+#include "minishell.h"
+
+/*
+** unko
+*/
 
 char	*ft_getenv(t_envlist *elst, char *search_key)
 {
