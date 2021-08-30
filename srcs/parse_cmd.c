@@ -38,5 +38,5 @@ t_execdata	*parse_cmd(char *command, t_envlist *envlist, unsigned char *status)
 	data = create_execdata(tokenlist, envlist, status);
 	clear_tokenlist(tokenlist);
 	expansion(data);
-	return (check_syntax(data));
+	return (data);
 }
