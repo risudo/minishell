@@ -1,6 +1,6 @@
-# include "rakiyama.h"
+# include "execute.h"
 
-size_t	envlist_size(t_envlist *head)
+static size_t	envlist_size(t_envlist *head)
 {
 	t_envlist	*move;
 	size_t		cnt;
@@ -15,7 +15,7 @@ size_t	envlist_size(t_envlist *head)
 	return (cnt);
 }
 
-size_t	cmdlist_size(t_cmdlist *head)
+static size_t	cmdlist_size(t_cmdlist *head)
 {
 	t_cmdlist	*move;
 	size_t		cnt;

@@ -1,4 +1,4 @@
-# include "rakiyama.h"
+# include "execute.h"
 
 /*check if the file exists*/
 int	ft_stat(char *pathname)

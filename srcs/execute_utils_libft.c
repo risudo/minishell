@@ -1,4 +1,4 @@
-# include "rakiyama.h"
+# include "execute.h"
 
 static bool check_nonnum_overflow(unsigned long num, char *str, int sign, size_t i)
 {
@@ -9,7 +9,7 @@ static bool check_nonnum_overflow(unsigned long num, char *str, int sign, size_t
 	return (false);
 }
 
-long	ft_atolong(char *str, bool *nonnum_check)
+long	ft_atol(char *str, bool *nonnum_check)
 {
 	size_t			i;
 	unsigned long	num;

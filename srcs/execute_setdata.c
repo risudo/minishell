@@ -1,4 +1,4 @@
-#include "rakiyama.h"
+#include "execute.h"
 
 
 int	setdata_cmdline_redirect(t_execdata *data)
@@ -51,7 +51,7 @@ int	is_cmd_type(t_cmdlist *clst)
 		return(OTHER);
 }
 
-enum e_cmd	get_here_doc(char *limiter)
+t_cmd	get_here_doc(char *limiter)
 {
 	char*	line;
 	int		pipefd[PIPEFD_NUM];
