@@ -15,9 +15,13 @@ void	minishell_loop(char **envp)
 		line = readline("minishell$ ");
 		if (!line)
 			exit(1);
-		data = parse_cmd(line, elst, status);
-		execute_start(data);
-		clear_execdata(data);
+		if (line[0] != '\0')
+		{
+			data = parse_cmd(line, elst, status);
+			execute_start(data);
+			clear_execdata(data);
+			add_history(line);
+		}
 		free(line);
 	}
 }
