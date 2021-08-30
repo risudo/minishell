@@ -90,8 +90,6 @@ typedef struct s_envlist
 typedef struct s_execdata
 {
 	char				**cmdline;
-	int					in_fd;
-	int					out_fd;
 	int					ori_stdin;
 	int					ori_stdout;
 	int					ori_stderr;

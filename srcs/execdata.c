@@ -52,8 +52,6 @@ t_execdata	*new_execdata(t_execdata *cur, t_token *start,
 
 	new = (t_execdata *)ft_xcalloc(1, sizeof(*new));
 	new->cmdline = NULL;
-	new->in_fd = STDIN_FILENO;
-	new->out_fd = STDOUT_FILENO;
 	new->clst = get_clst(start, cur_token);
 	new->iolst = get_iolst(start, cur_token);
 	new->elst = arg->envlist;
