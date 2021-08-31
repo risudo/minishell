@@ -1,7 +1,7 @@
 #include "minishell.h"
 
 /*
-** unko
+** Edit or search the list of environment variables.
 */
 
 char	*ft_getenv(t_envlist *elst, char *search_key)

@@ -1,6 +1,12 @@
 #include "minishell.h"
 
-//unset
+/*
+** Execute built-in commands.
+** - unset
+** - env
+** - exit
+*/
+
 void	builtin_unset(t_execdata *data)
 {
 	size_t	i;
@@ -14,7 +20,6 @@ void	builtin_unset(t_execdata *data)
 	*(data->status) = 0;
 }
 
-//env
 void	builtin_env(t_execdata *data)
 {
 	t_envlist	*move;
@@ -29,7 +34,6 @@ void	builtin_env(t_execdata *data)
 	*(data->status) = 0;
 }
 
-//exit
 void	builtin_exit(t_execdata *data)
 {
 	bool	nonnum_check;

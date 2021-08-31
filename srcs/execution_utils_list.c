@@ -1,5 +1,9 @@
 #include "minishell.h"
 
+/*
+** Convert type list to type char 2D array
+*/
+
 static size_t	envlist_size(t_envlist *head)
 {
 	t_envlist	*move;
@@ -30,9 +34,6 @@ static size_t	cmdlist_size(t_cmdlist *head)
 	return (cnt);
 }
 
-/*
-convert t_envlist type list -> char type 2d array
-*/
 char	**convert_envlist_2dchar(t_envlist *elst)
 {
 	char		**array;
@@ -56,9 +57,6 @@ char	**convert_envlist_2dchar(t_envlist *elst)
 	return (array);
 }
 
-/*
-convert t_cmdlist type list -> char type 2d array
-*/
 char	**convert_cmdlist_2dchar(t_cmdlist *clst)
 {
 	char		**array;

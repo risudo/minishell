@@ -1,14 +1,17 @@
 #include "minishell.h"
 
-//non_buitin
 /*
-split PATH and join "/" + "command"
-example (command is cat)
-/usr/local/bin/cat
-/usr/bin/cat
-/bin/cat
-:
-finally return the list
+** Execute non built-in commands or no command.
+*/
+
+/*
+** make list from split the PATH and join "/" + "command".
+** example (command is cat)
+** [0]/usr/local/bin/cat
+** [1]/usr/bin/cat
+** [2]/bin/cat
+**  :
+** finally return the list.
 */
 static char	**make_exec_pathlist(char *cmd, char *path_env)
 {
@@ -34,7 +37,7 @@ static char	**make_exec_pathlist(char *cmd, char *path_env)
 }
 
 /*
-search the valid executable file path in pathlist.
+** search the valid executable file path.
 */
 static char	*set_cmd_path(char *cmd, char *path_env)
 {
@@ -79,8 +82,7 @@ void	non_builtin(t_execdata *data)
 	*(data->status) = 126;
 }
 
-//non_command
-void	non_command(t_execdata *data)
+void	no_command(t_execdata *data)
 {
 	*(data->status) = 0;
 }

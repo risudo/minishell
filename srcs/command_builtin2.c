@@ -1,6 +1,10 @@
 #include "minishell.h"
 
-//export
+/*
+** Execute built-in command.
+** - export
+*/
+
 static ssize_t	check_name_rule(char *src_str)
 {
 	ssize_t	i;

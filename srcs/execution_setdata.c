@@ -1,5 +1,9 @@
 #include "minishell.h"
 
+/*
+**	Used to prepare data before executing command.
+*/
+
 int	setdata_cmdline_redirect(t_execdata *data)
 {
 	int			ret;
