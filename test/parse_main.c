@@ -1,23 +1,5 @@
 #include "../includes/minishell.h"
 
-void	put_execdata(t_execdata *data)
-{
-	int	i;
-
-	i = 0;
-	while (data)
-	{
-		printf("\033[41mexecdata[%d]\033[49m\n", i);
-		printf("\t*status: %hhu\n", *(data->status));
-		printf("\tin_fd: %d\n", data->in_fd);
-		printf("\tout_fd: %d\n\n", data->out_fd);
-		put_cmdlist(data->clst);
-		put_iolist(data->iolst);
-		data = data->next;
-		i++;
-	}
-}
-
 int	main(int argc, char **argv, char **envp)
 {
 	t_execdata		*data;

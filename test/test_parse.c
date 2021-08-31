@@ -31,7 +31,7 @@ void	put_cmdlist(t_cmdlist *list)
 	i = 0;
 	while (list)
 	{
-		printf("\t\033[32mcmdlist[%d]\033[39m\n\t  str: \"%s\"\n", i, list->str);
+		printf("\tcmdlist[%d]\n\t  str: \"%s\"\n", i, list->str);
 		printf("\t  quot: %s\n", list->quot);
 		list = list->next;
 		i++;
@@ -46,7 +46,7 @@ void	put_iolist(t_iolist *list)
 	i = 0;
 	while (list)
 	{
-		printf("\t\033[35miolist[%d]\033[39m\n\t  str: \"%s\"\n", i, list->str);
+		printf("\tiolist[%d]\n\t  str: \"%s\"\n", i, list->str);
 		printf("\t  quot: %s\n", list->quot);
 		if (list->c_type == IN_REDIRECT)
 			printf("\t  c_type: IN_REDIRECT\n");
@@ -72,7 +72,7 @@ void	put_envlist(t_envlist *envlist)
 	int	i;
 
 	i = 0;
-	printf("\033[41menvlist\033[49m\n");
+	printf("envlist\n");
 	while (envlist)
 	{
 		printf("\t[%d] kew: %s\tvalue: %s\n", i, envlist->key, envlist->value);
