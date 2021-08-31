@@ -7,8 +7,7 @@ void	minishell_loop(char **envp)
 	t_execdata		*data;
 	char			*line;
 
-	status = (unsigned char *)malloc(sizeof(unsigned char));
-	*status = 0;
+	status = (unsigned char *)ft_calloc(1, sizeof(unsigned char));
 	elst = create_envlist(envp);
 	while (1)
 	{

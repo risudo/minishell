@@ -1,53 +1,5 @@
 #include "minishell.h"
 
-void	put_2d_array(char **a)
-{
-	if (a == NULL)
-	{
-		fprintf(stderr, "array is NULL");
-		return ;
-	}
-	while (*a != NULL)
-	{
-		fprintf(stderr, "%s\n", *a);
-		a++;
-	}
-}
-
-void	put_data(t_execdata *data)
-{
-	t_cmdlist	*ctmp;
-	t_iolist	*iotmp;
-	t_envlist	*etmp;
-
-	while(data)
-	{
-		printf("--------------------------------------------\n");
-		printf("status:%d\n", *(data->status));
-		ctmp = data->clst;
-		while (ctmp)
-		{
-			printf("cmdlist:%s\n", ctmp->str);
-			ctmp = ctmp->next;
-		}
-		iotmp = data->iolst;
-		while (iotmp)
-		{
-			printf("iolist:%s\n", iotmp->str);
-			iotmp = iotmp->next;
-		}
-		etmp = data->elst;
-		while (etmp)
-		{
-			printf("env key:%s\n", etmp->key);
-			printf("env value:%s\n", etmp->value);
-			etmp = etmp->next;
-		}
-		data = data->next;
-	}
-}
-
-
 t_cmdlist	*add_cmdlist(t_cmdlist *clst, char *s)
 {
 	t_cmdlist	*tmp;
