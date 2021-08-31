@@ -34,9 +34,9 @@ void	builtin_exit(t_execdata *data)
 {
 	bool	nonnum_check;
 
+	ft_putendl_fd("exit", STDERR_FILENO);
 	if (data->cmdline[1] == NULL)
 		exit(0);
-	ft_putendl_fd("exit", STDERR_FILENO);
 	if (data->cmdline[2])
 	{
 		ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
