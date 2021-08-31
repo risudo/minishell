@@ -21,7 +21,7 @@ void		xfree(void *ptr);
 char		*ft_xitoa(int n);
 
 // tokenize
-t_token		*tokenize_cmd_by_space(char *cmd, unsigned char *status);
+t_token		*tokenize_cmd_by_space(char *cmd, unsigned char *status, bool *err);
 int			parse_tokenlist(t_token *list, unsigned char *status);
 int			split_operater(t_token *list);
 void		clear_execdata(t_execdata *data);

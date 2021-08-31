@@ -29,9 +29,11 @@ t_execdata	*parse_cmd(char *command, t_envlist *envlist, unsigned char *status)
 {
 	t_token		*tokenlist;
 	t_execdata	*data;
+	bool		err;
 
-	tokenlist = tokenize_cmd_by_space(command, status);
-	if (*status != 0)
+	err = false;
+	tokenlist = tokenize_cmd_by_space(command, status, &err);
+	if (err == true)
 		return (create_error_execdata(tokenlist, status));
 	split_operater(tokenlist);
 	if (parse_tokenlist(tokenlist, status) == -1)
