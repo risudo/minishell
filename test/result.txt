@@ -16,6 +16,42 @@ execdata[1]
 	  quot: 000
 
 
+command: [   echo aaa|cat]
+execdata[0]
+	*status: 0
+	cmdlist[0]
+	  str: "echo"
+	  quot: 0000
+	cmdlist[1]
+	  str: "aaa"
+	  quot: 000
+
+
+execdata[1]
+	*status: 0
+	cmdlist[0]
+	  str: "cat"
+	  quot: 000
+
+
+command: [echo aaa|cat   ]
+execdata[0]
+	*status: 0
+	cmdlist[0]
+	  str: "echo"
+	  quot: 0000
+	cmdlist[1]
+	  str: "aaa"
+	  quot: 000
+
+
+execdata[1]
+	*status: 0
+	cmdlist[0]
+	  str: "cat"
+	  quot: 000
+
+
 command: [echo aaa |cat]
 execdata[0]
 	*status: 0
