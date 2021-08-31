@@ -32,25 +32,26 @@ void	execute_command(t_execdata *data)
 int	execute_loop(t_execdata *data)
 {
 	int	pid;
+	int	pipefd[PIPEFD_NUM];
+	int	prev_pipe_read;
 
+	prev_pipe_read = STDIN_FILENO;
 	while (data)
 	{
-		xpipe(data->pipefd);
+		xpipe(pipefd);
 		pid = xfork();
 		if (pid == 0)
 		{
-			xclose(data->pipefd[READ]);
+			ft_dup2(prev_pipe_read, STDIN_FILENO);
+			xclose(pipefd[READ]);
 			if (data->next != NULL)
-				ft_dup2(data->pipefd[WRITE], STDOUT_FILENO);
+				ft_dup2(pipefd[WRITE], STDOUT_FILENO);
 			if (setdata_cmdline_redirect(data) == 0)
 				execute_command(data);
 			exit(*(data->status));
 		}
-		else
-		{
-			xclose(data->pipefd[WRITE]);
-			ft_dup2(data->pipefd[READ], STDIN_FILENO);
-		}
+		xclose(pipefd[WRITE]);
+		prev_pipe_read = pipefd[READ];
 		data = data->next;
 	}
 	return (pid);

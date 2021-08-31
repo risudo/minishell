@@ -57,4 +57,7 @@ void		xwaitpid(pid_t pid, int *wstatus, int options);
 void		xpipe(int *pipefd);
 pid_t		xfork(void);
 
+//minishell_loop.c
+void		minishell_loop(char **envp);
+
 #endif
