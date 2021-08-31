@@ -1,6 +1,5 @@
 #include "minishell.h"
 
-/*check if the file exists*/
 int	ft_stat(char *pathname)
 {
 	struct stat	sb;

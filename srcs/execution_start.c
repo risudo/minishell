@@ -1,17 +1,17 @@
 #include "minishell.h"
 
+/*
+** All execution starts with execute_start().
+** If there are multiple executions (been separated by '|'),
+** execute_loop() runs each execution.
+*/
+
 enum e_stdfd_mode
 {
 	SAVE,
 	RESTORE
 };
-/*
-** all execution starts with execute_start().
-** if there are multiple execution separate by '|',
-** execute_loop() runs each command.
-*/
 
-//execute command according to data->cmd_type
 void	execute_command(t_execdata *data)
 {
 	void	(*cmd_func[CMD_NUM])(t_execdata *data);
@@ -24,11 +24,21 @@ void	execute_command(t_execdata *data)
 	cmd_func[ENV] = builtin_env;
 	cmd_func[EXIT] = builtin_exit;
 	cmd_func[OTHER] = non_builtin;
-	cmd_func[NON_CMD] = non_command;
+	cmd_func[NON_CMD] = no_command;
 	cmd_func[data->cmd_type](data);
 }
 
-//this loop execute commands and connect those outfputs to next command
+/*
+** Loop flow
+** 1 pipe() to create pipe and prepare pipe_fd
+** 2 fork() to create child process
+** 3 parent process update prev_pipe_read with (current)pipe_fd
+** 4 child process
+**   set prev_pipe_read -> input fd
+**   set (current)pipe_fd -> output fd
+**   set data
+**   run execution
+*/
 int	execute_loop(t_execdata *data)
 {
 	int	pid;
@@ -73,7 +83,12 @@ static void	stdfd_handler(t_execdata *data, int mode)
 	}
 }
 
-//confirm WIFEXITED and WIFSIGNALED etc..
+/*
+** If the execution is a single and it's built-in command,
+** handle standard I/O and run execution.
+** If there are multiple executions,
+** run execute_loop() and get last exit status.
+*/
 void	execute_start(t_execdata *data)
 {
 	int			lastchild_pid;

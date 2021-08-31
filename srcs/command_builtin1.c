@@ -1,10 +1,12 @@
 #include "minishell.h"
 
 /*
-** all command functions
+** Execute built-in commands.
+** - echo
+** - cd
+** - pwd
 */
 
-//echo
 void	builtin_echo(t_execdata *data)
 {
 	int		option;
@@ -28,7 +30,6 @@ void	builtin_echo(t_execdata *data)
 	*(data->status) = 0;
 }
 
-//cd
 void	builtin_cd(t_execdata *data)
 {
 	ft_setenv(data->elst, ft_xstrdup("OLDPWD"), getcwd(NULL, 0), 0);
@@ -45,8 +46,6 @@ void	builtin_cd(t_execdata *data)
 	*(data->status) = 0;
 }
 
-//pwd
-//if no authority to directory what happen
 void	builtin_pwd(t_execdata *data)
 {
 	char	*pathname;
