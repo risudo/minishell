@@ -37,7 +37,7 @@ static char	**make_exec_pathlist(char *cmd, char *path_env)
 }
 
 /*
-** search the valid executable file path.
+** search the valid executable file path from PATH env.
 */
 static char	*cmdpath_from_pathenv(char *cmd, char *path_env)
 {
@@ -67,6 +67,9 @@ static char	*cmdpath_from_pathenv(char *cmd, char *path_env)
 	return (cmd_path);
 }
 
+/*
+** verify if the file path is valid.
+*/
 static char	*cmdpath_from_direct(char *cmd)
 {
 	t_path_type	path_type;
