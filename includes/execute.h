@@ -3,6 +3,14 @@
 
 # include "minishell.h"
 
+typedef enum e_path_type
+{
+	UNKNOWN,
+	IS_FILE,
+	IS_DIR,
+	ELSE_TYPE
+}	t_path_type;
+
 //execution_start.c
 void		execute_command(t_execdata *data);
 int			execute_loop(t_execdata *data);
@@ -24,7 +32,7 @@ void		non_builtin(t_execdata *data);
 void		no_command(t_execdata *data);
 
 //execution_utils.c
-int			ft_stat(char *pathname);
+t_path_type	ft_stat(char *pathname);
 int			ft_dup2(int oldfd, int newfd);
 int			ft_open(t_iolist *filenode, int flags, mode_t mode);
 void		expansion_key_heredoc(char **line, \
