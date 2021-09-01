@@ -1,23 +1,16 @@
 #include "minishell.h"
 
-int	ft_stat(char *pathname)
+t_path_type	ft_stat(char *pathname)
 {
 	struct stat	sb;
 
 	if (stat(pathname, &sb) == -1)
-		return (0);
-	else
-		return (1);
-/*	{
-		ft_putstr_fd("stat : ", STDERR_FILENO);
-		ft_putendl_fd(strerror(errno), STDERR_FILENO);
-		exit(EXIT_FAILURE);
-	}
-	if (S_ISREG(sb.st_mode))
-		return (1);
-	else
-		return (0);
-*/
+		return (UNKNOWN);
+	if ((sb.st_mode & S_IFMT) == S_IFREG)
+		return (IS_FILE);
+	if ((sb.st_mode & S_IFMT) == S_IFDIR)
+		return (IS_DIR);
+	return (ELSE_TYPE);
 }
 
 int	ft_dup2(int oldfd, int newfd)
