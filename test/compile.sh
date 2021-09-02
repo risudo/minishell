@@ -25,7 +25,6 @@ test_parse2.c \
 ../srcs/expansion_utils2.c \
 ../srcs/parse_cmd.c \
 ../srcs/parse_tokenlist.c \
-../srcs/signal_handler.c \
 ../srcs/tokenize1.c \
 ../srcs/tokenize2.c \
 ../srcs/tokenize_utils.c \

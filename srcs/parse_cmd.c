@@ -8,7 +8,6 @@ static t_execdata	*expand_variable(t_execdata *data)
 	while (data)
 	{
 		serch_env_cmdlist(data->clst, data->elst);
-		serch_env_iolist(data->iolst, data->elst);
 		data = data->next;
 	}
 	return (data);
