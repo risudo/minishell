@@ -4,7 +4,7 @@
 void	handler(int signo)
 {
 	(void)signo;
-	write(1, "\n", 1);
+	ft_putchar_fd('\n', STDOUT_FILENO);
 	rl_replace_line("", 0);
 	rl_on_new_line();
 	rl_redisplay();
@@ -13,6 +13,7 @@ void	handler(int signo)
 int	main(int argc, char **argv, char **envp)
 {
 	signal(SIGINT, handler);
+	signal(SIGQUIT, SIG_IGN);
 	minishell_loop(envp);
 	(void)argc;
 	(void)argv;
