@@ -12,8 +12,12 @@ void	handler(int signo)
 
 int	main(int argc, char **argv, char **envp)
 {
-	signal(SIGINT, handler);
-	signal(SIGQUIT, SIG_IGN);
+	if (signal(SIGINT, handler) == SIG_ERR
+		|| signal(SIGQUIT, SIG_IGN) == SIG_ERR)
+	{
+		perror("signal");
+		exit(EXIT_FAILURE);
+	}
 	minishell_loop(envp);
 	(void)argc;
 	(void)argv;
