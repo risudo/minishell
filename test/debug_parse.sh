@@ -27,7 +27,6 @@ test_parse2.c \
 ../srcs/expansion_utils2.c \
 ../srcs/parse_cmd.c \
 ../srcs/parse_tokenlist.c \
-../srcs/signal_handler.c \
 ../srcs/tokenize1.c \
 ../srcs/tokenize2.c \
 ../srcs/tokenize_utils.c \
@@ -54,6 +53,13 @@ test_parse2.c \
 ./parse 'echo "aaa > bbb"' >> result.txt
 
 ./parse 'echo "aaa << bbb"' >> result.txt
+
+./parse 'echo $' >> result.txt
+
+./parse 'echo$' >> result.txt
+
+./parse 'echo $ | cat' >> result.txt
+
 
 # expand $?
 ./parse 'echo $?' >> result.txt
@@ -139,4 +145,4 @@ diff -s result.txt answer.txt \
 | sed "s/Files result.txt and answer.txt are identical/<TEST OK>/g" \
 | GREP_COLOR='23;32' grep -E --color "$|<TEST OK>"
 
-rm parse
+# rm parse

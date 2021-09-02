@@ -141,6 +141,43 @@ execdata[0]
 	  quot: DDDDDDDDDD
 
 
+command: [echo $]
+execdata[0]
+	*status: 0
+	cmdlist[0]
+	  str: "echo"
+	  quot: 0000
+	cmdlist[1]
+	  str: "$"
+	  quot: 0
+
+
+command: [echo$]
+execdata[0]
+	*status: 0
+	cmdlist[0]
+	  str: "echo$"
+	  quot: 00000
+
+
+command: [echo $ | cat]
+execdata[0]
+	*status: 0
+	cmdlist[0]
+	  str: "echo"
+	  quot: 0000
+	cmdlist[1]
+	  str: "$"
+	  quot: 0
+
+
+execdata[1]
+	*status: 0
+	cmdlist[0]
+	  str: "cat"
+	  quot: 000
+
+
 command: [echo $?]
 execdata[0]
 	*status: 0
@@ -354,8 +391,8 @@ execdata[0]
 	  here_doc_fd: -1
 
 	iolist[1]
-	  str: "sudourio"
-	  quot: 00000000
+	  str: "$USER"
+	  quot: 00000
 	  c_type: ELSE
 	  here_doc_fd: -1
 
@@ -374,8 +411,8 @@ execdata[0]
 	  here_doc_fd: -1
 
 	iolist[1]
-	  str: "sudourio"
-	  quot: DDDDDDDD
+	  str: ""$USER""
+	  quot: DDDDDD2
 	  c_type: ELSE
 	  here_doc_fd: -1
 
@@ -394,8 +431,8 @@ execdata[0]
 	  here_doc_fd: -1
 
 	iolist[1]
-	  str: ""$USER""
-	  quot: SSSSSSS
+	  str: "'"$USER"'"
+	  quot: SSSSSSSS1
 	  c_type: ELSE
 	  here_doc_fd: -1
 
@@ -414,8 +451,8 @@ execdata[0]
 	  here_doc_fd: -1
 
 	iolist[1]
-	  str: "sudourio"
-	  quot: 00000000
+	  str: "''$USER''"
+	  quot: S100000S1
 	  c_type: ELSE
 	  here_doc_fd: -1
 
@@ -434,8 +471,8 @@ execdata[0]
 	  here_doc_fd: -1
 
 	iolist[1]
-	  str: "sudourio"
-	  quot: 00000000
+	  str: """$USER"""
+	  quot: D200000D2
 	  c_type: ELSE
 	  here_doc_fd: -1
 
@@ -454,8 +491,8 @@ execdata[0]
 	  here_doc_fd: -1
 
 	iolist[1]
-	  str: "'sudourio'"
-	  quot: D00000000D
+	  str: ""'"$USER"'""
+	  quot: DD200000DD2
 	  c_type: ELSE
 	  here_doc_fd: -1
 
@@ -474,8 +511,8 @@ execdata[0]
 	  here_doc_fd: -1
 
 	iolist[1]
-	  str: "aa   ramen"
-	  quot: DDDDDDDDDD
+	  str: ""aa$VAR""
+	  quot: DDDDDDD2
 	  c_type: ELSE
 	  here_doc_fd: -1
 
@@ -494,16 +531,10 @@ execdata[0]
 	  here_doc_fd: -1
 
 	iolist[1]
-	  str: "aa"
-	  quot: 00
+	  str: "aa$VAR"
+	  quot: 000000
 	  c_type: ELSE
 	  here_doc_fd: -1
-
-	iolist[2]
-	  str: "ramen"
-	  quot: 00000
-	  c_type: ELSE
-	  here_doc_fd: 0
 
 
 minishell: syntax error near unexpected token |
