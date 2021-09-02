@@ -36,7 +36,7 @@ t_path_type	ft_stat(char *pathname);
 int			ft_dup2(int oldfd, int newfd);
 int			ft_open(t_iolist *filenode, int flags, mode_t mode);
 void		expansion_key_heredoc(char **line, \
-				t_envlist *envlist, char *doll_ptr);
+				t_envlist *envlist, char *doll_ptr, int recursive);
 
 //env_functions.c
 char		*ft_getenv(t_envlist *elst, char *search_key);
@@ -67,5 +67,9 @@ pid_t		xfork(void);
 
 //minishell_loop.c
 void		minishell_loop(char **envp);
+
+//after
+void	clear_quot_iolist(t_iolist *iolist);
+int		serch_env_iolist(t_iolist *iolist, t_envlist *envlist);
 
 #endif

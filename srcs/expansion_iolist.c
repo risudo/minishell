@@ -6,7 +6,7 @@
 ** 2 Clear quotation.
 ** 3 If there are spaces after expanding, insert new list.
 */
-
+/*
 static void	expansion_key_iolist(t_iolist *iolist,
 		t_envlist *envlist, char *doll_ptr)
 {
@@ -27,8 +27,8 @@ static void	expansion_key_iolist(t_iolist *iolist,
 	iolist->str = ft_strjoin_three(front, value, back);
 	xfree(front), xfree(key), xfree(back);
 }
-
-static void	clear_quot_iolist(t_iolist *iolist)
+*/
+void	clear_quot_iolist(t_iolist *iolist)
 {
 	char	*new_str;
 	size_t	i;
@@ -69,12 +69,14 @@ static void	insert_new_iolist(t_iolist *iolist, size_t i)
 	iolist->next = new;
 }
 
-static void	serch_new_space_iolist(t_iolist *iolist)
+static int	check_filename(t_iolist *iolist)
 {
 	size_t	i;
 	char	*str;
 
 	i = 0;
+	if (iolist->str[i] == '\0')
+		return (-1);
 	while (iolist->str[i])
 	{
 		if (iolist->str[i] == ' ' && iolist->quot[i] == '0')
@@ -89,29 +91,23 @@ static void	serch_new_space_iolist(t_iolist *iolist)
 		}
 		i++;
 	}
+	return (0);
 }
 
-void	serch_env_iolist(t_iolist *iolist, t_envlist *envlist)
+int	serch_env_iolist(t_iolist *iolist, t_envlist *envlist)
 {
-	t_iolist	*prev;
 	char		*doll_ptr;
 
-	prev = NULL;
-	while (iolist)
+	doll_ptr = ft_strchr(iolist->str, '$');
+	while (doll_ptr && iolist->quot[doll_ptr - iolist->str] != 'S'
+		&& !is_delimiter(*(doll_ptr + 1)))
 	{
+		expansion_key_heredoc(&(iolist->str), envlist, doll_ptr, 0);
+		xfree(iolist->quot);
+		iolist->quot = get_quot_flag(iolist->str);
 		doll_ptr = ft_strchr(iolist->str, '$');
-		while (doll_ptr
-			&& is_env_iolist(iolist->quot[doll_ptr - iolist->str], prev))
-		{
-			expansion_key_iolist(iolist, envlist, doll_ptr);
-			xfree(iolist->quot);
-			iolist->quot = get_quot_flag(iolist->str);
-			doll_ptr = ft_strchr(iolist->str, '$');
-		}
-		if (ft_strchr(iolist->quot, '1') || ft_strchr(iolist->quot, '2'))
-			clear_quot_iolist(iolist);
-		serch_new_space_iolist(iolist);
-		prev = iolist;
-		iolist = iolist->next;
 	}
+	if (ft_strchr(iolist->quot, '1') || ft_strchr(iolist->quot, '2'))
+		clear_quot_iolist(iolist);
+	return (check_filename(iolist));
 }
