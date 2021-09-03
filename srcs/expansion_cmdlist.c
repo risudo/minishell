@@ -59,10 +59,12 @@ static t_cmdlist	*insert_new_cmdlist(t_cmdlist *clist, int i)
 	t_cmdlist	*new;
 	size_t		len;
 
-	new = (t_cmdlist *)ft_xcalloc(1, sizeof(*new));
-	while (clist->str[i] == ' ')
+	while (ft_isspace(clist->str[i]))
 		i++;
 	len = ft_strlen(clist->str + i);
+	if (len == 0)
+		return (clist);
+	new = (t_cmdlist *)ft_xcalloc(1, sizeof(*new));
 	new->str = ft_xsubstr(clist->str, i, len);
 	new->quot = get_quot_flag(new->str);
 	new->next = clist->next;
@@ -73,22 +75,27 @@ static t_cmdlist	*insert_new_cmdlist(t_cmdlist *clist, int i)
 static void	serch_new_space_cmdlist(t_cmdlist *clist)
 {
 	size_t	i;
+	size_t	len;
 	char	*str;
 
-	i = 0;
-	while (clist->str[i])
+	i = get_space_idx(clist);
+	if (i == 0 && ft_isspace(clist->str[i]))
 	{
-		if (clist->str[i] == ' ' && clist->quot[i] == '0')
-		{
-			str = ft_xsubstr(clist->str, 0, i);
-			clist = insert_new_cmdlist(clist, i);
-			xfree(clist->str);
-			xfree(clist->quot);
-			clist->str = str;
-			clist->quot = get_quot_flag(clist->str);
-			i--;
-		}
-		i++;
+		while (ft_isspace(clist->str[i]))
+			i++;
+		len = ft_strlen(clist->str + i);
+		free(clist->str), free(clist->quot);
+		clist->str = ft_xsubstr(clist->str, i, len);
+		clist->quot = get_quot_flag(clist->str);
+		serch_new_space_cmdlist(clist);
+	}
+	else if (ft_isspace(clist->str[i]))
+	{
+		str = ft_xsubstr(clist->str, 0, i);
+		clist = insert_new_cmdlist(clist, i);
+		free(clist->str), free(clist->quot);
+		clist->str = str;
+		clist->quot = get_quot_flag(clist->str);
 	}
 }
 

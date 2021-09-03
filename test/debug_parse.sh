@@ -96,6 +96,7 @@ test_parse2.c \
 #echo "'"$USER"'"
 
 export VAR="   ramen"
+echo 'VAR="   ramen"' >> result.txt
 
 ./parse 'echo "aa$VAR"' >> result.txt
 
@@ -104,20 +105,12 @@ export VAR="   ramen"
 ### redirect
 ./parse 'echo >$USER' >> result.txt
 
-./parse 'echo >"$USER"' >> result.txt
+export VAR="  aa  bb  "
+echo 'VAR="  aa  bb  "' >> result.txt
 
-./parse 'echo >'\''"$USER"'\' >> result.txt
-#echo '"$VAR"'
+./parse 'echo $VAR' >> result.txt
 
-./parse 'echo >'\'\''$USER'\'\' >> result.txt
-
-./parse 'echo >""$USER""' >> result.txt
-
-./parse 'echo >''"'\''"$USER"'\''"' >> result.txt
-#echo "'"$USER"'"
-
-./parse 'echo >"aa$VAR"' >> result.txt
-
+./parse 'echo XX$VAR' >> result.txt
 
 ### error case
 ./parse 'echo >aa$VAR' >> result.txt 2>&1

@@ -50,3 +50,14 @@ bool	is_delimiter_quot(char c, char flag)
 	else
 		return (false);
 }
+
+size_t	get_space_idx(t_cmdlist *clist)
+{
+	size_t	i;
+
+	i = 0;
+	while (clist->str[i]
+		&& (!ft_isspace(clist->str[i]) || clist->quot[i] != '0'))
+		i++;
+	return (i);
+}
