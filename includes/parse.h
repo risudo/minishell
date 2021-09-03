@@ -29,6 +29,7 @@ t_token		*join_redirect(t_token *list);
 bool		is_consecutive_redirect(t_token *list);
 t_token		*trim_list(t_token *list);//
 bool		is_space_after_quot(t_token *list);
+bool		ft_isspace(char c);
 
 // parse tokenlist
 int			parse_tokenlist(t_token *list, unsigned char *status);
@@ -58,6 +59,7 @@ size_t		ft_strlen_excluded_quot(char *str, char *quot);
 bool		is_delimiter(char c);
 char		*ft_strjoin_three(char *str1, char *str2, char *str3);
 bool		is_env_iolist(char flag, t_iolist *prev);
+size_t		get_space_idx(t_cmdlist *clist);
 
 // expansion_utils
 bool		is_delimiter(char c);
