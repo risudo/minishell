@@ -8,10 +8,13 @@ static int	set_redirected_fd(t_execdata *data, t_iolist *iolst, int *redirect_fd
 {
 /*	if (iolst->c_type == FD)
 	{
-		*redirect_fd = convert_to_fd(iolst->str);
-		if (*redirect_fd = -1)
+		*redirect_fd = ft_atoi(iolst->str);
+		if (*redirect_fd < 0 || FD_MAX < *redirect_fd)
+		{
+			ft_putendl_fd("bad file descriptor", STDERR_FILENO);
 			return (-1);
-		stdfd_handler(data, FD_REDIRECTED);
+		}
+		stdfd_handler(data, FD_REDIRECTED, *redirected_fd);
 		*is_fd_specified = 1;
 	}*/
 	(void)data;

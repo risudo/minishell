@@ -57,6 +57,8 @@ void	expansion_key_heredoc(char **line,
 	char	*back_key;
 	size_t	len;
 
+	if (!doll_ptr)
+		return ;
 	len = 1;
 	while (!is_delimiter(doll_ptr[len]))
 		len++;
