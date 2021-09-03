@@ -2,6 +2,7 @@
 # define EXECUTE_H
 
 # include "minishell.h"
+# define FD_MAX 2000
 
 typedef enum e_path_type
 {

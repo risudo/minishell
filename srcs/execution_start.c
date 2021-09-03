@@ -9,6 +9,7 @@
 enum e_stdfd_mode
 {
 	SAVE,
+	FD_REDIRECTED,
 	RESTORE
 };
 
@@ -67,19 +68,32 @@ int	execute_loop(t_execdata *data)
 	return (pid);
 }
 
-static void	stdfd_handler(t_execdata *data, int mode)
+static void	fd_handler(t_execdata *data, int mode, int redirected_fd)
 {
-	if (mode == SAVE)
-	{
-		data->ori_stdin = xdup(STDIN_FILENO);
-		data->ori_stdout = xdup(STDOUT_FILENO);
-		data->ori_stderr = xdup(STDERR_FILENO);
-	}
+	static char	red_fd_flag[FD_MAX + 1];
+	int			index_fd;
+
+	if (mode == SAVE || (mode == FD_REDIRECTED && data->ori_stdin == redirected_fd))
+		data->ori_stdin = xdup(data->ori_stdin);
+	if (mode == SAVE || (mode == FD_REDIRECTED && data->ori_stdout == redirected_fd))
+		data->ori_stdout = xdup(data->ori_stdout);
+	if (mode == SAVE || (mode == FD_REDIRECTED && data->ori_stderr == redirected_fd))
+		data->ori_stderr = xdup(data->ori_stderr);
+	if (mode == FD_REDIRECTED)
+		red_fd_flag[redirected_fd]++;
 	if (mode == RESTORE)
 	{
 		ft_dup2(data->ori_stdin, STDIN_FILENO);
 		ft_dup2(data->ori_stdout, STDOUT_FILENO);
 		ft_dup2(data->ori_stderr, STDERR_FILENO);
+		index_fd = 0;
+		while (index_fd <= FD_MAX)
+		{
+			if (red_fd_flag[index_fd])
+				xclose(index_fd);
+			red_fd_flag[index_fd] = 0;
+			index_fd++;
+		}
 	}
 }
 
@@ -97,11 +111,14 @@ void	execute_start(t_execdata *data)
 	setdata_heredoc_cmdtype(data);
 	if (data->next == NULL && data->cmd_type != OTHER)
 	{
-		stdfd_handler(data, SAVE);
+		data->ori_stdin = STDIN_FILENO;
+		data->ori_stdout = STDOUT_FILENO;
+		data->ori_stderr = STDERR_FILENO;
+		fd_handler(data, SAVE, -1);
 		if (setdata_cmdline_redirect(data) == 0)
 			execute_command(data);
 		free_2d_array(data->cmdline);
-		stdfd_handler(data, RESTORE);
+		fd_handler(data, RESTORE, -1);
 	}
 	else
 	{

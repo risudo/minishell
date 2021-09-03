@@ -14,7 +14,7 @@ static int	set_redirected_fd(t_execdata *data, t_iolist *iolst, int *redirect_fd
 			ft_putendl_fd("bad file descriptor", STDERR_FILENO);
 			return (-1);
 		}
-		stdfd_handler(data, FD_REDIRECTED, *redirected_fd);
+		fd_handler(data, FD_REDIRECTED, *redirected_fd);
 		*is_fd_specified = 1;
 	}*/
 	(void)data;
