@@ -4,7 +4,7 @@
 ** Tokenize command and create t_token list.
 */
 
-static bool	ft_isspace(char c)
+bool	ft_isspace(char c)
 {
 	if (c == ' ' || c == '\t' || c == '\r' || c == '\n' || c == '\v' || c == '\f')
 		return (true);
