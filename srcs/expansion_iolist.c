@@ -6,29 +6,38 @@
 ** 2 Clear quotation.
 ** 3 If there are spaces after expanding, insert new list.
 */
-/*
-static void	expansion_key_iolist(t_iolist *iolist,
-		t_envlist *envlist, char *doll_ptr)
+
+void	expansion_key_io(char **line,
+		t_envlist *envlist, char *doll_ptr, int recursive)
 {
 	char	*key;
 	char	*value;
-	char	*front;
-	char	*back;
+	char	*front_key;
+	char	*back_key;
 	size_t	len;
 
+	if (!(doll_ptr && !is_delimiter(*(doll_ptr + 1))))
+		return ;
 	len = 1;
 	while (!is_delimiter(doll_ptr[len]))
 		len++;
+	front_key = ft_xsubstr(*line, 0, doll_ptr - *line);
 	key = ft_xsubstr(doll_ptr, 1, len - 1);
-	front = ft_xsubstr(iolist->str, 0, doll_ptr - iolist->str);
-	back = ft_xsubstr(doll_ptr + len, 0, ft_strlen(doll_ptr + len));
+	back_key = ft_xsubstr(doll_ptr + len, 0, ft_strlen(doll_ptr + len));
 	value = ft_getenv(envlist, key);
-	xfree(iolist->str);
-	iolist->str = ft_strjoin_three(front, value, back);
-	xfree(front), xfree(key), xfree(back);
+	xfree(*line);
+	*line = ft_strjoin_three(front_key, value, back_key);
+	xfree(front_key), xfree(key), xfree(back_key);
+	if (recursive)
+	{
+		doll_ptr = ft_strchr(*line, '$');
+		if (doll_ptr && !is_delimiter(*(doll_ptr + 1)))
+			expansion_key_io(line, \
+				envlist, doll_ptr, recursive);
+	}
 }
-*/
-void	clear_quot_iolist(t_iolist *iolist)
+
+void	clear_quot_filename(char **filename, char **filequot)
 {
 	char	*new_str;
 	size_t	i;
@@ -36,23 +45,24 @@ void	clear_quot_iolist(t_iolist *iolist)
 
 	i = 0;
 	j = 0;
-	new_str = ft_xcalloc(ft_strlen_excluded_quot(iolist->str, iolist->quot) + 1,
+	new_str = ft_xcalloc(\
+			ft_strlen_excluded_quot(*filename, *filequot) + 1, \
 			sizeof(char));
-	while (iolist->str[i])
+	while ((*filename)[i])
 	{
-		if (is_delimiter_quot(iolist->str[i], iolist->quot[i]))
+		if (is_delimiter_quot((*filename)[i], (*filequot)[i]))
 		{
 			i++;
 			continue ;
 		}
-		new_str[j++] = iolist->str[i++];
+		new_str[j++] = (*filename)[i++];
 	}
-	xfree(iolist->str);
-	iolist->str = new_str;
-	iolist->quot = get_removed_endflag(&iolist->quot, '1');
-	iolist->quot = get_removed_endflag(&iolist->quot, '2');
+	xfree(*filename);
+	*filename = new_str;
+	*filequot = get_removed_endflag(filequot, '1');
+	*filequot = get_removed_endflag(filequot, '2');
 }
-
+/*
 static void	insert_new_iolist(t_iolist *iolist, size_t i)
 {
 	t_iolist	*new;
@@ -68,46 +78,82 @@ static void	insert_new_iolist(t_iolist *iolist, size_t i)
 	new->next = iolist->next;
 	iolist->next = new;
 }
+*/
 
-static int	check_filename(t_iolist *iolist)
+static size_t	space_idx(char *filename, char *filequot)
 {
 	size_t	i;
-	char	*str;
 
 	i = 0;
-	if (iolist->str[i] == '\0')
-		return (-1);
-	while (iolist->str[i])
-	{
-		if (iolist->str[i] == ' ' && iolist->quot[i] == '0')
-		{
-			str = ft_xsubstr(iolist->str, 0, i);
-			insert_new_iolist(iolist, i);
-			xfree(iolist->str);
-			xfree(iolist->quot);
-			iolist->str = str;
-			iolist->quot = get_quot_flag(iolist->str);
-			i--;
-		}
+	while (filename[i]
+		&& (!ft_isspace(filename[i]) || filequot[i] != '0'))
 		i++;
+	return (i);
+}
+
+static int	check_filename(t_iolist *iolist, \
+				char *filename, char *filequot)
+{
+	size_t	i;
+	size_t	len;
+	char	*str;
+
+	if (filename[0] == '\0')
+	{
+		free(filename), free(filequot);
+		return (-1);
 	}
+	i = space_idx(filename, filequot);
+	if (i == 0 && ft_isspace(filename[i]))
+	{
+		while (ft_isspace(filename[i]))
+			i++;
+		len = ft_strlen(filename + i);
+		free(filename), free(filequot);
+		filename = ft_xsubstr(filename, i, len);//
+		filequot = get_quot_flag(filename);
+		check_filename(iolist, filename, filequot);
+	}
+	else if (ft_isspace(filename[i]))
+	{
+		str = ft_xsubstr(filename, 0, i);
+		free(filename), free(filequot);
+		filename = str;
+		filequot = get_quot_flag(filename);
+		i = 0;
+		while (ft_isspace(filename[i]))
+			i++;
+	}
+	if (filename[i] != '\0')
+	{
+		free(filename), free(filequot);
+		return (-1);
+	}
+	free(iolist->str), free(filequot);
+	iolist->str = filename;
 	return (0);
 }
 
 int	serch_env_iolist(t_iolist *iolist, t_envlist *envlist)
 {
 	char		*doll_ptr;
+	char		*filename;
+	char		*filequot;
 
-	doll_ptr = ft_strchr(iolist->str, '$');
-	while (doll_ptr && iolist->quot[doll_ptr - iolist->str] != 'S'
+	doll_ptr = ft_strchr(filename, '$');
+	if (!(doll_ptr && !is_delimiter(*(doll_ptr + 1))))
+		return (0);
+	filename = ft_xstrdup(iolist->str);
+	filequot = get_quot_flag(filename);
+	while (doll_ptr && filequot[doll_ptr - filename] != 'S'
 		&& !is_delimiter(*(doll_ptr + 1)))
 	{
-		expansion_key_heredoc(&(iolist->str), envlist, doll_ptr, 0);
-		xfree(iolist->quot);
-		iolist->quot = get_quot_flag(iolist->str);
-		doll_ptr = ft_strchr(iolist->str, '$');
+		expansion_key_io(&filename, envlist, doll_ptr, 0);
+		xfree(filequot);
+		filequot = get_quot_flag(filename);
+		doll_ptr = ft_strchr(filename, '$');
 	}
-	if (ft_strchr(iolist->quot, '1') || ft_strchr(iolist->quot, '2'))
-		clear_quot_iolist(iolist);
-	return (check_filename(iolist));
+	if (ft_strchr(filequot, '1') || ft_strchr(filequot, '2'))
+		clear_quot_filename(&filename, &filequot);
+	return (check_filename(iolist, filename, filequot));
 }

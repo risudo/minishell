@@ -108,7 +108,7 @@ static t_cmd	get_here_doc(char *limiter, t_envlist *elst, int is_quot)
 		if (no_limit)
 		{
 			if (is_quot == 0)
-				expansion_key_heredoc(&line, elst, ft_strchr(line, '$'), 1);
+				expansion_key_io(&line, elst, ft_strchr(line, '$'), 1);
 			ft_putendl_fd(line, pipefd[WRITE]);
 		}
 		free(line);
@@ -130,12 +130,15 @@ void	setdata_heredoc_cmdtype(t_execdata *data)
 		{
 			if (move->c_type == IN_HERE_DOC)
 			{
-				if (ft_strchr(move->next->quot, '1') || ft_strchr(move->next->quot, '2'))
+				if (ft_strchr(move->next->quot, '1') || \
+					ft_strchr(move->next->quot, '2'))
 				{
-					clear_quot_iolist(move->next);
+					clear_quot_filename(&(move->next->str), \
+										&(move->next->quot));
 					is_quot++;
 				}
-				move->here_doc_fd = get_here_doc(move->next->str, data->elst, is_quot);
+				move->here_doc_fd = get_here_doc(move->next->str, \
+										data->elst, is_quot);
 			}
 			move = move->next;
 		}
