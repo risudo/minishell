@@ -352,6 +352,7 @@ execdata[0]
 	  quot: 000000000
 
 
+VAR="   ramen"
 command: [echo "aa$VAR"]
 execdata[0]
 	*status: 0
@@ -397,124 +398,36 @@ execdata[0]
 	  here_doc_fd: -1
 
 
-command: [echo >"$USER"]
+VAR="  aa  bb  "
+command: [echo $VAR]
 execdata[0]
 	*status: 0
 	cmdlist[0]
 	  str: "echo"
 	  quot: 0000
-
-	iolist[0]
-	  str: ">"
-	  quot: 0
-	  c_type: OUT_REDIRECT
-	  here_doc_fd: -1
-
-	iolist[1]
-	  str: ""$USER""
-	  quot: DDDDDD2
-	  c_type: ELSE
-	  here_doc_fd: -1
+	cmdlist[1]
+	  str: "aa"
+	  quot: 00
+	cmdlist[2]
+	  str: "bb"
+	  quot: 00
 
 
-command: [echo >'"$USER"']
+command: [echo XX$VAR]
 execdata[0]
 	*status: 0
 	cmdlist[0]
 	  str: "echo"
 	  quot: 0000
-
-	iolist[0]
-	  str: ">"
-	  quot: 0
-	  c_type: OUT_REDIRECT
-	  here_doc_fd: -1
-
-	iolist[1]
-	  str: "'"$USER"'"
-	  quot: SSSSSSSS1
-	  c_type: ELSE
-	  here_doc_fd: -1
-
-
-command: [echo >''$USER'']
-execdata[0]
-	*status: 0
-	cmdlist[0]
-	  str: "echo"
-	  quot: 0000
-
-	iolist[0]
-	  str: ">"
-	  quot: 0
-	  c_type: OUT_REDIRECT
-	  here_doc_fd: -1
-
-	iolist[1]
-	  str: "''$USER''"
-	  quot: S100000S1
-	  c_type: ELSE
-	  here_doc_fd: -1
-
-
-command: [echo >""$USER""]
-execdata[0]
-	*status: 0
-	cmdlist[0]
-	  str: "echo"
-	  quot: 0000
-
-	iolist[0]
-	  str: ">"
-	  quot: 0
-	  c_type: OUT_REDIRECT
-	  here_doc_fd: -1
-
-	iolist[1]
-	  str: """$USER"""
-	  quot: D200000D2
-	  c_type: ELSE
-	  here_doc_fd: -1
-
-
-command: [echo >"'"$USER"'"]
-execdata[0]
-	*status: 0
-	cmdlist[0]
-	  str: "echo"
-	  quot: 0000
-
-	iolist[0]
-	  str: ">"
-	  quot: 0
-	  c_type: OUT_REDIRECT
-	  here_doc_fd: -1
-
-	iolist[1]
-	  str: ""'"$USER"'""
-	  quot: DD200000DD2
-	  c_type: ELSE
-	  here_doc_fd: -1
-
-
-command: [echo >"aa$VAR"]
-execdata[0]
-	*status: 0
-	cmdlist[0]
-	  str: "echo"
-	  quot: 0000
-
-	iolist[0]
-	  str: ">"
-	  quot: 0
-	  c_type: OUT_REDIRECT
-	  here_doc_fd: -1
-
-	iolist[1]
-	  str: ""aa$VAR""
-	  quot: DDDDDDD2
-	  c_type: ELSE
-	  here_doc_fd: -1
+	cmdlist[1]
+	  str: "XX"
+	  quot: 00
+	cmdlist[2]
+	  str: "aa"
+	  quot: 00
+	cmdlist[3]
+	  str: "bb"
+	  quot: 00
 
 
 command: [echo >aa$VAR]
