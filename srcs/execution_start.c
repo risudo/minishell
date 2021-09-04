@@ -73,11 +73,14 @@ static void	fd_handler(t_execdata *data, int mode, int redirected_fd)
 	static char	red_fd_flag[FD_MAX + 1];
 	int			index_fd;
 
-	if (mode == SAVE || (mode == FD_REDIRECTED && data->ori_stdin == redirected_fd))
+	if (mode == SAVE || \
+		(mode == FD_REDIRECTED && data->ori_stdin == redirected_fd))
 		data->ori_stdin = xdup(data->ori_stdin);
-	if (mode == SAVE || (mode == FD_REDIRECTED && data->ori_stdout == redirected_fd))
+	if (mode == SAVE || \
+		(mode == FD_REDIRECTED && data->ori_stdout == redirected_fd))
 		data->ori_stdout = xdup(data->ori_stdout);
-	if (mode == SAVE || (mode == FD_REDIRECTED && data->ori_stderr == redirected_fd))
+	if (mode == SAVE || \
+		(mode == FD_REDIRECTED && data->ori_stderr == redirected_fd))
 		data->ori_stderr = xdup(data->ori_stderr);
 	if (mode == FD_REDIRECTED)
 		red_fd_flag[redirected_fd]++;
