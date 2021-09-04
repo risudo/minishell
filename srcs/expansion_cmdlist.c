@@ -84,8 +84,9 @@ static void	serch_new_space_cmdlist(t_cmdlist *clist)
 		while (ft_isspace(clist->str[i]))
 			i++;
 		len = ft_strlen(clist->str + i);
+		str = ft_xsubstr(clist->str, i, len);
 		free(clist->str), free(clist->quot);
-		clist->str = ft_xsubstr(clist->str, i, len);
+		clist->str = str;
 		clist->quot = get_quot_flag(clist->str);
 		serch_new_space_cmdlist(clist);
 	}

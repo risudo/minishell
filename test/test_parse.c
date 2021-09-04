@@ -58,11 +58,12 @@ void	put_iolist(t_iolist *list)
 			printf("\t  c_type: OUT_HERE_DOC\n");
 		if (list->c_type == PIPE)
 			printf("\t  c_type: PIPE\n");
+		if (list->c_type == FD)
+			printf("\t  c_type: FD\n");
 		if (list->c_type == ELSE)
 			printf("\t  c_type: ELSE\n");
 		printf("\t  here_doc_fd: %d\n\n", list->here_doc_fd);
-		list = list->next;
-		i++;
+		list = list->next, i++;
 	}
 	printf("\n");
 }

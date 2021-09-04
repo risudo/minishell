@@ -378,6 +378,51 @@ execdata[0]
 	  quot: 00000
 
 
+VAR="    "
+command: [echo $VAR]
+execdata[0]
+	*status: 0
+	cmdlist[0]
+	  str: "echo"
+	  quot: 0000
+	cmdlist[1]
+	  str: ""
+	  quot: 
+
+
+command: [echo aa$VAR]
+execdata[0]
+	*status: 0
+	cmdlist[0]
+	  str: "echo"
+	  quot: 0000
+	cmdlist[1]
+	  str: "aa"
+	  quot: 00
+
+
+command: [echo "$VAR"]
+execdata[0]
+	*status: 0
+	cmdlist[0]
+	  str: "echo"
+	  quot: 0000
+	cmdlist[1]
+	  str: "    "
+	  quot: DDDD
+
+
+command: [echo "$VAR"a]
+execdata[0]
+	*status: 0
+	cmdlist[0]
+	  str: "echo"
+	  quot: 0000
+	cmdlist[1]
+	  str: "    a"
+	  quot: DDDD0
+
+
 command: [echo >$USER]
 execdata[0]
 	*status: 0
@@ -394,6 +439,142 @@ execdata[0]
 	iolist[1]
 	  str: "$USER"
 	  quot: 00000
+	  c_type: ELSE
+	  here_doc_fd: -1
+
+
+command: [echo aa 10> file]
+execdata[0]
+	*status: 0
+	cmdlist[0]
+	  str: "echo"
+	  quot: 0000
+	cmdlist[1]
+	  str: "aa"
+	  quot: 00
+
+	iolist[0]
+	  str: "10"
+	  quot: 00
+	  c_type: FD
+	  here_doc_fd: -1
+
+	iolist[1]
+	  str: ">"
+	  quot: 0
+	  c_type: OUT_REDIRECT
+	  here_doc_fd: -1
+
+	iolist[2]
+	  str: "file"
+	  quot: 0000
+	  c_type: ELSE
+	  here_doc_fd: -1
+
+
+command: [echo aa 10 > file]
+execdata[0]
+	*status: 0
+	cmdlist[0]
+	  str: "echo"
+	  quot: 0000
+	cmdlist[1]
+	  str: "aa"
+	  quot: 00
+	cmdlist[2]
+	  str: "10"
+	  quot: 00
+
+	iolist[0]
+	  str: ">"
+	  quot: 0
+	  c_type: OUT_REDIRECT
+	  here_doc_fd: -1
+
+	iolist[1]
+	  str: "file"
+	  quot: 0000
+	  c_type: ELSE
+	  here_doc_fd: -1
+
+
+command: [echo aa 10>file]
+execdata[0]
+	*status: 0
+	cmdlist[0]
+	  str: "echo"
+	  quot: 0000
+	cmdlist[1]
+	  str: "aa"
+	  quot: 00
+
+	iolist[0]
+	  str: "10"
+	  quot: 00
+	  c_type: FD
+	  here_doc_fd: -1
+
+	iolist[1]
+	  str: ">"
+	  quot: 0
+	  c_type: OUT_REDIRECT
+	  here_doc_fd: -1
+
+	iolist[2]
+	  str: "file"
+	  quot: 0000
+	  c_type: ELSE
+	  here_doc_fd: -1
+
+
+command: [echo aa "10"> file]
+execdata[0]
+	*status: 0
+	cmdlist[0]
+	  str: "echo"
+	  quot: 0000
+	cmdlist[1]
+	  str: "aa"
+	  quot: 00
+	cmdlist[2]
+	  str: "10"
+	  quot: DD
+
+	iolist[0]
+	  str: ">"
+	  quot: 0
+	  c_type: OUT_REDIRECT
+	  here_doc_fd: -1
+
+	iolist[1]
+	  str: "file"
+	  quot: 0000
+	  c_type: ELSE
+	  here_doc_fd: -1
+
+
+command: [echo aa "1"0> file]
+execdata[0]
+	*status: 0
+	cmdlist[0]
+	  str: "echo"
+	  quot: 0000
+	cmdlist[1]
+	  str: "aa"
+	  quot: 00
+	cmdlist[2]
+	  str: "10"
+	  quot: D0
+
+	iolist[0]
+	  str: ">"
+	  quot: 0
+	  c_type: OUT_REDIRECT
+	  here_doc_fd: -1
+
+	iolist[1]
+	  str: "file"
+	  quot: 0000
 	  c_type: ELSE
 	  here_doc_fd: -1
 

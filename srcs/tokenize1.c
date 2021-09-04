@@ -35,7 +35,7 @@ static t_token	*new_token(t_token *cur, char **cmd,
 	return (tok);
 }
 
-static t_quottype	get_flag_quot(char *cmd, t_quottype flag_quot)
+t_quottype	get_flag_quot(char *cmd, t_quottype flag_quot)
 {
 	if ((flag_quot == S_QUOT && *cmd == '\''))
 		return (END_S_QUOT);

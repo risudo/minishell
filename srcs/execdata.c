@@ -11,7 +11,6 @@ static t_iolist	*get_iolst(t_token *start, t_token *cur_token)
 {
 	t_iolist	head;
 	t_iolist	*cur;
-	t_special_c	prev;
 
 	head.next = NULL;
 	cur = &head;
@@ -20,8 +19,12 @@ static t_iolist	*get_iolst(t_token *start, t_token *cur_token)
 		if (!is_cmd(start))
 		{
 			cur = new_iolst(cur, start);
+			if (cur->c_type >= IN_REDIRECT && cur->c_type <= OUT_REDIRECT
+				&& ft_isdigit(cur->str[0]))
+			{
+				cur = delimit_fd(cur);
+			}
 		}
-		prev = start->special;
 		start = start->next;
 	}
 	return (head.next);
