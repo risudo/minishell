@@ -17,6 +17,7 @@ typedef enum e_special_c
 	IN_HERE_DOC,
 	OUT_HERE_DOC,
 	PIPE,
+	FD,
 	ELSE
 }	t_special_c;
 

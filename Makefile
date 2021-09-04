@@ -12,6 +12,7 @@ SRCS_NAME = main.c \
 			envlist.c \
 			execdata.c \
 			execdata_utils.c \
+			delimit_fd.c \
 			setdata_cmdline_redirection.c \
 			setdata_heredoc_cmdtype.c \
 			execution_start.c \
@@ -31,7 +32,7 @@ SRCS_NAME = main.c \
 			tokenize_utils.c \
 			wrapper1.c \
 			wrapper2.c \
-			wrapper3.c 
+			wrapper3.c
 
 SRCS = ${addprefix ${SRCS_DIR}, ${SRCS_NAME}}
 

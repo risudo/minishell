@@ -39,21 +39,33 @@ static t_token	*get_newstr_list(t_token *list, char *delimiter_ptr)
 	return (list);
 }
 
+/*
+** @param(str): token list's str
+** Return pointer to the character to be delimited.
+*/
 char	*is_delimiter_operater(char *str)
 {
-	static int	flag;
-	size_t		i;
+	t_quottype	flag;
+	bool		nodigit;
+	char		*head;
 
-	i = 0;
-	while (str[i])
+	head = str;
+	nodigit = false;
+	flag = DEFAULT;
+	while (*str)
 	{
-		if (flag == 0 && (str[i] == '\'' || str[i] == '\"'))
-			flag = 1;
-		else if (flag == 1 && (str[i] == '\'' || str[i] == '\"'))
-			flag = 0;
-		if (flag == 0 && (str[i] == '>' || str[i] == '<' || str[i] == '|'))
-			return (str + i);
-		i++;
+		flag = get_flag_quot(str, flag);
+		if (head != str && !ft_isdigit(*(str - 1)))
+			nodigit = true;
+		if ((*str == '>' || *str == '<' || *str == '|')
+			&& flag != D_QUOT && flag != S_QUOT
+			&& ((!nodigit && *(str + 1) != '\0') || nodigit))
+		{
+			if (nodigit == false && head != str)
+				str++;
+			return (str);
+		}
+		str++;
 	}
 	return (NULL);
 }

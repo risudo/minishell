@@ -30,6 +30,7 @@ bool		is_consecutive_redirect(t_token *list);
 t_token		*trim_list(t_token *list);//
 bool		is_space_after_quot(t_token *list);
 bool		ft_isspace(char c);
+t_quottype	get_flag_quot(char *cmd, t_quottype flag_quot);
 
 // parse tokenlist
 int			parse_tokenlist(t_token *list, unsigned char *status);
@@ -41,6 +42,7 @@ t_execdata	*create_execdata(t_token *tokenlist,
 t_iolist	*new_iolst(t_iolist *cur, t_token *token);
 t_cmdlist	*new_clst(t_cmdlist *cur, t_token *token);
 bool		is_cmd(t_token *start);
+t_iolist	*delimit_fd(t_iolist *cur);
 
 // clear list
 void		clear_tokenlist(t_token *list);
@@ -51,7 +53,6 @@ t_execdata	*check_syntax(t_execdata *data);
 void		put_syntax_error(char *str);
 
 // expansion
-void		serch_env_iolist(t_iolist *iolist, t_envlist *envlist);
 void		serch_env_cmdlist(t_cmdlist *clist, t_envlist *envlist);
 char		*get_quot_flag(char *str);
 char		*get_removed_endflag(char **quot, char flag);
