@@ -42,7 +42,7 @@ int	execute_loop(t_execdata *data)
 	prev_pipe_read = STDIN_FILENO;
 	while (data)
 	{
-		xpipe(pipefd);
+		xpipe(pipefd, data);
 		pid = xfork();
 		if (pid == 0)
 		{
@@ -54,40 +54,38 @@ int	execute_loop(t_execdata *data)
 				execute_command(data);
 			exit(*(data->status));
 		}
-		xclose(pipefd[WRITE]);
-		if (prev_pipe_read != STDIN_FILENO)
-			xclose(prev_pipe_read);
+		open_fd_handler(data, CLOSE, pipefd[WRITE]);
 		prev_pipe_read = pipefd[READ];
 		data = data->next;
 	}
-	xclose(prev_pipe_read);
 	return (pid);
 }
 
-void	open_fd_handler(t_execdata *data, int mode, int open_fd)
+void	open_fd_handler(t_execdata *data, int mode, int fd)
 {
 	static char	open_fd_flag[FD_MAX + 1];
 	int			index_fd;
 
-	if (mode == FD_REDIRECTED && !open_fd_flag[open_fd])
+	if (mode == FD_REDIRECTED)
 	{
-		if(data->ori_stdin == open_fd)
-			data->ori_stdin = xdup(open_fd);
-		else if (data->ori_stdout == open_fd)
-			data->ori_stdout = xdup(open_fd);
-		else if (data->ori_stderr == open_fd)
-			data->ori_stderr = xdup(open_fd);
-		open_fd_flag[open_fd]++;
+		if (data->ori_stdin == fd)
+			data->ori_stdin = xdup(fd, data);
+		else if (data->ori_stdout == fd)
+			data->ori_stdout = xdup(fd, data);
+		else if (data->ori_stderr == fd)
+			data->ori_stderr = xdup(fd, data);
 	}
-	else if (mode == CLOSE)
+	if ((mode == OPEN || mode == FD_REDIRECTED) && !open_fd_flag[fd])
+		open_fd_flag[fd]++;
+	if (mode == CLOSE && open_fd_flag[fd])
+		open_fd_flag[fd]--, xclose(fd);
+	if (mode == ALL_CLOSE)
 	{
-		index_fd = 0;
-		while (index_fd <= FD_MAX)
+		index_fd = -1;
+		while (++index_fd <= FD_MAX)
 		{
 			if (open_fd_flag[index_fd])
-				xclose(index_fd);
-			open_fd_flag[index_fd] = 0;
-			index_fd++;
+				xclose(index_fd), open_fd_flag[index_fd] = 0;
 		}
 	}
 }
@@ -96,16 +94,16 @@ static void	std_fd_handler(t_execdata *data, int mode)
 {
 	if (mode == SAVE)
 	{
-		data->ori_stdin = xdup(STDIN_FILENO);
-		data->ori_stdout = xdup(STDOUT_FILENO);
-		data->ori_stderr = xdup(STDERR_FILENO);
+		data->ori_stdin = xdup(STDIN_FILENO, data);
+		data->ori_stdout = xdup(STDOUT_FILENO, data);
+		data->ori_stderr = xdup(STDERR_FILENO, data);
 	}
 	else if (mode == RESTORE)
 	{
 		ft_dup2(data->ori_stdin, STDIN_FILENO);
 		ft_dup2(data->ori_stdout, STDOUT_FILENO);
 		ft_dup2(data->ori_stderr, STDERR_FILENO);
-		open_fd_handler(data, CLOSE, 0);
+		open_fd_handler(data, ALL_CLOSE, 0);
 	}
 }
 
@@ -139,5 +137,6 @@ void	execute_start(t_execdata *data)
 			xwaitpid(0, NULL, 0);
 			data = data->next;
 		}
+		open_fd_handler(data, ALL_CLOSE, 0);
 	}
 }

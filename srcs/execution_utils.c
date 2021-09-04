@@ -18,22 +18,14 @@ int	ft_dup2(int oldfd, int newfd)
 	if (oldfd < 0 || newfd < 0)
 		return (-1);
 	if (oldfd != newfd)
-	{
 		xdup2(oldfd, newfd);
-		xclose(oldfd);
-	}
 	return (0);
 }
 
-int	ft_open(t_iolist *filenode, int flags, mode_t mode)
+int	ft_open(t_execdata *data, t_iolist *filenode, int flags, mode_t mode)
 {
 	int	fd;
 
-	if (filenode->next && filenode->next->c_type == ELSE)
-	{
-		ft_putendl_fd("minishell: ambiguous redirect", STDERR_FILENO);
-		return (-1);
-	}
 	if (mode == 0)
 		fd = open(filenode->str, flags);
 	else
@@ -45,5 +37,7 @@ int	ft_open(t_iolist *filenode, int flags, mode_t mode)
 		ft_putstr_fd(": ", STDERR_FILENO);
 		perror("");
 	}
+	else
+		open_fd_handler(data, OPEN, fd);
 	return (fd);
 }
