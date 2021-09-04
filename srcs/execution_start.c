@@ -43,8 +43,6 @@ int	execute_loop(t_execdata *data)
 	while (data)
 	{
 		xpipe(pipefd);
-		// open_fd_handler(data, FD_REDIRECTED, pipefd[0]);
-		// open_fd_handler(data, FD_REDIRECTED, pipefd[1]);
 		pid = xfork();
 		if (pid == 0)
 		{
@@ -56,13 +54,13 @@ int	execute_loop(t_execdata *data)
 				execute_command(data);
 			exit(*(data->status));
 		}
-//		xclose(pipefd[WRITE]);
-		// if (prev_pipe_read != STDIN_FILENO)
-		// 	xclose(prev_pipe_read);
+		xclose(pipefd[WRITE]);
+		if (prev_pipe_read != STDIN_FILENO)
+			xclose(prev_pipe_read);
 		prev_pipe_read = pipefd[READ];
 		data = data->next;
 	}
-	// xclose(prev_pipe_read);
+	xclose(prev_pipe_read);
 	return (pid);
 }
 
