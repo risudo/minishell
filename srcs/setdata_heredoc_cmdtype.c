@@ -1,35 +1,11 @@
 #include "minishell.h"
 
 /*
-**	Used to prepare data before executing command.
+** Used to prepare data before executing command.
+** 1 Recieve all here documents and the pipe
+**   (contains here documents) fd.
+** 2 get command type of each data.
 */
-
-int	setdata_cmdline_redirect(t_execdata *data)
-{
-	int			ret;
-	t_iolist	*move;
-
-	data->cmdline = convert_cmdlist_2dchar(data->clst);
-	ret = 0;
-	move = data->iolst;
-	while (ret == 0 && move)
-	{
-		if (move->c_type == IN_REDIRECT)
-			ret = ft_dup2(ft_open(move->next, O_RDONLY, 0), STDIN_FILENO);
-		else if (move->c_type == IN_HERE_DOC)
-			ret = ft_dup2(move->here_doc_fd, STDIN_FILENO);
-		else if (move->c_type == OUT_REDIRECT)
-			ret = ft_dup2(ft_open(move->next, O_WRONLY | O_CREAT | O_TRUNC, 0666), \
-							STDOUT_FILENO);
-		else if (move->c_type == OUT_HERE_DOC)
-			ret = ft_dup2(ft_open(move->next, O_WRONLY | O_CREAT | O_APPEND, 0666), \
-							STDOUT_FILENO);
-		if (ret == -1)
-			*(data->status) = 1;
-		move = move->next;
-	}
-	return (ret);
-}
 
 static int	is_cmd_type(t_cmdlist *clst)
 {
@@ -53,7 +29,19 @@ static int	is_cmd_type(t_cmdlist *clst)
 		return (OTHER);
 }
 
-static t_cmd	get_here_doc(char *limiter, t_envlist *elst)
+static void	expansion_heredoc(char **line, t_envlist *elst)
+{
+	char	*doll_ptr;
+
+	doll_ptr = ft_strdoll(*line);
+	while (doll_ptr)
+	{
+		expansion_key_io(line, elst, doll_ptr);
+		doll_ptr = ft_strdoll(*line);
+	}
+}
+
+static t_cmd	get_here_doc(char *limiter, t_envlist *elst, int is_quot)
 {
 	char	*line;
 	int		pipefd[PIPEFD_NUM];
@@ -69,7 +57,8 @@ static t_cmd	get_here_doc(char *limiter, t_envlist *elst)
 		no_limit = ft_strcmp(line, limiter);
 		if (no_limit)
 		{
-			expansion_key_heredoc(&line, elst, ft_strchr(line, '$'));
+			if (is_quot == 0)
+				expansion_heredoc(&line, elst);
 			ft_putendl_fd(line, pipefd[WRITE]);
 		}
 		free(line);
@@ -81,14 +70,23 @@ static t_cmd	get_here_doc(char *limiter, t_envlist *elst)
 void	setdata_heredoc_cmdtype(t_execdata *data)
 {
 	t_iolist	*move;
+	int			is_quot;
 
+	is_quot = 0;
 	while (data)
 	{
 		move = data->iolst;
 		while (move)
 		{
 			if (move->c_type == IN_HERE_DOC)
-				move->here_doc_fd = get_here_doc(move->next->str, data->elst);
+			{
+				if (ft_strchr(move->next->quot, '1') || \
+					ft_strchr(move->next->quot, '2'))
+					clear_quot_filename(&(move->next->str), \
+						&(move->next->quot)), is_quot++;
+				move->here_doc_fd = get_here_doc(move->next->str, \
+										data->elst, is_quot);
+			}
 			move = move->next;
 		}
 		data->cmd_type = is_cmd_type(data->clst);

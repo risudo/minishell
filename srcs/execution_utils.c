@@ -47,28 +47,3 @@ int	ft_open(t_iolist *filenode, int flags, mode_t mode)
 	}
 	return (fd);
 }
-
-void	expansion_key_heredoc(char **line,
-		t_envlist *envlist, char *doll_ptr)
-{
-	char	*key;
-	char	*value;
-	char	*front_key;
-	char	*back_key;
-	size_t	len;
-
-	while (doll_ptr)
-	{
-		len = 1;
-		while (!is_delimiter(doll_ptr[len]))
-			len++;
-		front_key = ft_xsubstr(*line, 0, doll_ptr - *line);
-		key = ft_xsubstr(doll_ptr, 1, len - 1);
-		back_key = ft_xsubstr(doll_ptr + len, 0, ft_strlen(doll_ptr + len));
-		value = ft_getenv(envlist, key);
-		xfree(*line);
-		*line = ft_strjoin_three(front_key, value, back_key);
-		xfree(front_key), xfree(key), xfree(back_key);
-		doll_ptr = ft_strchr(*line, '$');
-	}
-}

@@ -2,6 +2,7 @@
 # define EXECUTE_H
 
 # include "minishell.h"
+# define FD_MAX 2000
 
 typedef enum e_path_type
 {
@@ -16,8 +17,10 @@ void		execute_command(t_execdata *data);
 int			execute_loop(t_execdata *data);
 void		execute_start(t_execdata *data);
 
-//execution_setdata.c
+//setdata_cmdline_redirection.c
 int			setdata_cmdline_redirect(t_execdata *data);
+
+//setdata_heredoc_cmdtype.c
 void		setdata_heredoc_cmdtype(t_execdata *data);
 
 //command_*.c
@@ -35,8 +38,6 @@ void		no_command(t_execdata *data);
 t_path_type	ft_stat(char *pathname);
 int			ft_dup2(int oldfd, int newfd);
 int			ft_open(t_iolist *filenode, int flags, mode_t mode);
-void		expansion_key_heredoc(char **line, \
-				t_envlist *envlist, char *doll_ptr);
 
 //env_functions.c
 char		*ft_getenv(t_envlist *elst, char *search_key);
@@ -67,5 +68,14 @@ pid_t		xfork(void);
 
 //minishell_loop.c
 void		minishell_loop(char **envp);
+
+//expansion_iolist.c
+int			serch_env_iolist(t_iolist *iolist, t_envlist *envlist);
+
+//expansion_io_utils.c
+void		clear_quot_filename(char **filename, char **filequot);
+void		expansion_key_io(char **line, \
+				t_envlist *envlist, char *doll_ptr);
+char		*ft_strdoll(const char *s);
 
 #endif

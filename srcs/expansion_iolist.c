@@ -1,117 +1,98 @@
 #include "minishell.h"
 
 /*
-** Serch iolist and do the following.
+** Receive iolist node (contains filename) and do the following.
 ** 1 Expand environment valiables.
 ** 2 Clear quotation.
-** 3 If there are spaces after expanding, insert new list.
+** 3 If there are spaces before and after string, remove spaces.
+** 4 If there are spaces between strings
+**   (or string is empty after expanded), put error.
 */
 
-static void	expansion_key_iolist(t_iolist *iolist,
-		t_envlist *envlist, char *doll_ptr)
+static size_t	pass_space_idx(char *filename, char *filequot)
 {
-	char	*key;
-	char	*value;
-	char	*front;
-	char	*back;
+	size_t	i;
+
+	i = 0;
+	while (filename[i] && \
+		ft_isspace(filename[i]) && filequot[i] == '0')
+		i++;
+	return (i);
+}
+
+static size_t	get_filename_len(char *filename, char *filequot)
+{
+	size_t	i;
+
+	i = 0;
+	while (filename[i] && \
+		(!ft_isspace(filename[i]) || filequot[i] != '0'))
+		i++;
+	return (i);
+}
+
+static char	*rm_isspace(char *filename, char *filequot)
+{
+	size_t	start;
 	size_t	len;
+	size_t	back;
+	char	*clear_name;
 
-	len = 1;
-	while (!is_delimiter(doll_ptr[len]))
-		len++;
-	key = ft_xsubstr(doll_ptr, 1, len - 1);
-	front = ft_xsubstr(iolist->str, 0, doll_ptr - iolist->str);
-	back = ft_xsubstr(doll_ptr + len, 0, ft_strlen(doll_ptr + len));
-	value = ft_getenv(envlist, key);
-	xfree(iolist->str);
-	iolist->str = ft_strjoin_three(front, value, back);
-	xfree(front), xfree(key), xfree(back);
+	start = 0;
+	len = 0;
+	back = 0;
+	start = pass_space_idx(filename, filequot);
+	len = get_filename_len(filename + start, filequot + start);
+	back = pass_space_idx(filename + start + len, filequot + start + len);
+	if (filename[start + len + back])
+		clear_name = NULL;
+	else
+		clear_name = ft_xsubstr(filename, start, len);
+	free(filename);
+	return (clear_name);
 }
 
-static void	clear_quot_iolist(t_iolist *iolist)
+static int	check_filename(t_iolist *iolist, \
+				char *filename, char *filequot, int is_null)
 {
-	char	*new_str;
-	size_t	i;
-	size_t	j;
-
-	i = 0;
-	j = 0;
-	new_str = ft_xcalloc(ft_strlen_excluded_quot(iolist->str, iolist->quot) + 1,
-			sizeof(char));
-	while (iolist->str[i])
+	filename = rm_isspace(filename, filequot);
+	if (!filename || is_null)
 	{
-		if (is_delimiter_quot(iolist->str[i], iolist->quot[i]))
-		{
-			i++;
-			continue ;
-		}
-		new_str[j++] = iolist->str[i++];
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		ft_putstr_fd(iolist->str, STDERR_FILENO);
+		ft_putendl_fd(": ambiguous redirect", STDERR_FILENO);
+		free(filename);
+		free(filequot);
+		return (-1);
 	}
-	xfree(iolist->str);
-	iolist->str = new_str;
-	iolist->quot = get_removed_endflag(&iolist->quot, '1');
-	iolist->quot = get_removed_endflag(&iolist->quot, '2');
+	free(iolist->str);
+	free(iolist->quot);
+	iolist->str = filename;
+	iolist->quot = filequot;
+	return (0);
 }
 
-static void	insert_new_iolist(t_iolist *iolist, size_t i)
+int	serch_env_iolist(t_iolist *iolist, t_envlist *envlist)
 {
-	t_iolist	*new;
-	size_t		len;
-
-	new = (t_iolist *)ft_xcalloc(1, sizeof(*new));
-	while (iolist->str[i] == ' ')
-		i++;
-	len = ft_strlen(iolist->str + i);
-	new->str = ft_xsubstr(iolist->str, i, len);
-	new->quot = get_quot_flag(new->str);
-	new->c_type = ELSE;
-	new->next = iolist->next;
-	iolist->next = new;
-}
-
-static void	serch_new_space_iolist(t_iolist *iolist)
-{
-	size_t	i;
-	char	*str;
-
-	i = 0;
-	while (iolist->str[i])
-	{
-		if (iolist->str[i] == ' ' && iolist->quot[i] == '0')
-		{
-			str = ft_xsubstr(iolist->str, 0, i);
-			insert_new_iolist(iolist, i);
-			xfree(iolist->str);
-			xfree(iolist->quot);
-			iolist->str = str;
-			iolist->quot = get_quot_flag(iolist->str);
-			i--;
-		}
-		i++;
-	}
-}
-
-void	serch_env_iolist(t_iolist *iolist, t_envlist *envlist)
-{
-	t_iolist	*prev;
 	char		*doll_ptr;
+	char		*filename;
+	char		*filequot;
+	int			is_null;
 
-	prev = NULL;
-	while (iolist)
+	filename = ft_xstrdup(iolist->str);
+	filequot = get_quot_flag(filename);
+	is_null = 0;
+	doll_ptr = ft_strdoll(filename);
+	while (doll_ptr && filequot[doll_ptr - filename] != 'S')
 	{
-		doll_ptr = ft_strchr(iolist->str, '$');
-		while (doll_ptr
-			&& is_env_iolist(iolist->quot[doll_ptr - iolist->str], prev))
-		{
-			expansion_key_iolist(iolist, envlist, doll_ptr);
-			xfree(iolist->quot);
-			iolist->quot = get_quot_flag(iolist->str);
-			doll_ptr = ft_strchr(iolist->str, '$');
-		}
-		if (ft_strchr(iolist->quot, '1') || ft_strchr(iolist->quot, '2'))
-			clear_quot_iolist(iolist);
-		serch_new_space_iolist(iolist);
-		prev = iolist;
-		iolist = iolist->next;
+		expansion_key_io(&filename, envlist, doll_ptr);
+		xfree(filequot);
+		filequot = get_quot_flag(filename);
+		doll_ptr = ft_strdoll(filename);
 	}
+	if (filename[0] == '\0')
+		is_null++;
+	if (ft_strchr(filequot, '1') || ft_strchr(filequot, '2'))
+		clear_quot_filename(&filename, &filequot);
+	return (check_filename(iolist, filename, filequot, is_null));
 }
