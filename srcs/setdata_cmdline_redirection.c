@@ -1,5 +1,11 @@
 #include "minishell.h"
 
+/*
+** Used to prepare data before executing command.
+** 1 Make command line char array.
+** 2 Redirection.
+*/
+
 static int	set_redirected_fd(t_execdata *data, t_iolist *iolst, \
 							int *redirect_fd, int *is_fd_specified)
 {

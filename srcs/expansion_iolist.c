@@ -1,10 +1,12 @@
 #include "minishell.h"
 
 /*
-** Serch iolist and do the following.
+** Receive iolist node (contains filename) and do the following.
 ** 1 Expand environment valiables.
 ** 2 Clear quotation.
-** 3 If there are spaces after expanding, insert new list.
+** 3 If there are spaces before and after string, remove spaces.
+** 4 If there are spaces between strings
+**   (or string is empty after expanded), put error.
 */
 
 static size_t	pass_space_idx(char *filename, char *filequot)

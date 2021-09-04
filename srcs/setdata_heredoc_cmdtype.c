@@ -2,6 +2,9 @@
 
 /*
 ** Used to prepare data before executing command.
+** 1 Recieve all here documents and the pipe
+**   (contains here documents) fd.
+** 2 get command type of each data.
 */
 
 static int	is_cmd_type(t_cmdlist *clst)
