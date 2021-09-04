@@ -7,26 +7,25 @@
 */
 
 static int	set_redirected_fd(t_execdata *data, t_iolist *iolst, \
-							int *redirect_fd, int *is_fd_specified)
+							int *redirected_fd, int *is_fd_specified)
 {
-/*	if (iolst->c_type == FD)
+	if (iolst->c_type == FD)
 	{
-		*redirect_fd = ft_atoi(iolst->str);
-		if (*redirect_fd < 0 || FD_MAX < *redirect_fd)
+		*redirected_fd = ft_atoi(iolst->str);
+		if (*redirected_fd < 0 || FD_MAX < *redirected_fd)
 		{
 			ft_putendl_fd("bad file descriptor", STDERR_FILENO);
 			return (-1);
 		}
-		fd_handler(data, FD_REDIRECTED, *redirected_fd);
+		open_fd_handler(data, FD_REDIRECTED, *redirected_fd);
 		*is_fd_specified = 1;
-	}*/
-	(void)data;
-	if (*is_fd_specified == 0 && \
+	}
+	else if (*is_fd_specified == 0 && \
 		(iolst->c_type == IN_REDIRECT || iolst->c_type == IN_HERE_DOC))
-		*redirect_fd = STDIN_FILENO;
+		*redirected_fd = STDIN_FILENO;
 	else if (*is_fd_specified == 0 && \
 		(iolst->c_type == OUT_REDIRECT || iolst->c_type == OUT_HERE_DOC))
-	*redirect_fd = STDOUT_FILENO;
+	*redirected_fd = STDOUT_FILENO;
 	return (0);
 }
 

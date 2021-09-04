@@ -6,13 +6,6 @@
 ** execute_loop() runs each execution.
 */
 
-enum e_stdfd_mode
-{
-	SAVE,
-	FD_REDIRECTED,
-	RESTORE
-};
-
 void	execute_command(t_execdata *data)
 {
 	void	(*cmd_func[CMD_NUM])(t_execdata *data);
@@ -50,53 +43,71 @@ int	execute_loop(t_execdata *data)
 	while (data)
 	{
 		xpipe(pipefd);
+		// open_fd_handler(data, FD_REDIRECTED, pipefd[0]);
+		// open_fd_handler(data, FD_REDIRECTED, pipefd[1]);
 		pid = xfork();
 		if (pid == 0)
 		{
 			ft_dup2(prev_pipe_read, STDIN_FILENO);
 			xclose(pipefd[READ]);
-			if (data->next != NULL)
+			if (data->next)
 				ft_dup2(pipefd[WRITE], STDOUT_FILENO);
 			if (setdata_cmdline_redirect(data) == 0)
 				execute_command(data);
 			exit(*(data->status));
 		}
-		xclose(pipefd[WRITE]);
+//		xclose(pipefd[WRITE]);
+		// if (prev_pipe_read != STDIN_FILENO)
+		// 	xclose(prev_pipe_read);
 		prev_pipe_read = pipefd[READ];
 		data = data->next;
 	}
+	// xclose(prev_pipe_read);
 	return (pid);
 }
 
-static void	fd_handler(t_execdata *data, int mode, int redirected_fd)
+void	open_fd_handler(t_execdata *data, int mode, int open_fd)
 {
-	static char	red_fd_flag[FD_MAX + 1];
+	static char	open_fd_flag[FD_MAX + 1];
 	int			index_fd;
 
-	if (mode == SAVE || \
-		(mode == FD_REDIRECTED && data->ori_stdin == redirected_fd))
-		data->ori_stdin = xdup(data->ori_stdin);
-	if (mode == SAVE || \
-		(mode == FD_REDIRECTED && data->ori_stdout == redirected_fd))
-		data->ori_stdout = xdup(data->ori_stdout);
-	if (mode == SAVE || \
-		(mode == FD_REDIRECTED && data->ori_stderr == redirected_fd))
-		data->ori_stderr = xdup(data->ori_stderr);
-	if (mode == FD_REDIRECTED)
-		red_fd_flag[redirected_fd]++;
-	if (mode == RESTORE)
+	if (mode == FD_REDIRECTED && !open_fd_flag[open_fd])
+	{
+		if(data->ori_stdin == open_fd)
+			data->ori_stdin = xdup(open_fd);
+		else if (data->ori_stdout == open_fd)
+			data->ori_stdout = xdup(open_fd);
+		else if (data->ori_stderr == open_fd)
+			data->ori_stderr = xdup(open_fd);
+		open_fd_flag[open_fd]++;
+	}
+	else if (mode == CLOSE)
+	{
+		index_fd = 0;
+		while (index_fd <= FD_MAX)
+		{
+			if (open_fd_flag[index_fd])
+				xclose(index_fd);
+			open_fd_flag[index_fd] = 0;
+			index_fd++;
+		}
+	}
+}
+
+static void	std_fd_handler(t_execdata *data, int mode)
+{
+	if (mode == SAVE)
+	{
+		data->ori_stdin = xdup(STDIN_FILENO);
+		data->ori_stdout = xdup(STDOUT_FILENO);
+		data->ori_stderr = xdup(STDERR_FILENO);
+	}
+	else if (mode == RESTORE)
 	{
 		ft_dup2(data->ori_stdin, STDIN_FILENO);
 		ft_dup2(data->ori_stdout, STDOUT_FILENO);
 		ft_dup2(data->ori_stderr, STDERR_FILENO);
-		index_fd = 0;
-		while (index_fd <= FD_MAX)
-		{
-			if (red_fd_flag[index_fd])
-				xclose(index_fd);
-			red_fd_flag[index_fd] = 0;
-			index_fd++;
-		}
+		open_fd_handler(data, CLOSE, 0);
 	}
 }
 
@@ -114,14 +125,11 @@ void	execute_start(t_execdata *data)
 	setdata_heredoc_cmdtype(data);
 	if (data->next == NULL && data->cmd_type != OTHER)
 	{
-		data->ori_stdin = STDIN_FILENO;
-		data->ori_stdout = STDOUT_FILENO;
-		data->ori_stderr = STDERR_FILENO;
-		fd_handler(data, SAVE, -1);
+		std_fd_handler(data, SAVE);
 		if (setdata_cmdline_redirect(data) == 0)
 			execute_command(data);
 		free_2d_array(data->cmdline);
-		fd_handler(data, RESTORE, -1);
+		std_fd_handler(data, RESTORE);
 	}
 	else
 	{

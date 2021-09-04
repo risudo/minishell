@@ -12,6 +12,14 @@ typedef enum e_path_type
 	ELSE_TYPE
 }	t_path_type;
 
+enum e_fd_mode
+{
+	SAVE,
+	RESTORE,
+	FD_REDIRECTED,
+	CLOSE
+}	t_fd_mode;
+
 //execution_start.c
 void		execute_command(t_execdata *data);
 int			execute_loop(t_execdata *data);
@@ -77,5 +85,8 @@ void		clear_quot_filename(char **filename, char **filequot);
 void		expansion_key_io(char **line, \
 				t_envlist *envlist, char *doll_ptr);
 char		*ft_strdoll(const char *s);
+
+//after
+void	open_fd_handler(t_execdata *data, int mode, int redirected_fd);
 
 #endif
