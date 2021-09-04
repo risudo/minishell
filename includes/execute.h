@@ -71,6 +71,7 @@ void		minishell_loop(char **envp);
 void		clear_quot_filename(char **filename, char **filequot);
 int			serch_env_iolist(t_iolist *iolist, t_envlist *envlist);
 void		expansion_key_io(char **line, \
-				t_envlist *envlist, char *doll_ptr, int recursive);
+				t_envlist *envlist, char *doll_ptr);
+char		*ft_strdoll(const char *s);
 
 #endif

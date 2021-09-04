@@ -31,7 +31,9 @@ static int	redirection(t_iolist *iolst, t_envlist *elst, int redirected_fd, int 
 {
 	int	ret;
 
-	ret = serch_env_iolist(iolst->next, elst);
+//	ret = serch_env_iolist(iolst->next, elst);
+	ret = 0;
+	(void)elst;
 	if (ret == 0 && iolst->c_type == IN_REDIRECT)
 		ret = ft_dup2(ft_open(iolst->next, O_RDONLY, 0), redirected_fd);
 	else if (ret == 0 && iolst->c_type == IN_HERE_DOC)
@@ -91,6 +93,18 @@ static int	is_cmd_type(t_cmdlist *clst)
 		return (OTHER);
 }
 
+static void	expansion_heredoc(char **line, t_envlist *elst)
+{
+	char *doll_ptr;
+
+	doll_ptr = ft_strdoll(*line);
+	while(doll_ptr)
+	{
+		expansion_key_io(line, elst, doll_ptr);
+		doll_ptr = ft_strdoll(*line);
+	}
+}
+
 static t_cmd	get_here_doc(char *limiter, t_envlist *elst, int is_quot)
 {
 	char	*line;
@@ -108,7 +122,7 @@ static t_cmd	get_here_doc(char *limiter, t_envlist *elst, int is_quot)
 		if (no_limit)
 		{
 			if (is_quot == 0)
-				expansion_key_io(&line, elst, ft_strchr(line, '$'), 1);
+				expansion_heredoc(&line, elst);
 			ft_putendl_fd(line, pipefd[WRITE]);
 		}
 		free(line);
@@ -132,11 +146,8 @@ void	setdata_heredoc_cmdtype(t_execdata *data)
 			{
 				if (ft_strchr(move->next->quot, '1') || \
 					ft_strchr(move->next->quot, '2'))
-				{
 					clear_quot_filename(&(move->next->str), \
-										&(move->next->quot));
-					is_quot++;
-				}
+						&(move->next->quot)), is_quot++;
 				move->here_doc_fd = get_here_doc(move->next->str, \
 										data->elst, is_quot);
 			}
