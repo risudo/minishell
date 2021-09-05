@@ -11,7 +11,7 @@ char	*ft_strdoll(const char *s)
 		return (doll_ptr);
 }
 
-void	expansion_key_io(char **line, \
+size_t	expansion_key_io(char **line, \
 		t_envlist *envlist, char *doll_ptr)
 {
 	char	*key;
@@ -29,7 +29,9 @@ void	expansion_key_io(char **line, \
 	value = ft_getenv(envlist, key);
 	xfree(*line);
 	*line = ft_strjoin_three(front_key, value, back_key);
+	len = ft_strlen(front_key) + ft_strlen(value);
 	xfree(front_key), xfree(key), xfree(back_key);
+	return (len);
 }
 
 void	clear_quot_filename(char **filename, char **filequot)
