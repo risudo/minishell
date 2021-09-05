@@ -85,7 +85,7 @@ void	builtin_export(t_execdata *data)
 	size_t	arg_i;
 	ssize_t	split_point;
 
-	*(data->status) = 0;
+	g_status = 0;
 	arg_i = 1;
 	if (data->cmdline[arg_i] == NULL)
 		put_env_asciiorder(data->elst, NULL);
@@ -101,7 +101,7 @@ void	builtin_export(t_execdata *data)
 				ft_putstr_fd("minishell: export: ", STDERR_FILENO);
 				ft_putstr_fd(data->cmdline[arg_i], STDERR_FILENO);
 				ft_putendl_fd(": not a valid identifier", STDERR_FILENO);
-				*(data->status) = 1;
+				g_status = 1;
 			}
 			arg_i++;
 		}

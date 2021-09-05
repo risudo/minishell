@@ -70,6 +70,6 @@ int	setdata_cmdline_redirect(t_execdata *data)
 		move = move->next;
 	}
 	if (ret == -1)
-		*(data->status) = 1;
+		g_status = 1;
 	return (ret);
 }

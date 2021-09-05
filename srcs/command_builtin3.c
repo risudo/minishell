@@ -17,7 +17,7 @@ void	builtin_unset(t_execdata *data)
 		ft_unsetenv(data->elst, data->cmdline[i]);
 		i++;
 	}
-	*(data->status) = 0;
+	g_status = 0;
 }
 
 void	builtin_env(t_execdata *data)
@@ -31,7 +31,7 @@ void	builtin_env(t_execdata *data)
 			printf("%s=%s\n", move->key, move->value);
 		move = move->next;
 	}
-	*(data->status) = 0;
+	g_status = 0;
 }
 
 void	builtin_exit(t_execdata *data)
@@ -44,16 +44,16 @@ void	builtin_exit(t_execdata *data)
 	if (data->cmdline[2])
 	{
 		ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
-		*(data->status) = 1;
+		g_status = 1;
 		return ;
 	}
-	*(data->status) = (unsigned char)ft_atol(data->cmdline[1], &nonnum_check);
+	g_status = (unsigned char)ft_atol(data->cmdline[1], &nonnum_check);
 	if (nonnum_check)
 	{
 		ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
 		ft_putstr_fd(data->cmdline[1], STDERR_FILENO);
 		ft_putendl_fd(": numeric argument required", STDERR_FILENO);
-		*(data->status) = 255;
+		g_status = 255;
 	}
-	exit(*(data->status));
+	exit(g_status);
 }

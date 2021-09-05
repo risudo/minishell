@@ -27,7 +27,7 @@ void	builtin_echo(t_execdata *data)
 	}
 	if (option == 0)
 		printf("\n");
-	*(data->status) = 0;
+	g_status = 0;
 }
 
 void	builtin_cd(t_execdata *data)
@@ -38,12 +38,12 @@ void	builtin_cd(t_execdata *data)
 		chdir(data->cmdline[1]) == -1)
 	{
 		perror("cd");
-		*(data->status) = 1;
+		g_status = 1;
 		return ;
 	}
 	if (ft_getenv(data->elst, "PWD"))
 		ft_setenv(data->elst, ft_xstrdup("PWD"), getcwd(NULL, 0), 0);
-	*(data->status) = 0;
+	g_status = 0;
 }
 
 void	builtin_pwd(t_execdata *data)
@@ -54,12 +54,13 @@ void	builtin_pwd(t_execdata *data)
 	if (!pathname)
 	{
 		perror("pwd");
-		*(data->status) = 1;
+		g_status = 1;
 	}
 	else
 	{
 		printf("%s\n", pathname);
-		*(data->status) = 0;
+		g_status = 0;
 	}
+	(void)data;
 	free(pathname);
 }

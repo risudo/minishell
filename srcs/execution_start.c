@@ -15,7 +15,7 @@ static void	child_execute(t_execdata *data, int prev_pipe_read, \
 		ft_dup2(pipewrite, STDOUT_FILENO);
 	if (setdata_cmdline_redirect(data) == 0)
 		execute_command(data);
-	exit(*(data->status));
+	exit(g_status);
 }
 
 static int	parent_connect_fd(t_execdata *data, int prev_pipe_read, \
@@ -103,7 +103,7 @@ void	execute_start(t_execdata *data)
 	{
 		lastchild_pid = execute_loop(data);
 		xwaitpid(lastchild_pid, &wstatus, 0);
-		*(data->status) = WEXITSTATUS(wstatus);
+		g_status = WEXITSTATUS(wstatus);
 		while (data->next)
 		{
 			xwaitpid(0, NULL, 0);
