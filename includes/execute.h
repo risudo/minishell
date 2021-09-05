@@ -84,7 +84,7 @@ int			expand_filename(t_iolist *iolist, t_envlist *envlist);
 
 //expansion_io_utils.c
 void		clear_quot_filename(char **filename, char **filequot);
-void		expansion_key_io(char **line, \
+size_t		expansion_key_io(char **line, \
 				t_envlist *envlist, char *doll_ptr);
 char		*ft_strdoll(const char *s);
 
