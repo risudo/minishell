@@ -39,7 +39,6 @@ void		builtin_unset(t_execdata *data);
 void		builtin_env(t_execdata *data);
 void		builtin_exit(t_execdata *data);
 void		non_builtin(t_execdata *data);
-void		no_command(t_execdata *data);
 
 //execution_utils.c
 t_path_type	ft_stat(char *pathname);
