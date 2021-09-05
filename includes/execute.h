@@ -21,10 +21,8 @@ typedef enum e_fd_mode
 }	t_fd_mode;
 
 //execution_start.c
-void		execute_command(t_execdata *data);
 int			execute_loop(t_execdata *data);
 void		execute_start(t_execdata *data);
-void		open_fd_handler(t_execdata *data, int mode, int redireceted_fd);
 
 //setdata_cmdline_redirection.c
 int			setdata_cmdline_redirect(t_execdata *data);
@@ -48,6 +46,8 @@ t_path_type	ft_stat(char *pathname);
 int			ft_dup2(int oldfd, int newfd);
 int			ft_open(t_iolist *filenode, \
 					int flags, mode_t mode);
+void		execute_command(t_execdata *data);
+void		open_fd_handler(t_execdata *data, int mode, int redireceted_fd);
 
 //env_functions.c
 char		*ft_getenv(t_envlist *elst, char *search_key);

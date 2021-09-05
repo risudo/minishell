@@ -6,20 +6,27 @@
 ** execute_loop() runs each execution.
 */
 
-void	execute_command(t_execdata *data)
+static void	child_execute(t_execdata *data, int prev_pipe_read, \
+						int piperead, int pipewrite)
 {
-	void	(*cmd_func[CMD_NUM])(t_execdata *data);
+	ft_dup2(prev_pipe_read, STDIN_FILENO);
+	xclose(piperead);
+	if (data->next)
+		ft_dup2(pipewrite, STDOUT_FILENO);
+	if (setdata_cmdline_redirect(data) == 0)
+		execute_command(data);
+	exit(*(data->status));
+}
 
-	cmd_func[ECHO] = builtin_echo;
-	cmd_func[CD] = builtin_cd;
-	cmd_func[PWD] = builtin_pwd;
-	cmd_func[EXPORT] = builtin_export;
-	cmd_func[UNSET] = builtin_unset;
-	cmd_func[ENV] = builtin_env;
-	cmd_func[EXIT] = builtin_exit;
-	cmd_func[OTHER] = non_builtin;
-	cmd_func[NON_CMD] = no_command;
-	cmd_func[data->cmd_type](data);
+static int	parent_connect_fd(t_execdata *data, int prev_pipe_read, \
+						int piperead, int pipewrite)
+{
+	xclose(pipewrite);
+	if (prev_pipe_read != STDIN_FILENO)
+		xclose(prev_pipe_read);
+	if (!data->next)
+		xclose(piperead);
+	return (piperead);
 }
 
 /*
@@ -45,51 +52,14 @@ int	execute_loop(t_execdata *data)
 		xpipe(pipefd);
 		pid = xfork();
 		if (pid == 0)
-		{
-			ft_dup2(prev_pipe_read, STDIN_FILENO);
-			xclose(pipefd[READ]);
-			if (data->next)
-				ft_dup2(pipefd[WRITE], STDOUT_FILENO);
-			if (setdata_cmdline_redirect(data) == 0)
-				execute_command(data);
-			exit(*(data->status));
-		}
-		xclose(pipefd[WRITE]);
-		if (prev_pipe_read != STDIN_FILENO)
-			xclose(prev_pipe_read);
-		if (data->next)
-			prev_pipe_read = pipefd[READ];
+			child_execute(data, prev_pipe_read, \
+					pipefd[READ], pipefd[WRITE]);
 		else
-			xclose(pipefd[READ]);
+			prev_pipe_read = parent_connect_fd(data, \
+					prev_pipe_read, pipefd[READ], pipefd[WRITE]);
 		data = data->next;
 	}
 	return (pid);
-}
-
-void	open_fd_handler(t_execdata *data, int mode, int redireceted_fd)
-{
-	static char	open_fd_flag[FD_MAX + 1];
-	int			index_fd;
-
-	if (mode == FD_REDIRECTED && !open_fd_flag[redireceted_fd])
-	{
-		if (data->ori_stdin == redireceted_fd)
-			data->ori_stdin = xdup(redireceted_fd);
-		else if (data->ori_stdout == redireceted_fd)
-			data->ori_stdout = xdup(redireceted_fd);
-		else if (data->ori_stderr == redireceted_fd)
-			data->ori_stderr = xdup(redireceted_fd);
-		open_fd_flag[redireceted_fd]++;
-	}
-	else if (mode == ALL_CLOSE)
-	{
-		index_fd = -1;
-		while (++index_fd <= FD_MAX)
-		{
-			if (open_fd_flag[index_fd])
-				xclose(index_fd), open_fd_flag[index_fd] = 0;
-		}
-	}
 }
 
 static void	std_fd_handler(t_execdata *data, int mode)

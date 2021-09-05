@@ -42,3 +42,45 @@ int	ft_open(t_iolist *filenode, int flags, mode_t mode)
 	}
 	return (fd);
 }
+
+void	execute_command(t_execdata *data)
+{
+	void	(*cmd_func[CMD_NUM])(t_execdata *data);
+
+	cmd_func[ECHO] = builtin_echo;
+	cmd_func[CD] = builtin_cd;
+	cmd_func[PWD] = builtin_pwd;
+	cmd_func[EXPORT] = builtin_export;
+	cmd_func[UNSET] = builtin_unset;
+	cmd_func[ENV] = builtin_env;
+	cmd_func[EXIT] = builtin_exit;
+	cmd_func[OTHER] = non_builtin;
+	cmd_func[NON_CMD] = no_command;
+	cmd_func[data->cmd_type](data);
+}
+
+void	open_fd_handler(t_execdata *data, int mode, int redireceted_fd)
+{
+	static char	open_fd_flag[FD_MAX + 1];
+	int			index_fd;
+
+	if (mode == FD_REDIRECTED && !open_fd_flag[redireceted_fd])
+	{
+		if (data->ori_stdin == redireceted_fd)
+			data->ori_stdin = xdup(redireceted_fd);
+		else if (data->ori_stdout == redireceted_fd)
+			data->ori_stdout = xdup(redireceted_fd);
+		else if (data->ori_stderr == redireceted_fd)
+			data->ori_stderr = xdup(redireceted_fd);
+		open_fd_flag[redireceted_fd]++;
+	}
+	else if (mode == ALL_CLOSE)
+	{
+		index_fd = -1;
+		while (++index_fd <= FD_MAX)
+		{
+			if (open_fd_flag[index_fd])
+				xclose(index_fd), open_fd_flag[index_fd] = 0;
+		}
+	}
+}
