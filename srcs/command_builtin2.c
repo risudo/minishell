@@ -72,7 +72,10 @@ static void	put_env_asciiorder(t_envlist *head, t_envlist *min_node)
 	}
 	if (put_node)
 	{
-		printf("declare -x %s=\"%s\"\n", put_node->key, put_node->value);
+		if (put_node->value)
+			printf("declare -x %s=\"%s\"\n", put_node->key, put_node->value);
+		else
+			printf("declare -x %s\n", put_node->key);
 		put_env_asciiorder(head, put_node);
 	}
 }
