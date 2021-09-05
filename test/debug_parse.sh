@@ -79,6 +79,17 @@ echo 'VAR="    "' >> result.txt
 
 ./parse 'echo "$VAR"a' >> result.txt
 
+export file=f
+export FILE='$file'
+echo 'file=f' >> result.txt
+echo 'FILE='\''$file'\' >> result.txt
+
+./parse 'echo $FILE' >> result.txt
+
+./parse 'echo $FILE$file' >> result.txt
+
+./parse 'echo $#$HOME' >> result.txt
+
 ### redirect
 ./parse 'echo >$USER' >> result.txt
 
