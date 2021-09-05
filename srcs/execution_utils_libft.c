@@ -12,7 +12,7 @@ static bool	is_overflow(unsigned long num, \
 
 static size_t	pass_isspace(char *str, size_t i)
 {
-	while(ft_isspace(str[i]))
+	while (ft_isspace(str[i]))
 		i++;
 	return (i);
 }

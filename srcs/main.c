@@ -6,6 +6,7 @@ unsigned char	g_status = 0;
 void	handler(int signo)
 {
 	(void)signo;
+	g_status = 128 + SIGINT;
 	ft_putchar_fd('\n', STDOUT_FILENO);
 	rl_replace_line("", 0);
 	rl_on_new_line();
