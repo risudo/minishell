@@ -110,8 +110,7 @@ void	serch_env_cmdlist(t_cmdlist *clist, t_envlist *envlist)
 	while (clist)
 	{
 		doll_ptr = ft_strdoll(clist->str);
-		while (doll_ptr != NULL && clist->quot[doll_ptr - clist->str] != 'S'
-			&& !is_delimiter(*(doll_ptr + 1)))
+		while (doll_ptr != NULL && clist->quot[doll_ptr - clist->str] != 'S')
 		{
 			len = expansion_key_cmdlist(clist, envlist, doll_ptr);
 			xfree(clist->quot);
