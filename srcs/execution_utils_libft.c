@@ -1,13 +1,20 @@
 #include "minishell.h"
 
-static bool	check_nonnum_overflow(unsigned long num, \
-						char *str, int sign, size_t i)
+static bool	is_overflow(unsigned long num, \
+						int sign, bool *nonnum_check)
 {
-	if (ft_isdigit(str[i]) == 0 || \
-		(sign == 1 && LONG_MAX < num) || \
+	if ((sign == 1 && LONG_MAX < num) || \
 		(sign == -1 && LONG_MAX < num - 1))
 		return (true);
+	*nonnum_check = false;
 	return (false);
+}
+
+static size_t	pass_isspace(char *str, size_t i)
+{
+	while(ft_isspace(str[i]))
+		i++;
+	return (i);
 }
 
 long	ft_atol(char *str, bool *nonnum_check)
@@ -16,23 +23,25 @@ long	ft_atol(char *str, bool *nonnum_check)
 	unsigned long	num;
 	int				sign;
 
-	*nonnum_check = false;
 	i = 0;
 	num = 0;
 	sign = 1;
-	if (str[i] == '\0')
-		*nonnum_check = true;
-	else if (str[i] == '+')
+	i = pass_isspace(str, i);
+	if (str[i] == '+')
 		i++;
 	else if (str[i] == '-' && ++i)
 		sign = -1;
-	while (*nonnum_check == false && str[i])
+	*nonnum_check = true;
+	while (str[i] && ft_isdigit(str[i]))
 	{
-		num *= 10;
-		num += str[i] - '0';
-		*nonnum_check = check_nonnum_overflow(num, str, sign, i);
+		num = num * 10 + (str[i] - '0');
+		if (is_overflow(num, sign, nonnum_check))
+			break ;
 		i++;
 	}
+	i = pass_isspace(str, i);
+	if (i == 0 || str[i] != '\0')
+		*nonnum_check = true;
 	return ((long)num * sign);
 }
 
