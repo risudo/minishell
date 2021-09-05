@@ -47,6 +47,8 @@ void	execute_command(t_execdata *data)
 {
 	void	(*cmd_func[CMD_NUM])(t_execdata *data);
 
+	if (data->cmd_type == NON_CMD)
+		return ;
 	cmd_func[ECHO] = builtin_echo;
 	cmd_func[CD] = builtin_cd;
 	cmd_func[PWD] = builtin_pwd;
@@ -55,7 +57,7 @@ void	execute_command(t_execdata *data)
 	cmd_func[ENV] = builtin_env;
 	cmd_func[EXIT] = builtin_exit;
 	cmd_func[OTHER] = non_builtin;
-	cmd_func[NON_CMD] = no_command;
+	cmd_func[NON_CMD] = NULL;
 	cmd_func[data->cmd_type](data);
 }
 

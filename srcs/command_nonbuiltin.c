@@ -114,7 +114,3 @@ void	non_builtin(t_execdata *data)
 	*(data->status) = 126;
 }
 
-void	no_command(t_execdata *data)
-{
-	*(data->status) = 0;
-}
