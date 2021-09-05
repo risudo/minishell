@@ -32,12 +32,13 @@ static int	is_cmd_type(t_cmdlist *clst)
 static void	expansion_heredoc(char **line, t_envlist *elst)
 {
 	char	*doll_ptr;
+	size_t	len;
 
 	doll_ptr = ft_strdoll(*line);
 	while (doll_ptr)
 	{
-		expansion_key_io(line, elst, doll_ptr);
-		doll_ptr = ft_strdoll(*line);
+		len = expansion_key_io(line, elst, doll_ptr);
+		doll_ptr = ft_strdoll(*line + len);
 	}
 }
 
