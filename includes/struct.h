@@ -80,7 +80,6 @@ typedef struct s_execdata
 	int					ori_stdin;
 	int					ori_stdout;
 	int					ori_stderr;
-	unsigned char		*status;
 	int					pipefd[PIPEFD_NUM];
 	t_cmd				cmd_type;
 	t_cmdlist			*clst;

@@ -100,7 +100,7 @@ void	non_builtin(t_execdata *data)
 {
 	char	*cmd_path;
 
-	*(data->status) = 0;
+	g_status = 0;
 	if (ft_strchr(data->cmdline[0], '/'))
 		cmd_path = cmdpath_from_direct(data->cmdline[0]);
 	else
@@ -111,6 +111,5 @@ void	non_builtin(t_execdata *data)
 	if (execve(cmd_path, data->cmdline, \
 		convert_envlist_2dchar(data->elst)) == -1)
 		perror(data->cmdline[0]);
-	*(data->status) = 126;
+	g_status = 126;
 }
-
