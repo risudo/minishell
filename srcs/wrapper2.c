@@ -50,7 +50,7 @@ int	xdup2(int oldfd, int newfd)
 	return (fd);
 }
 
-int	xdup(int oldfd, t_execdata *data)
+int	xdup(int oldfd)
 {
 	int	newfd;
 
@@ -61,7 +61,5 @@ int	xdup(int oldfd, t_execdata *data)
 		ft_putendl_fd(strerror(errno), STDERR_FILENO);
 		exit(EXIT_FAILURE);
 	}
-	else
-		open_fd_handler(data, OPEN, newfd);
 	return (newfd);
 }
