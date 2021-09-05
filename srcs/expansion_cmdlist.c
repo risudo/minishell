@@ -106,14 +106,14 @@ void	serch_env_cmdlist(t_cmdlist *clist, t_envlist *envlist)
 
 	while (clist)
 	{
-		doll_ptr = ft_strchr(clist->str, '$');
+		doll_ptr = ft_strdoll(clist->str);
 		while (doll_ptr != NULL && clist->quot[doll_ptr - clist->str] != 'S'
 			&& !is_delimiter(*(doll_ptr + 1)))
 		{
 			expansion_key_cmdlist(clist, envlist, doll_ptr);
 			xfree(clist->quot);
 			clist->quot = get_quot_flag(clist->str);
-			doll_ptr = ft_strchr(clist->str, '$');
+			doll_ptr = ft_strdoll(clist->str);
 		}
 		if (ft_strchr(clist->quot, '1') || ft_strchr(clist->quot, '2'))
 			clear_quot_cmdlist(clist);
