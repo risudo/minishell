@@ -9,15 +9,13 @@ void	xwaitpid(pid_t pid, int *wstatus, int options)
 	}
 }
 
-void	xpipe(int *pipefd, t_execdata *data)
+void	xpipe(int *pipefd)
 {
 	if (pipe(pipefd) == -1)
 	{
 		perror("pipe");
 		exit(EXIT_FAILURE);
 	}
-	open_fd_handler(data, OPEN, pipefd[READ]);
-	open_fd_handler(data, OPEN, pipefd[WRITE]);
 }
 
 pid_t	xfork(void)

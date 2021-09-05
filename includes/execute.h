@@ -14,19 +14,15 @@ typedef enum e_path_type
 
 typedef enum e_fd_mode
 {
-	SAVE,
-	RESTORE,
+	STD_SAVE,
+	STD_RESTORE,
 	FD_REDIRECTED,
-	OPEN,
-	CLOSE,
 	ALL_CLOSE
 }	t_fd_mode;
 
 //execution_start.c
-void		execute_command(t_execdata *data);
 int			execute_loop(t_execdata *data);
 void		execute_start(t_execdata *data);
-void		open_fd_handler(t_execdata *data, int mode, int fd);
 
 //setdata_cmdline_redirection.c
 int			setdata_cmdline_redirect(t_execdata *data);
@@ -48,8 +44,10 @@ void		no_command(t_execdata *data);
 //execution_utils.c
 t_path_type	ft_stat(char *pathname);
 int			ft_dup2(int oldfd, int newfd);
-int			ft_open(t_execdata *data, t_iolist *filenode, \
+int			ft_open(t_iolist *filenode, \
 					int flags, mode_t mode);
+void		execute_command(t_execdata *data);
+void		open_fd_handler(t_execdata *data, int mode, int redireceted_fd);
 
 //env_functions.c
 char		*ft_getenv(t_envlist *elst, char *search_key);
@@ -71,11 +69,11 @@ char		*ft_xstrjoin(char *str1, char *str2);
 char		**ft_xsplit(char *src_str, char cut_char);
 void		xclose(int fd);
 int			xdup2(int oldfd, int newfd);
-int			xdup(int oldfd, t_execdata *data);
+int			xdup(int oldfd);
 
 //wrapper3.c
 void		xwaitpid(pid_t pid, int *wstatus, int options);
-void		xpipe(int *pipefd, t_execdata *data);
+void		xpipe(int *pipefd);
 pid_t		xfork(void);
 
 //minishell_loop.c

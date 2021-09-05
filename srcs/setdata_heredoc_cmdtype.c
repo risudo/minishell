@@ -47,7 +47,7 @@ static t_cmd	get_here_doc(char *limiter, t_execdata *data, int is_quot)
 	int		pipefd[PIPEFD_NUM];
 	int		no_limit;
 
-	xpipe(pipefd, data);
+	xpipe(pipefd);
 	no_limit = 1;
 	while (no_limit)
 	{
@@ -63,7 +63,7 @@ static t_cmd	get_here_doc(char *limiter, t_execdata *data, int is_quot)
 		}
 		free(line);
 	}
-	open_fd_handler(data, CLOSE, pipefd[WRITE]);
+	xclose(pipefd[WRITE]);
 	return (pipefd[READ]);
 }
 
