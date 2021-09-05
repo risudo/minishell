@@ -1,6 +1,8 @@
 #include "minishell.h"
 #include "signal.h"
 
+unsigned char	g_status = 0;
+
 void	handler(int signo)
 {
 	(void)signo;
