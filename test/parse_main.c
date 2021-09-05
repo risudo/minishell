@@ -1,5 +1,7 @@
 #include "../includes/minishell.h"
 
+unsigned char	g_status = 0;
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_execdata		*data;
@@ -12,7 +14,9 @@ int	main(int argc, char **argv, char **envp)
 	if (argv[1])
 	{
 		printf("command: [%s]\n", argv[1]);
-		data = parse_cmd(argv[1], envlist, status);
+		data = parse_cmd(argv[1], envlist);
+		*status = g_status;
+		data->status = status;
 		put_execdata(data);
 		clear_envlist(envlist);
 		xfree(status);

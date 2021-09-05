@@ -13,31 +13,29 @@ static t_execdata	*expand_variable(t_execdata *data)
 	return (data);
 }
 
-static t_execdata	*create_error_execdata(t_token *tokenlist,
-		unsigned char *status)
+static t_execdata	*create_error_execdata(t_token *tokenlist)
 {
 	t_execdata	*data;
 
 	data = (t_execdata *)ft_calloc(1, sizeof(*data));
 	clear_tokenlist(tokenlist);
-	data->status = status;
 	return (data);
 }
 
-t_execdata	*parse_cmd(char *command, t_envlist *envlist, unsigned char *status)
+t_execdata	*parse_cmd(char *command, t_envlist *envlist)
 {
 	t_token		*tokenlist;
 	t_execdata	*data;
 	bool		err;
 
 	err = false;
-	tokenlist = tokenize_cmd_by_space(command, status, &err);
+	tokenlist = tokenize_cmd_by_space(command, &err);
 	if (err == true)
-		return (create_error_execdata(tokenlist, status));
+		return (create_error_execdata(tokenlist));
 	split_operater(tokenlist);
-	if (parse_tokenlist(tokenlist, status) == -1)
-		return (create_error_execdata(tokenlist, status));
-	data = create_execdata(tokenlist, envlist, status);
+	if (parse_tokenlist(tokenlist) == -1)
+		return (create_error_execdata(tokenlist));
+	data = create_execdata(tokenlist, envlist);
 	clear_tokenlist(tokenlist);
 	expand_variable(data);
 	return (data);

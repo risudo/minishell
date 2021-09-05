@@ -18,8 +18,9 @@
 # include "parse.h"
 # include "execute.h"
 
-t_execdata	*parse_cmd(char *command,
-				t_envlist *envlist, unsigned char *status);
+extern unsigned char	g_status;
+
+t_execdata	*parse_cmd(char *command, t_envlist *envlist);
 t_envlist	*create_envlist(char **envp);
 
 #endif

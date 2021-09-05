@@ -2,7 +2,7 @@
 
 /*
 ** Split tokenlist by pipe, and create execdata list.
-** execdata has cmdlist, iolist, envlist, and status.
+** execdata has cmdlist, iolist, and envlist.
 ** iolist has the token related redirect.
 ** cmdlist has other token.
 */
@@ -49,7 +49,7 @@ static t_cmdlist	*get_clst(t_token *start, t_token *cur_token)
 }
 
 static t_execdata	*new_execdata(t_execdata *cur, t_token *start,
-		t_token *cur_token, t_execarg *arg)
+		t_token *cur_token, t_envlist *envlist)
 {
 	t_execdata	*new;
 
@@ -57,8 +57,7 @@ static t_execdata	*new_execdata(t_execdata *cur, t_token *start,
 	new->cmdline = NULL;
 	new->clst = get_clst(start, cur_token);
 	new->iolst = get_iolst(start, cur_token);
-	new->elst = arg->envlist;
-	new->status = arg->status;
+	new->elst = envlist;
 	cur->next = new;
 	return (new);
 }
@@ -68,32 +67,26 @@ static t_execdata	*new_execdata(t_execdata *cur, t_token *start,
 **  command list splited by space or other operater like pipe.
 ** @(envlist)
 **  list that has environment variable's key and value
-** @(status)
-**  exit status
 ** Create execdata from token list. Return the execdata.
 */
 
-t_execdata	*create_execdata(t_token *tokenlist,
-		t_envlist *envlist, unsigned char *status)
+t_execdata	*create_execdata(t_token *tokenlist, t_envlist *envlist)
 {
 	t_execdata	head;
 	t_execdata	*cur;
 	t_token		*start;
-	t_execarg	arg;
 
-	arg.envlist = envlist;
-	arg.status = status;
 	cur = &head;
 	start = tokenlist;
 	while (tokenlist)
 	{
 		if (tokenlist->special == PIPE)
 		{
-			cur = new_execdata(cur, start, tokenlist, &arg);
+			cur = new_execdata(cur, start, tokenlist, envlist);
 			start = tokenlist->next;
 		}
 		tokenlist = tokenlist->next;
 	}
-	cur = new_execdata(cur, start, tokenlist, &arg);
+	cur = new_execdata(cur, start, tokenlist, envlist);
 	return (head.next);
 }

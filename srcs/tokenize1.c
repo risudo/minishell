@@ -60,7 +60,7 @@ static char	*skip_space(char **cmd)
 	return (*cmd);
 }
 
-t_token	*tokenize_cmd_by_space(char *cmd, unsigned char *status, bool *err)
+t_token	*tokenize_cmd_by_space(char *cmd, bool *err)
 {
 	t_token		head;
 	t_token		*cur;
@@ -80,7 +80,7 @@ t_token	*tokenize_cmd_by_space(char *cmd, unsigned char *status, bool *err)
 		cur = new_token(cur, &cmd, &start, &flag_quot);
 	if (cur == NULL)
 	{
-		*status = (unsigned char)258;
+		g_status = 2;
 		*err = true;
 		return (head.next);
 	}

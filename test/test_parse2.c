@@ -8,7 +8,7 @@ void	put_execdata(t_execdata *data)
 	while (data)
 	{
 		printf("execdata[%d]\n", i);
-		printf("\t*status: %hhu\n", *(data->status));
+		printf("\t*status: %hhu\n", g_status);
 		put_cmdlist(data->clst);
 		put_iolist(data->iolst);
 		data = data->next;

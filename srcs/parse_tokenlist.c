@@ -14,7 +14,7 @@ void	put_syntax_error(char *str)
 	ft_putendl_fd(str, STDERR_FILENO);
 }
 
-static void	expand_status(t_token *list, char *doll_ptr, unsigned char *status)
+static void	expand_status(t_token *list, char *doll_ptr)
 {
 	char	*front;
 	char	*back;
@@ -22,7 +22,7 @@ static void	expand_status(t_token *list, char *doll_ptr, unsigned char *status)
 
 	front = ft_xsubstr(list->str, 0, doll_ptr - list->str);
 	back = ft_xsubstr(doll_ptr, 2, ft_strlen(doll_ptr + 2));
-	value = ft_xitoa(*status);
+	value = ft_xitoa(g_status);
 	xfree(list->str);
 	list->str = ft_strjoin_three(front, value, back);
 	xfree(front), xfree(back), xfree(value);
@@ -48,28 +48,27 @@ static bool	is_in_squot(char *str, char *doll_ptr)
 	return (false);
 }
 
-static int	check_token_syntax(t_token *head,
-		t_token *last, unsigned char *status)
+static int	check_token_syntax(t_token *head, t_token *last)
 {
 	int	ret;
 
 	ret = 0;
 	if (last->special == PIPE || head->special == PIPE)
 	{
-		*status = (unsigned char)258;
+		g_status = 2;
 		put_syntax_error("|");
 		ret = -1;
 	}
 	if (last->special >= IN_REDIRECT && last->special <= OUT_HERE_DOC)
 	{
-		*status = (unsigned char)258;
+		g_status = 2;
 		put_syntax_error(last->str);
 		ret = -1;
 	}
 	return (ret);
 }
 
-int	parse_tokenlist(t_token *list, unsigned char *status)
+int	parse_tokenlist(t_token *list)
 {
 	t_token	*head;
 	t_token	*prev;
@@ -83,12 +82,12 @@ int	parse_tokenlist(t_token *list, unsigned char *status)
 		doll_ptr = ft_strnstr(list->str, "$?", ft_strlen("list->str"));
 		if (doll_ptr && !is_in_squot(list->str, doll_ptr))
 		{
-			expand_status(list, doll_ptr, status);
+			expand_status(list, doll_ptr);
 			continue ;
 		}
 		prev = list;
 		list = list->next;
 	}
 	set_special_c(head);
-	return (check_token_syntax(head, prev, status));
+	return (check_token_syntax(head, prev));
 }
