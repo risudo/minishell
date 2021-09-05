@@ -423,6 +423,41 @@ execdata[0]
 	  quot: DDDD0
 
 
+file=f
+FILE='$file'
+command: [echo $FILE]
+execdata[0]
+	*status: 0
+	cmdlist[0]
+	  str: "echo"
+	  quot: 0000
+	cmdlist[1]
+	  str: "$file"
+	  quot: 00000
+
+
+command: [echo $FILE$file]
+execdata[0]
+	*status: 0
+	cmdlist[0]
+	  str: "echo"
+	  quot: 0000
+	cmdlist[1]
+	  str: "$filef"
+	  quot: 000000
+
+
+command: [echo $#$HOME]
+execdata[0]
+	*status: 0
+	cmdlist[0]
+	  str: "echo"
+	  quot: 0000
+	cmdlist[1]
+	  str: "$#/Users/sudourio"
+	  quot: 00000000000000000
+
+
 command: [echo >$USER]
 execdata[0]
 	*status: 0
