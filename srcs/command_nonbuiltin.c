@@ -113,4 +113,3 @@ void	non_builtin(t_execdata *data)
 		perror(data->cmdline[0]);
 	g_status = 126;
 }
-
