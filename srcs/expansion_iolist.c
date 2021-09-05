@@ -72,7 +72,7 @@ static int	check_filename(t_iolist *iolist, \
 	return (0);
 }
 
-int	serch_env_iolist(t_iolist *iolist, t_envlist *envlist)
+int	expand_filename(t_iolist *iolist, t_envlist *envlist)
 {
 	char		*doll_ptr;
 	char		*filename;

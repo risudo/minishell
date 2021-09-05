@@ -7,44 +7,43 @@
 */
 
 static int	set_redirected_fd(t_execdata *data, t_iolist *iolst, \
-							int *redirect_fd, int *is_fd_specified)
+							int *redirected_fd, int *is_fd_specified)
 {
-/*	if (iolst->c_type == FD)
+	if (iolst->c_type == FD)
 	{
-		*redirect_fd = ft_atoi(iolst->str);
-		if (*redirect_fd < 0 || FD_MAX < *redirect_fd)
+		*redirected_fd = ft_atoi(iolst->str);
+		if (*redirected_fd < 0 || FD_MAX < *redirected_fd)
 		{
 			ft_putendl_fd("bad file descriptor", STDERR_FILENO);
 			return (-1);
 		}
-		fd_handler(data, FD_REDIRECTED, *redirected_fd);
+		open_fd_handler(data, FD_REDIRECTED, *redirected_fd);
 		*is_fd_specified = 1;
-	}*/
-	(void)data;
-	if (*is_fd_specified == 0 && \
+	}
+	else if (*is_fd_specified == 0 && \
 		(iolst->c_type == IN_REDIRECT || iolst->c_type == IN_HERE_DOC))
-		*redirect_fd = STDIN_FILENO;
+		*redirected_fd = STDIN_FILENO;
 	else if (*is_fd_specified == 0 && \
 		(iolst->c_type == OUT_REDIRECT || iolst->c_type == OUT_HERE_DOC))
-	*redirect_fd = STDOUT_FILENO;
+		*redirected_fd = STDOUT_FILENO;
 	return (0);
 }
 
-static int	redirection(t_iolist *iolst, t_envlist *elst, \
+static int	redirection(t_execdata *data, t_iolist *iolst, \
 					int redirected_fd, int *is_fd_specified)
 {
 	int	ret;
 
-	ret = serch_env_iolist(iolst->next, elst);
+	ret = expand_filename(iolst->next, data->elst);
 	if (ret == 0 && iolst->c_type == IN_REDIRECT)
-		ret = ft_dup2(ft_open(iolst->next, O_RDONLY, 0), redirected_fd);
+		ret = ft_dup2(ft_open(data, iolst->next, O_RDONLY, 0), redirected_fd);
 	else if (ret == 0 && iolst->c_type == IN_HERE_DOC)
 		ret = ft_dup2(iolst->here_doc_fd, redirected_fd);
 	else if (ret == 0 && iolst->c_type == OUT_REDIRECT)
-		ret = ft_dup2(ft_open(iolst->next, O_WRONLY | O_CREAT | O_TRUNC, 0666), \
+		ret = ft_dup2(ft_open(data, iolst->next, O_WRONLY | O_CREAT | O_TRUNC, 0666), \
 						redirected_fd);
 	else if (ret == 0 && iolst->c_type == OUT_HERE_DOC)
-		ret = ft_dup2(ft_open(iolst->next, O_WRONLY | O_CREAT | O_APPEND, 0666), \
+		ret = ft_dup2(ft_open(data, iolst->next, O_WRONLY | O_CREAT | O_APPEND, 0666), \
 						redirected_fd);
 	*is_fd_specified = 0;
 	return (ret);
@@ -66,7 +65,7 @@ int	setdata_cmdline_redirect(t_execdata *data)
 		ret = set_redirected_fd(data, move, &redirected_fd, &is_fd_specified);
 		if (ret == 0 && \
 			IN_REDIRECT <= move->c_type && move->c_type <= OUT_HERE_DOC)
-			ret = redirection(move, data->elst, \
+			ret = redirection(data, move, \
 					redirected_fd, &is_fd_specified);
 		move = move->next;
 	}

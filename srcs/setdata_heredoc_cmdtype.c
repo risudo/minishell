@@ -41,13 +41,13 @@ static void	expansion_heredoc(char **line, t_envlist *elst)
 	}
 }
 
-static t_cmd	get_here_doc(char *limiter, t_envlist *elst, int is_quot)
+static t_cmd	get_here_doc(char *limiter, t_execdata *data, int is_quot)
 {
 	char	*line;
 	int		pipefd[PIPEFD_NUM];
 	int		no_limit;
 
-	xpipe(pipefd);
+	xpipe(pipefd, data);
 	no_limit = 1;
 	while (no_limit)
 	{
@@ -58,12 +58,12 @@ static t_cmd	get_here_doc(char *limiter, t_envlist *elst, int is_quot)
 		if (no_limit)
 		{
 			if (is_quot == 0)
-				expansion_heredoc(&line, elst);
+				expansion_heredoc(&line, data->elst);
 			ft_putendl_fd(line, pipefd[WRITE]);
 		}
 		free(line);
 	}
-	xclose(pipefd[WRITE]);
+	open_fd_handler(data, CLOSE, pipefd[WRITE]);
 	return (pipefd[READ]);
 }
 
@@ -85,7 +85,7 @@ void	setdata_heredoc_cmdtype(t_execdata *data)
 					clear_quot_filename(&(move->next->str), \
 						&(move->next->quot)), is_quot++;
 				move->here_doc_fd = get_here_doc(move->next->str, \
-										data->elst, is_quot);
+										data, is_quot);
 			}
 			move = move->next;
 		}
