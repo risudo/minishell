@@ -71,28 +71,30 @@ void	execute_command(t_execdata *data)
 	cmd_func[data->cmd_type](data);
 }
 
-void	open_fd_handler(t_execdata *data, int mode, int redireceted_fd)
+int	redfd_handler(t_execdata *data, t_fd_mode mode, int fd)
 {
-	static char	open_fd_flag[FD_MAX + 1];
+	static char	redfd_flag[FD_MAX + 1];
 	int			index_fd;
 
-	if (mode == FD_REDIRECTED && !open_fd_flag[redireceted_fd])
+	if (mode == FD_SPECIFIED)
 	{
-		if (data->ori_stdin == redireceted_fd)
-			data->ori_stdin = xdup(redireceted_fd);
-		else if (data->ori_stdout == redireceted_fd)
-			data->ori_stdout = xdup(redireceted_fd);
-		else if (data->ori_stderr == redireceted_fd)
-			data->ori_stderr = xdup(redireceted_fd);
-		open_fd_flag[redireceted_fd]++;
+		if (data->stdfd[ORIGINAL_IN] == fd)
+			return (ft_dup(data, ORIGINAL_IN, fd));
+		else if (data->stdfd[ORIGINAL_OUT] == fd)
+			return (ft_dup(data, ORIGINAL_OUT, fd));
+		else if (data->stdfd[ORIGINAL_ERR] == fd)
+			return (ft_dup(data, ORIGINAL_ERR, fd));
 	}
+	else if (mode == FD_REDIRECTED && !redfd_flag[fd] && STDERR_FILENO < fd)
+		redfd_flag[fd]++;
 	else if (mode == ALL_CLOSE)
 	{
 		index_fd = -1;
 		while (++index_fd <= FD_MAX)
 		{
-			if (open_fd_flag[index_fd])
-				xclose(index_fd), open_fd_flag[index_fd] = 0;
+			if (redfd_flag[index_fd])
+				xclose(index_fd), redfd_flag[index_fd] = 0;
 		}
 	}
+	return (0);
 }

@@ -36,7 +36,7 @@ void	xclose(int fd)
 	}
 }
 
-int	xdup(int oldfd)
+int	ft_dup(t_execdata *data, t_stdfd type, int oldfd)
 {
 	int	newfd;
 
@@ -45,7 +45,8 @@ int	xdup(int oldfd)
 	{
 		ft_putstr_fd("dup : ", STDERR_FILENO);
 		ft_putendl_fd(strerror(errno), STDERR_FILENO);
-		exit(EXIT_FAILURE);
 	}
+	else
+		data->stdfd[type] = newfd;
 	return (newfd);
 }

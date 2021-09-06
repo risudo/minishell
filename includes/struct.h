@@ -42,6 +42,14 @@ typedef enum e_pipefd
 	PIPEFD_NUM
 }	t_pipefd;
 
+typedef enum e_stdfd
+{
+	ORIGINAL_IN,
+	ORIGINAL_OUT,
+	ORIGINAL_ERR,
+	STDFD_NUM
+}	t_stdfd;
+
 typedef struct s_token
 {
 	char			*str;
@@ -77,10 +85,7 @@ typedef struct s_envlist
 typedef struct s_execdata
 {
 	char				**cmdline;
-	int					ori_stdin;
-	int					ori_stdout;
-	int					ori_stderr;
-	int					pipefd[PIPEFD_NUM];
+	int					stdfd[STDFD_NUM];
 	t_cmd				cmd_type;
 	t_cmdlist			*clst;
 	t_iolist			*iolst;

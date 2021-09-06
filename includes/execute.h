@@ -16,6 +16,7 @@ typedef enum e_fd_mode
 {
 	STD_SAVE,
 	STD_RESTORE,
+	FD_SPECIFIED,
 	FD_REDIRECTED,
 	ALL_CLOSE
 }	t_fd_mode;
@@ -46,7 +47,7 @@ int			ft_dup2(int oldfd, int newfd, int exit_status);
 int			ft_open(t_iolist *filenode, \
 					int flags, mode_t mode);
 void		execute_command(t_execdata *data);
-void		open_fd_handler(t_execdata *data, int mode, int redireceted_fd);
+int			redfd_handler(t_execdata *data, t_fd_mode mode, int redireceted_fd);
 
 //env_functions.c
 char		*ft_getenv(t_envlist *elst, char *search_key);
@@ -67,7 +68,7 @@ void		free_2d_array(char **array);
 char		*ft_xstrjoin(char *str1, char *str2);
 char		**ft_xsplit(char *src_str, char cut_char);
 void		xclose(int fd);
-int			xdup(int oldfd);
+int			ft_dup(t_execdata *data, t_stdfd type, int oldfd);
 
 //wrapper3.c
 void		xwaitpid(pid_t pid, int *wstatus, int options);
