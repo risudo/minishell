@@ -50,6 +50,23 @@ typedef enum e_stdfd
 	STDFD_NUM
 }	t_stdfd;
 
+typedef enum e_path_type
+{
+	UNKNOWN,
+	IS_FILE,
+	IS_DIR,
+	ELSE_TYPE
+}	t_path_type;
+
+typedef enum e_fd_mode
+{
+	STD_SAVE,
+	STD_RESTORE,
+	FD_SPECIFIED,
+	FD_REDIRECTED,
+	ALL_CLOSE
+}	t_fd_mode;
+
 typedef struct s_token
 {
 	char			*str;

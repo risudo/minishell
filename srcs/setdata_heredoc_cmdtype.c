@@ -48,9 +48,9 @@ static int	get_here_doc(char *limiter, t_execdata *data, int is_quot)
 	int		pipefd[PIPEFD_NUM];
 	int		no_limit;
 
-	xpipe(pipefd);
+	ft_pipe(pipefd);
 	no_limit = 1;
-	while (no_limit)
+	while (no_limit && pipefd[WRITE] != -1)
 	{
 		line = readline("> ");
 		if (!line)

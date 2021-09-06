@@ -17,7 +17,7 @@ static int	set_redirect_fd(t_execdata *data, t_iolist *iolst, \
 			ft_putendl_fd("bad file descriptor", STDERR_FILENO);
 			return (-1);
 		}
-		if (redfd_handler(data, FD_SPECIFIED, *redirect_fd) == -1)
+		if (redirect_fd_handler(data, FD_SPECIFIED, *redirect_fd) == -1)
 			return (-1);
 		*is_fd_specified = 1;
 	}
@@ -47,7 +47,7 @@ static int	redirection(t_execdata *data, t_iolist *iolst, \
 		ret = ft_dup2(ft_open(iolst->next, O_WRONLY | O_CREAT | O_APPEND, 0666), \
 						redirect_fd, 0);
 	if (ret != -1)
-		redfd_handler(data, FD_REDIRECTED, redirect_fd);
+		redirect_fd_handler(data, FD_REDIRECTED, redirect_fd);
 	*is_fd_specified = 0;
 	return (ret);
 }

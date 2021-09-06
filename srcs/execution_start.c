@@ -33,7 +33,7 @@ static int	parent_connect_fd(t_execdata *data, int prev_pipe_read, \
 	xclose(pipewrite);
 	if (prev_pipe_read != STDIN_FILENO)
 		xclose(prev_pipe_read);
-	if (!data->next)
+	if (data->next == NULL)
 		xclose(piperead);
 	return (piperead);
 }
@@ -58,7 +58,7 @@ int	execute_loop(t_execdata *data)
 	prev_pipe_read = STDIN_FILENO;
 	while (data)
 	{
-		xpipe(pipefd);
+		ft_pipe(pipefd);
 		pid = xfork();
 		if (pid == 0)
 			child_execute(data, prev_pipe_read, \
@@ -91,7 +91,7 @@ static int	std_fd_handler(t_execdata *data, t_fd_mode mode)
 		ft_dup2(data->stdfd[ORIGINAL_IN], STDIN_FILENO, 1);
 		ft_dup2(data->stdfd[ORIGINAL_OUT], STDOUT_FILENO, 1);
 		ft_dup2(data->stdfd[ORIGINAL_ERR], STDERR_FILENO, 1);
-		redfd_handler(data, ALL_CLOSE, 0);
+		redirect_fd_handler(data, ALL_CLOSE, 0);
 	}
 	return (ret);
 }
