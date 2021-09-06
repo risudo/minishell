@@ -7,7 +7,7 @@
 ** 2 get command type of each data.
 */
 
-static int	is_cmd_type(t_cmdlist *clst)
+static t_cmd	is_cmd_type(t_cmdlist *clst)
 {
 	if (clst == NULL)
 		return (NON_CMD);
@@ -42,7 +42,7 @@ static void	expansion_heredoc(char **line, t_envlist *elst)
 	}
 }
 
-static t_cmd	get_here_doc(char *limiter, t_execdata *data, int is_quot)
+static int	get_here_doc(char *limiter, t_execdata *data, int is_quot)
 {
 	char	*line;
 	int		pipefd[PIPEFD_NUM];

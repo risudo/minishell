@@ -21,6 +21,15 @@ static void	child_execute(t_execdata *data, int prev_pipe_read, \
 static int	parent_connect_fd(t_execdata *data, int prev_pipe_read, \
 						int piperead, int pipewrite)
 {
+	t_iolist	*move;
+
+	move = data->iolst;
+	while (move)
+	{
+		if (move->c_type == IN_HERE_DOC)
+			xclose(move->here_doc_fd);
+		move = move->next;
+	}
 	xclose(pipewrite);
 	if (prev_pipe_read != STDIN_FILENO)
 		xclose(prev_pipe_read);
@@ -106,7 +115,7 @@ void	execute_start(t_execdata *data)
 		g_status = WEXITSTATUS(wstatus);
 		while (data->next)
 		{
-			xwaitpid(0, NULL, 0);
+			wait(NULL);
 			data = data->next;
 		}
 	}
