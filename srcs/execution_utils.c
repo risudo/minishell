@@ -13,16 +13,26 @@ t_path_type	ft_stat(char *pathname)
 	return (ELSE_TYPE);
 }
 
-int	ft_dup2(int oldfd, int newfd)
+int	ft_dup2(int oldfd, int newfd, int exit_status)
 {
+	int	fd;
+
+	fd = 0;
 	if (oldfd < 0 || newfd < 0)
 		return (-1);
 	if (oldfd != newfd)
 	{
-		xdup2(oldfd, newfd);
+		fd = dup2(oldfd, newfd);
+		if (fd == -1)
+		{
+			ft_putstr_fd("dup2 : ", STDERR_FILENO);
+			ft_putendl_fd(strerror(errno), STDERR_FILENO);
+			if (exit_status)
+				exit(exit_status);
+		}
 		xclose(oldfd);
 	}
-	return (0);
+	return (fd);
 }
 
 int	ft_open(t_iolist *filenode, int flags, mode_t mode)

@@ -9,10 +9,10 @@
 static void	child_execute(t_execdata *data, int prev_pipe_read, \
 						int piperead, int pipewrite)
 {
-	ft_dup2(prev_pipe_read, STDIN_FILENO);
+	ft_dup2(prev_pipe_read, STDIN_FILENO, 1);
 	xclose(piperead);
 	if (data->next)
-		ft_dup2(pipewrite, STDOUT_FILENO);
+		ft_dup2(pipewrite, STDOUT_FILENO, 1);
 	if (setdata_cmdline_redirect(data) == 0)
 		execute_command(data);
 	exit(g_status);
@@ -81,9 +81,9 @@ static void	std_fd_handler(t_execdata *data, int mode)
 	}
 	else if (mode == STD_RESTORE)
 	{
-		ft_dup2(data->ori_stdin, STDIN_FILENO);
-		ft_dup2(data->ori_stdout, STDOUT_FILENO);
-		ft_dup2(data->ori_stderr, STDERR_FILENO);
+		ft_dup2(data->ori_stdin, STDIN_FILENO, 1);
+		ft_dup2(data->ori_stdout, STDOUT_FILENO, 1);
+		ft_dup2(data->ori_stderr, STDERR_FILENO, 1);
 		open_fd_handler(data, ALL_CLOSE, 0);
 	}
 }

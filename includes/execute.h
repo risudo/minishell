@@ -42,7 +42,7 @@ void		non_builtin(t_execdata *data);
 
 //execution_utils.c
 t_path_type	ft_stat(char *pathname);
-int			ft_dup2(int oldfd, int newfd);
+int			ft_dup2(int oldfd, int newfd, int exit_status);
 int			ft_open(t_iolist *filenode, \
 					int flags, mode_t mode);
 void		execute_command(t_execdata *data);
@@ -67,7 +67,6 @@ void		free_2d_array(char **array);
 char		*ft_xstrjoin(char *str1, char *str2);
 char		**ft_xsplit(char *src_str, char cut_char);
 void		xclose(int fd);
-int			xdup2(int oldfd, int newfd);
 int			xdup(int oldfd);
 
 //wrapper3.c
