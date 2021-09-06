@@ -9,7 +9,7 @@ void	minishell_loop(char **envp)
 	elst = create_envlist(envp);
 	while (1)
 	{
-		line = readline("\033[32mminishell > \033[39m");
+		line = readline("minishell ");
 		if (!line)
 			exit(1);
 		if (line[0] != '\0')
