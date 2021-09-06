@@ -42,6 +42,31 @@ typedef enum e_pipefd
 	PIPEFD_NUM
 }	t_pipefd;
 
+typedef enum e_stdfd
+{
+	ORIGINAL_IN,
+	ORIGINAL_OUT,
+	ORIGINAL_ERR,
+	STDFD_NUM
+}	t_stdfd;
+
+typedef enum e_path_type
+{
+	UNKNOWN,
+	IS_FILE,
+	IS_DIR,
+	ELSE_TYPE
+}	t_path_type;
+
+typedef enum e_fd_mode
+{
+	STD_SAVE,
+	STD_RESTORE,
+	FD_SPECIFIED,
+	FD_REDIRECTED,
+	ALL_CLOSE
+}	t_fd_mode;
+
 typedef struct s_token
 {
 	char			*str;
@@ -77,10 +102,7 @@ typedef struct s_envlist
 typedef struct s_execdata
 {
 	char				**cmdline;
-	int					ori_stdin;
-	int					ori_stdout;
-	int					ori_stderr;
-	int					pipefd[PIPEFD_NUM];
+	int					stdfd[STDFD_NUM];
 	t_cmd				cmd_type;
 	t_cmdlist			*clst;
 	t_iolist			*iolst;

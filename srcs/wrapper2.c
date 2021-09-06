@@ -28,7 +28,7 @@ char	**ft_xsplit(char *src_str, char cut_char)
 
 void	xclose(int fd)
 {
-	if (close(fd) == -1)
+	if (0 <= fd && close(fd) == -1)
 	{
 		ft_putstr_fd("close : ", STDERR_FILENO);
 		ft_putendl_fd(strerror(errno), STDERR_FILENO);
@@ -36,30 +36,24 @@ void	xclose(int fd)
 	}
 }
 
-int	xdup2(int oldfd, int newfd)
+pid_t	xfork(void)
 {
-	int	fd;
+	int	pid;
 
-	fd = dup2(oldfd, newfd);
-	if (fd == -1)
+	pid = fork();
+	if (pid == -1)
 	{
-		ft_putstr_fd("dup2 : ", STDERR_FILENO);
-		ft_putendl_fd(strerror(errno), STDERR_FILENO);
+		perror("fork");
 		exit(EXIT_FAILURE);
 	}
-	return (fd);
+	return (pid);
 }
 
-int	xdup(int oldfd)
+void	xwaitpid(pid_t pid, int *wstatus, int options)
 {
-	int	newfd;
-
-	newfd = dup(oldfd);
-	if (newfd == -1)
+	if (waitpid(pid, wstatus, options) == -1)
 	{
-		ft_putstr_fd("dup : ", STDERR_FILENO);
-		ft_putendl_fd(strerror(errno), STDERR_FILENO);
+		perror("waitpid");
 		exit(EXIT_FAILURE);
 	}
-	return (newfd);
 }
