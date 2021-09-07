@@ -98,9 +98,8 @@ void	builtin_export(t_execdata *data)
 				to_setenv(data->elst, data->cmdline[arg_i], split_point);
 			else
 			{
-				ft_putstr_fd("minishell: export: ", STDERR_FILENO);
-				ft_putstr_fd(data->cmdline[arg_i], STDERR_FILENO);
-				ft_putendl_fd(": not a valid identifier", STDERR_FILENO);
+				ft_puterror("export", data->cmdline[arg_i], \
+									"not a valid identifier");
 				g_status = 1;
 			}
 			arg_i++;

@@ -21,15 +21,6 @@ static void	child_execute(t_execdata *data, int prev_pipe_read, \
 static int	parent_connect_fd(t_execdata *data, int prev_pipe_read, \
 						int piperead, int pipewrite)
 {
-	// t_iolist	*move;
-
-	// move = data->iolst;
-	// while (move)
-	// {
-	// 	if (move->c_type == IN_HERE_DOC)
-	// 		xclose(move->here_doc_fd);
-	// 	move = move->next;
-	// }
 	xclose(pipewrite);
 	if (prev_pipe_read != STDIN_FILENO)
 		xclose(prev_pipe_read);
@@ -114,7 +105,6 @@ void	execute_start(t_execdata *data)
 		if (std_fd_handler(data, STD_SAVE) != -1 && \
 				setdata_cmdline_redirect(data) != -1)
 			execute_command(data);
-		free_2d_array(data->cmdline);
 		std_fd_handler(data, STD_RESTORE);
 	}
 	else

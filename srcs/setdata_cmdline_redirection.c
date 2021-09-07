@@ -73,9 +73,11 @@ int	setdata_cmdline_redirect(t_execdata *data)
 			IN_REDIRECT <= move->c_type && move->c_type <= OUT_HERE_DOC)
 			ret = redirection(data, move, \
 					redirect_fd, &is_fd_specified);
+		if (ret == -1)
+			g_status = 1;
+		else
+			g_status = 0;
 		move = move->next;
 	}
-	if (ret == -1)
-		g_status = 1;
 	return (ret);
 }

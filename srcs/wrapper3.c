@@ -18,10 +18,7 @@ int	ft_dup(t_execdata *data, t_stdfd type, int oldfd)
 
 	newfd = dup(oldfd);
 	if (newfd == -1)
-	{
-		ft_putstr_fd("dup : ", STDERR_FILENO);
-		ft_putendl_fd(strerror(errno), STDERR_FILENO);
-	}
+		ft_perror("dup");
 	else
 		data->stdfd[type] = newfd;
 	return (newfd);
@@ -39,8 +36,7 @@ int	ft_dup2(int oldfd, int newfd, int exit_status)
 		fd = dup2(oldfd, newfd);
 		if (fd == -1)
 		{
-			ft_putstr_fd("dup2 : ", STDERR_FILENO);
-			ft_putendl_fd(strerror(errno), STDERR_FILENO);
+			ft_perror("dup2");
 			if (exit_status)
 				exit(exit_status);
 		}
@@ -76,7 +72,7 @@ int	ft_open(t_iolist *filenode, int flags, mode_t mode)
 		fd = open(filenode->str, flags, mode);
 	if (fd == -1)
 	{
-		ft_putstr_fd("open: ", STDERR_FILENO);
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
 		ft_putstr_fd(filenode->str, STDERR_FILENO);
 		ft_putstr_fd(": ", STDERR_FILENO);
 		perror("");
