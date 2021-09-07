@@ -53,7 +53,8 @@ typedef enum e_stdfd
 typedef enum e_path_type
 {
 	UNKNOWN,
-	IS_FILE,
+	EXECUTABLE,
+	UN_EXECUTABLE,
 	IS_DIR,
 	ELSE_TYPE
 }	t_path_type;

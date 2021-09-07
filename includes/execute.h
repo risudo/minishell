@@ -59,6 +59,9 @@ int			ft_dup2(int oldfd, int newfd, int exit_status);
 int			ft_open(t_iolist *filenode, \
 					int flags, mode_t mode);
 
+//wrapper4.c
+void		ft_perror(char *perror_str);
+
 //minishell_loop.c
 void		minishell_loop(char **envp);
 

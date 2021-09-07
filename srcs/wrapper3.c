@@ -56,7 +56,11 @@ t_path_type	ft_stat(char *pathname)
 	if (stat(pathname, &sb) == -1)
 		return (UNKNOWN);
 	if ((sb.st_mode & S_IFMT) == S_IFREG)
-		return (IS_FILE);
+	{
+		if (sb.st_mode & S_IXUSR)
+			return (EXECUTABLE);
+		return (UN_EXECUTABLE);
+	}
 	if ((sb.st_mode & S_IFMT) == S_IFDIR)
 		return (IS_DIR);
 	return (ELSE_TYPE);
