@@ -12,7 +12,7 @@ void		execute_start(t_execdata *data);
 int			setdata_cmdline_redirect(t_execdata *data);
 
 //setdata_heredoc_cmdtype.c
-void		setdata_heredoc_cmdtype(t_execdata *data);
+int			setdata_heredoc_cmdtype(t_execdata *data);
 
 //command_*.c
 void		builtin_echo(t_execdata *data);
