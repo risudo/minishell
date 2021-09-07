@@ -4,6 +4,20 @@
 ** Execute non built-in commands or no command.
 */
 
+#define CMD_NO "command not found"
+#define PEM_NO "Permission denied"
+#define DIR_NO "is a directory"
+#define FILE_DIR_NO "No such file or directory"
+
+static void	result_of_search(char *cmd, char *str, int status)
+{
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	ft_putstr_fd(cmd, STDERR_FILENO);
+	ft_putstr_fd(": ", STDERR_FILENO);
+	ft_putendl_fd(str, STDERR_FILENO);
+	g_status = status;
+}
+
 /*
 ** make list from split the PATH and join "/" + "command".
 ** example (command is cat)
@@ -17,7 +31,7 @@ static char	**make_exec_pathlist(char *cmd, char *path_env)
 {
 	char	**pathlist;
 	char	*tmp;
-	size_t	i;
+	int		i;
 
 	if (!path_env)
 		return (NULL);
@@ -43,27 +57,28 @@ static char	*cmdpath_from_pathenv(char *cmd, char *path_env)
 {
 	char		**pathlist;
 	char		*cmd_path;
-	size_t		i;
+	t_path_type	path_type;
+	int			i;
 
 	pathlist = make_exec_pathlist(cmd, path_env);
 	cmd_path = NULL;
-	i = 0;
-	while (pathlist && pathlist[i])
+	i = -1;
+	while (pathlist && pathlist[++i])
 	{
-		if (ft_stat(pathlist[i]) == IS_FILE)
+		path_type = ft_stat(pathlist[i]);
+		if (path_type == EXECUTABLE)
 		{
 			cmd_path = ft_xstrdup(pathlist[i]);
 			break ;
 		}
-		i++;
+		else if (path_type == UN_EXECUTABLE)
+			g_status = 126;
 	}
 	free_2d_array(pathlist);
-	if (!cmd_path)
-	{
-		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		ft_putstr_fd(cmd, STDERR_FILENO);
-		ft_putstr_fd(": command not found\n", STDERR_FILENO);
-	}
+	if (!cmd_path && g_status == 126)
+		result_of_search(cmd, PEM_NO, 126);
+	else if (!cmd_path)
+		result_of_search(cmd, CMD_NO, 127);
 	return (cmd_path);
 }
 
@@ -78,21 +93,18 @@ static char	*cmdpath_from_direct(char *cmd)
 	cmd_path = NULL;
 	path_type = ft_stat(cmd);
 	if (path_type == UNKNOWN)
-		perror(cmd);
-	else if (path_type == IS_FILE)
+	{
+		ft_perror(cmd);
+		g_status = 127;
+	}
+	else if (path_type == EXECUTABLE)
 		cmd_path = cmd;
+	else if (path_type == UN_EXECUTABLE)
+		result_of_search(cmd, PEM_NO, 126);
 	else if (path_type == IS_DIR)
-	{
-		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		ft_putstr_fd(cmd, STDERR_FILENO);
-		ft_putstr_fd(": is a directory\n", STDERR_FILENO);
-	}
+		result_of_search(cmd, DIR_NO, 126);
 	else
-	{
-		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		ft_putstr_fd(cmd, STDERR_FILENO);
-		ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
-	}
+		result_of_search(cmd, FILE_DIR_NO, 127);
 	return (cmd_path);
 }
 
@@ -107,7 +119,7 @@ void	non_builtin(t_execdata *data)
 		cmd_path = cmdpath_from_pathenv(data->cmdline[0], \
 								ft_getenv(data->elst, "PATH"));
 	if (!cmd_path)
-		exit(127);
+		exit(g_status);
 	if (execve(cmd_path, data->cmdline, \
 		convert_envlist_2dchar(data->elst)) == -1)
 		perror(data->cmdline[0]);
