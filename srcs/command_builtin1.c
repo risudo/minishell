@@ -12,12 +12,17 @@ void	builtin_echo(t_execdata *data)
 	int		option;
 	size_t	arg_i;
 
+	if (write(STDOUT_FILENO, NULL, 0) == -1)
+	{
+		perror("echo: write error");
+		g_status = 1;
+		return ;
+	}
 	option = 0;
 	arg_i = 1;
 	if (data->cmdline[arg_i] && \
-		ft_strcmp(data->cmdline[arg_i], "-n") == 0 \
-		&& arg_i++)
-		option++;
+		ft_strcmp(data->cmdline[arg_i], "-n") == 0)
+		option++, arg_i++;
 	while (data->cmdline[arg_i])
 	{
 		printf("%s", data->cmdline[arg_i]);
@@ -50,6 +55,12 @@ void	builtin_pwd(t_execdata *data)
 {
 	char	*pathname;
 
+	if (write(STDOUT_FILENO, NULL, 0) == -1)
+	{
+		perror("pwd: write error");
+		g_status = 1;
+		return ;
+	}
 	pathname = getcwd(NULL, 0);
 	if (!pathname)
 	{
