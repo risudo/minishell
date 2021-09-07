@@ -42,33 +42,53 @@ static void	expansion_heredoc(char **line, t_envlist *elst)
 	}
 }
 
-static int	get_here_doc(char *limiter, t_execdata *data, int is_quot)
+static void	child_get_here_doc(char *limiter, t_execdata *data, \
+									int is_quot, int pipewrite)
 {
 	char	*line;
-	int		pipefd[PIPEFD_NUM];
 	int		no_limit;
 
-	ft_pipe(pipefd);
 	no_limit = 1;
-	while (no_limit && pipefd[WRITE] != -1)
+	while (no_limit && pipewrite != -1)
 	{
 		line = readline("> ");
 		if (!line)
-			exit(1);
+			break ;
 		no_limit = ft_strcmp(line, limiter);
 		if (no_limit)
 		{
 			if (is_quot == 0)
 				expansion_heredoc(&line, data->elst);
-			ft_putendl_fd(line, pipefd[WRITE]);
+			ft_putendl_fd(line, pipewrite);
 		}
 		free(line);
 	}
-	xclose(pipefd[WRITE]);
-	return (pipefd[READ]);
+	xclose(pipewrite);
+	exit(0);
 }
 
-void	setdata_heredoc_cmdtype(t_execdata *data)
+static int	get_here_doc(char *limiter, t_execdata *data, \
+							int is_quot, t_iolist *iolst)
+{
+	int		pipefd[PIPEFD_NUM];
+	int		wstatus;
+
+	ft_pipe(pipefd);
+	if (xfork() == 0)
+	{
+		xclose(pipefd[READ]);
+		child_get_here_doc(limiter, data, is_quot, pipefd[WRITE]);
+	}
+	xclose(pipefd[WRITE]);
+	wait(&wstatus);
+	g_status = WEXITSTATUS(wstatus);
+	if (g_status != 0)
+		return (-1);
+	iolst->here_doc_fd = pipefd[READ];
+	return (0);
+}
+
+int	setdata_heredoc_cmdtype(t_execdata *data)
 {
 	t_iolist	*move;
 	int			is_quot;
@@ -85,12 +105,14 @@ void	setdata_heredoc_cmdtype(t_execdata *data)
 					ft_strchr(move->next->quot, '2'))
 					clear_quot_filename(&(move->next->str), \
 						&(move->next->quot)), is_quot++;
-				move->here_doc_fd = get_here_doc(move->next->str, \
-										data, is_quot);
+				if (get_here_doc(move->next->str, data, \
+									is_quot, move) == -1)
+					return (-1);
 			}
 			move = move->next;
 		}
 		data->cmd_type = is_cmd_type(data->clst);
 		data = data->next;
 	}
+	return (0);
 }
