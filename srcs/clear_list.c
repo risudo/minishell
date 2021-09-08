@@ -52,6 +52,7 @@ void	clear_iolist(t_iolist *list)
 	while (list)
 	{
 		next = list->next;
+		xclose(list->here_doc_fd);
 		xfree(list->str);
 		xfree(list->quot);
 		xfree(list);
@@ -68,6 +69,7 @@ void	clear_execdata(t_execdata *data)
 		next = data->next;
 		clear_cmdlist(data->clst);
 		clear_iolist(data->iolst);
+		free_2d_array(data->cmdline);
 		xfree(data);
 		data = next;
 	}

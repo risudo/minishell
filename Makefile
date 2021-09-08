@@ -41,7 +41,7 @@ HEADER_DIR = ./includes
 
 LIBFT_DIR = ./libft
 
-READLINE_DIR = /usr/local/opt/readline
+READLINE_DIR = $(shell brew --prefix readline)
 
 OBJS = ${SRCS:.c=.o}
 
