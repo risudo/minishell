@@ -24,7 +24,6 @@ SRCS_NAME = main.c \
 			expansion_io_utils.c \
 			expansion_utils1.c \
 			expansion_utils2.c \
-			minishell_loop.c \
 			parse_cmd.c \
 			parse_tokenlist.c \
 			tokenize1.c \
