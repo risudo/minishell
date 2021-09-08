@@ -43,16 +43,15 @@ void	builtin_exit(t_execdata *data)
 		exit(0);
 	if (data->cmdline[2])
 	{
-		ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
+		ft_puterror("exit", "too many arguments", NULL);
 		g_status = 1;
 		return ;
 	}
 	g_status = (unsigned char)ft_atol(data->cmdline[1], &nonnum_check);
 	if (nonnum_check)
 	{
-		ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
-		ft_putstr_fd(data->cmdline[1], STDERR_FILENO);
-		ft_putendl_fd(": numeric argument required", STDERR_FILENO);
+		ft_puterror("exit", data->cmdline[1], \
+						"numeric argument required");
 		g_status = 255;
 	}
 	exit(g_status);

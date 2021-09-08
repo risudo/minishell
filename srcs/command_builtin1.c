@@ -14,7 +14,7 @@ void	builtin_echo(t_execdata *data)
 
 	if (write(STDOUT_FILENO, NULL, 0) == -1)
 	{
-		perror("echo: write error");
+		ft_perror("echo: write error");
 		g_status = 1;
 		return ;
 	}
@@ -42,7 +42,7 @@ void	builtin_cd(t_execdata *data)
 		data->cmdline[1][0] && \
 		chdir(data->cmdline[1]) == -1)
 	{
-		perror("cd");
+		ft_perror("cd");
 		g_status = 1;
 		return ;
 	}
@@ -57,14 +57,14 @@ void	builtin_pwd(t_execdata *data)
 
 	if (write(STDOUT_FILENO, NULL, 0) == -1)
 	{
-		perror("pwd: write error");
+		ft_perror("pwd: write error");
 		g_status = 1;
 		return ;
 	}
 	pathname = getcwd(NULL, 0);
 	if (!pathname)
 	{
-		perror("pwd");
+		ft_perror("pwd");
 		g_status = 1;
 	}
 	else

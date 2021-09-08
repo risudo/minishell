@@ -11,10 +11,7 @@
 
 static void	result_of_search(char *cmd, char *str, int status)
 {
-	ft_putstr_fd("minishell: ", STDERR_FILENO);
-	ft_putstr_fd(cmd, STDERR_FILENO);
-	ft_putstr_fd(": ", STDERR_FILENO);
-	ft_putendl_fd(str, STDERR_FILENO);
+	ft_puterror(cmd, str, NULL);
 	g_status = status;
 }
 
@@ -122,6 +119,6 @@ void	non_builtin(t_execdata *data)
 		exit(g_status);
 	if (execve(cmd_path, data->cmdline, \
 		convert_envlist_2dchar(data->elst)) == -1)
-		perror(data->cmdline[0]);
+		ft_perror(data->cmdline[0]);
 	g_status = 126;
 }

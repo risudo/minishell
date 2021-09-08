@@ -55,6 +55,9 @@ static t_execdata	*new_execdata(t_execdata *cur, t_token *start,
 
 	new = (t_execdata *)ft_xcalloc(1, sizeof(*new));
 	new->cmdline = NULL;
+	new->stdfd[ORIGINAL_IN] = -1;
+	new->stdfd[ORIGINAL_OUT] = -1;
+	new->stdfd[ORIGINAL_ERR] = -1;
 	new->clst = get_clst(start, cur_token);
 	new->iolst = get_iolst(start, cur_token);
 	new->elst = envlist;

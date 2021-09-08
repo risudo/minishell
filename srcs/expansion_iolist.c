@@ -58,9 +58,7 @@ static int	check_filename(t_iolist *iolist, \
 	filename = rm_isspace(filename, filequot);
 	if (!filename || is_null)
 	{
-		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		ft_putstr_fd(iolist->str, STDERR_FILENO);
-		ft_putendl_fd(": ambiguous redirect", STDERR_FILENO);
+		ft_puterror(iolist->str, "ambiguous redirect", NULL);
 		free(filename);
 		free(filequot);
 		return (-1);

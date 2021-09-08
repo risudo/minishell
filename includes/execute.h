@@ -61,6 +61,7 @@ int			ft_open(t_iolist *filenode, \
 
 //wrapper4.c
 void		ft_perror(char *perror_str);
+void		ft_puterror(char *str1, char *str2, char *str3);
 
 //minishell_loop.c
 void		minishell_loop(char **envp);

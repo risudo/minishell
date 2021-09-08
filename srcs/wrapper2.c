@@ -30,8 +30,7 @@ void	xclose(int fd)
 {
 	if (0 <= fd && close(fd) == -1)
 	{
-		ft_putstr_fd("close : ", STDERR_FILENO);
-		ft_putendl_fd(strerror(errno), STDERR_FILENO);
+		perror("close");
 		exit(EXIT_FAILURE);
 	}
 }
