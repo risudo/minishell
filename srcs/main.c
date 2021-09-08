@@ -24,7 +24,10 @@ void	minishell_loop(char **envp)
 	{
 		line = readline("minishell$ ");
 		if (!line)
+		{
+			clear_envlist(elst);
 			break ;
+		}
 		if (line[0] != '\0')
 		{
 			data = parse_cmd(line, elst);
