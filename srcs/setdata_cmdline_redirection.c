@@ -35,7 +35,9 @@ static int	redirection(t_execdata *data, t_iolist *iolst, \
 {
 	int	ret;
 
-	ret = expand_filename(iolst->next, data->elst);
+	ret = 0;
+	if (iolst->c_type != IN_HERE_DOC)
+		ret = expand_filename(iolst->next, data->elst);
 	if (ret != -1 && iolst->c_type == IN_REDIRECT)
 		ret = ft_dup2(ft_open(iolst->next, O_RDONLY, 0), redirect_fd, 0);
 	else if (ret != -1 && iolst->c_type == IN_HERE_DOC)
