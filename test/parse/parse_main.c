@@ -16,7 +16,6 @@ int	main(int argc, char **argv, char **envp)
 		printf("command: [%s]\n", argv[1]);
 		data = parse_cmd(argv[1], envlist);
 		*status = g_status;
-		data->status = status;
 		put_execdata(data);
 		clear_envlist(envlist);
 		xfree(status);
