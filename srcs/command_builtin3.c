@@ -40,7 +40,7 @@ void	builtin_exit(t_execdata *data)
 
 	ft_putendl_fd("exit", STDERR_FILENO);
 	if (data->cmdline[1] == NULL)
-		exit(0);
+		exit(g_status);
 	if (data->cmdline[2])
 	{
 		ft_puterror("exit", "too many arguments", NULL);
