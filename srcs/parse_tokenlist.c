@@ -54,17 +54,24 @@ static int	check_token_syntax(t_token *head, t_token *last)
 
 	ret = 0;
 	if (last->special == PIPE || head->special == PIPE)
-	{
-		g_status = 2;
-		put_syntax_error("|");
-		ret = -1;
-	}
+		put_syntax_error("|"), ret = -1;
 	if (last->special >= IN_REDIRECT && last->special <= OUT_HERE_DOC)
+		put_syntax_error(last->str), ret = -1;
+	while (head && ret == 0)
 	{
-		g_status = 2;
-		put_syntax_error(last->str);
-		ret = -1;
+		if (head->prev
+			&& head->prev->special >= IN_REDIRECT
+			&& head->prev->special <= OUT_HERE_DOC
+			&& head->special >= IN_REDIRECT
+			&& head->special <= OUT_HERE_DOC)
+		{
+			ret = -1;
+			put_syntax_error(head->str);
+		}
+		head = head->next;
 	}
+	if (ret == -1)
+		g_status = 2;
 	return (ret);
 }
 

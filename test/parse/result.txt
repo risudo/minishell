@@ -708,6 +708,12 @@ execdata[0]
 	*status: 2
 
 
+minishell: syntax error near unexpected token >
+command: [echo aaa >>> a]
+execdata[0]
+	*status: 2
+
+
 minishell: syntax error near unexpected token "aa
 command: [echo "aa]
 execdata[0]
