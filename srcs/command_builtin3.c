@@ -52,7 +52,7 @@ void	builtin_exit(t_execdata *data)
 	{
 		ft_puterror("exit", data->cmdline[1], \
 						"numeric argument required");
-		g_status = 255;
+		g_status = 2;
 	}
 	exit(g_status);
 }
