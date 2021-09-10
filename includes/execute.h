@@ -44,7 +44,7 @@ int			ft_strcmp(char *s1, char *s2);
 //wrapper2.c
 char		*ft_xstrjoin(char *str1, char *str2);
 char		**ft_xsplit(char *src_str, char cut_char);
-void		ft_close(int fd);
+void		xclose(int fd);
 pid_t		xfork(void);
 void		xwaitpid(pid_t pid, int *wstatus, int options);
 

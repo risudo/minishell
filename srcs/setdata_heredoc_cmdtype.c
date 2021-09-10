@@ -63,7 +63,7 @@ static void	child_get_here_doc(char *limiter, t_execdata *data, \
 		}
 		free(line);
 	}
-	ft_close(pipewrite);
+	xclose(pipewrite);
 	exit(0);
 }
 
@@ -78,10 +78,10 @@ static int	get_here_doc(char *limiter, t_execdata *data, \
 	{
 		if (signal(SIGINT, child_handler) == SIG_ERR)
 			perror("signal"), exit(EXIT_FAILURE);
-		ft_close(pipefd[READ]);
+		xclose(pipefd[READ]);
 		child_get_here_doc(limiter, data, is_quot, pipefd[WRITE]);
 	}
-	ft_close(pipefd[WRITE]);
+	xclose(pipefd[WRITE]);
 	iolst->open_fd = pipefd[READ];
 	wait(&wstatus);
 	g_status = WEXITSTATUS(wstatus);

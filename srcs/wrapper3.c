@@ -36,14 +36,14 @@ int	ft_dup2(int oldfd, int newfd, int exit_status)
 		fd = dup2(oldfd, newfd);
 		if (fd == -1)
 		{
-			if (errno == 9)
+			if (errno == EBADF)
 				ft_perror("file descriptor out of range");
 			else
 				ft_perror("dup2");
 			if (exit_status)
 				exit(exit_status);
 		}
-		ft_close(oldfd);
+		xclose(oldfd);
 	}
 	return (fd);
 }
