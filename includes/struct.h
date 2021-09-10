@@ -63,9 +63,6 @@ typedef enum e_fd_mode
 {
 	STD_SAVE,
 	STD_RESTORE,
-	FD_SPECIFIED,
-	FD_REDIRECTED,
-	ALL_CLOSE
 }	t_fd_mode;
 
 typedef struct s_token
@@ -82,7 +79,7 @@ typedef struct s_iolist
 	t_special_c		c_type;
 	char			*str;
 	char			*quot;
-	int				here_doc_fd;
+	int				open_fd;
 	struct s_iolist	*next;
 }	t_iolist;
 

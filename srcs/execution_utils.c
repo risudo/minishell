@@ -18,31 +18,15 @@ void	execute_command(t_execdata *data)
 	cmd_func[data->cmd_type](data);
 }
 
-int	redirect_fd_handler(t_execdata *data, t_fd_mode mode, int fd)
+void	free_2d_array(char **array)
 {
-	static char	redfd_flag[FD_MAX + 1];
-	int			index_fd;
+	int	i;
 
-	if (mode == FD_SPECIFIED)
+	if (array)
 	{
-		if (data->stdfd[ORIGINAL_IN] == fd)
-			return (ft_dup(data, ORIGINAL_IN, fd));
-		else if (data->stdfd[ORIGINAL_OUT] == fd)
-			return (ft_dup(data, ORIGINAL_OUT, fd));
-		else if (data->stdfd[ORIGINAL_ERR] == fd)
-			return (ft_dup(data, ORIGINAL_ERR, fd));
+		i = -1;
+		while (array[++i])
+			free(array[i]);
+		free(array);
 	}
-	else if (mode == FD_REDIRECTED && \
-				!redfd_flag[fd] && STDERR_FILENO < fd)
-		redfd_flag[fd]++;
-	else if (mode == ALL_CLOSE)
-	{
-		index_fd = -1;
-		while (++index_fd <= FD_MAX)
-		{
-			if (redfd_flag[index_fd])
-				xclose(index_fd), redfd_flag[index_fd] = 0;
-		}
-	}
-	return (0);
 }

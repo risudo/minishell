@@ -6,18 +6,24 @@
 ** 2 Redirection.
 */
 
+static int	resave_stdfd(t_execdata *data, int fd)
+{
+	if (data->stdfd[ORIGINAL_IN] == fd)
+		return (ft_dup(data, ORIGINAL_IN, fd));
+	else if (data->stdfd[ORIGINAL_OUT] == fd)
+		return (ft_dup(data, ORIGINAL_OUT, fd));
+	else if (data->stdfd[ORIGINAL_ERR] == fd)
+		return (ft_dup(data, ORIGINAL_ERR, fd));
+	return (0);
+}
+
 static int	set_redirect_fd(t_execdata *data, t_iolist *iolst, \
 							int *redirect_fd, int *is_fd_specified)
 {
 	if (iolst->c_type == FD)
 	{
 		*redirect_fd = ft_atoi(iolst->str);
-		if (*redirect_fd < 0 || FD_MAX < *redirect_fd)
-		{
-			ft_putendl_fd("bad file descriptor", STDERR_FILENO);
-			return (-1);
-		}
-		if (redirect_fd_handler(data, FD_SPECIFIED, *redirect_fd) == -1)
+		if (resave_stdfd(data, *redirect_fd) == -1)
 			return (-1);
 		*is_fd_specified = 1;
 	}
@@ -42,8 +48,8 @@ static int	redirection(t_execdata *data, t_iolist *iolst, \
 		ret = ft_dup2(ft_open(iolst->next, O_RDONLY, 0), redirect_fd, 0);
 	else if (ret != -1 && iolst->c_type == IN_HERE_DOC)
 	{
-		ret = ft_dup2(iolst->here_doc_fd, redirect_fd, 0);
-		iolst->here_doc_fd = -1;
+		ret = ft_dup2(iolst->open_fd, redirect_fd, 0);
+		iolst->open_fd = -1;
 	}
 	else if (ret != -1 && iolst->c_type == OUT_REDIRECT)
 		ret = ft_dup2(ft_open(iolst->next, O_WRONLY | O_CREAT | O_TRUNC, 0666), \
@@ -52,8 +58,8 @@ static int	redirection(t_execdata *data, t_iolist *iolst, \
 		ret = ft_dup2(\
 				ft_open(iolst->next, O_WRONLY | O_CREAT | O_APPEND, 0666), \
 						redirect_fd, 0);
-	if (ret != -1)
-		redirect_fd_handler(data, FD_REDIRECTED, redirect_fd);
+	if (ret != -1 && STDERR_FILENO < redirect_fd)
+		iolst->open_fd = redirect_fd;
 	*is_fd_specified = 0;
 	return (ret);
 }

@@ -26,13 +26,10 @@ char	**ft_xsplit(char *src_str, char cut_char)
 	return (splited_str);
 }
 
-void	xclose(int fd)
+void	ft_close(int fd)
 {
-	if (0 <= fd && close(fd) == -1)
-	{
-		perror("close");
-		exit(EXIT_FAILURE);
-	}
+	if (0 <= fd)
+		close(fd);
 }
 
 pid_t	xfork(void)

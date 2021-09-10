@@ -29,18 +29,21 @@ int	ft_dup2(int oldfd, int newfd, int exit_status)
 	int	fd;
 
 	fd = 0;
-	if (oldfd < 0 || newfd < 0)
+	if (oldfd < 0)
 		return (-1);
 	if (oldfd != newfd)
 	{
 		fd = dup2(oldfd, newfd);
 		if (fd == -1)
 		{
-			ft_perror("dup2");
+			if (errno == 9)
+				ft_perror("file descriptor out of range");
+			else
+				ft_perror("dup2");
 			if (exit_status)
 				exit(exit_status);
 		}
-		xclose(oldfd);
+		ft_close(oldfd);
 	}
 	return (fd);
 }

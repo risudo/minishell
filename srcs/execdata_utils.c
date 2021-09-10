@@ -71,7 +71,7 @@ t_iolist	*new_iolst(t_iolist *cur, t_token *token)
 	t_iolist	*new;
 
 	new = (t_iolist *)ft_xcalloc(1, sizeof(*new));
-	new->here_doc_fd = -1;
+	new->open_fd = -1;
 	new->c_type = token->special;
 	cur->next = new;
 	new->str = ft_xstrdup(token->str);

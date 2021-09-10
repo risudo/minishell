@@ -8,7 +8,7 @@ static t_iolist	*insert_redirect_iolist(t_iolist *cur,
 	new = (t_iolist *)ft_xcalloc(1, sizeof(*new));
 	new->str = redirect;
 	new->quot = get_quot_flag(new->str);
-	new->here_doc_fd = -1;
+	new->open_fd = -1;
 	new->c_type = type;
 	cur->next = new;
 	return (new);
