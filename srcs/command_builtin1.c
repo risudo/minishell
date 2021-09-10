@@ -21,8 +21,9 @@ void	builtin_echo(t_execdata *data)
 	option = 0;
 	arg_i = 1;
 	if (data->cmdline[arg_i] && \
-		ft_strcmp(data->cmdline[arg_i], "-n") == 0)
-		option++, arg_i++;
+		ft_strcmp(data->cmdline[arg_i], "-n") == 0 && \
+		arg_i++)
+		option++;
 	while (data->cmdline[arg_i])
 	{
 		printf("%s", data->cmdline[arg_i]);
