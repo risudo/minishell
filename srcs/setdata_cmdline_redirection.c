@@ -49,7 +49,8 @@ static int	redirection(t_execdata *data, t_iolist *iolst, \
 		ret = ft_dup2(ft_open(iolst->next, O_WRONLY | O_CREAT | O_TRUNC, 0666), \
 						redirect_fd, 0);
 	else if (ret != -1 && iolst->c_type == OUT_HERE_DOC)
-		ret = ft_dup2(ft_open(iolst->next, O_WRONLY | O_CREAT | O_APPEND, 0666), \
+		ret = ft_dup2(\
+				ft_open(iolst->next, O_WRONLY | O_CREAT | O_APPEND, 0666), \
 						redirect_fd, 0);
 	if (ret != -1)
 		redirect_fd_handler(data, FD_REDIRECTED, redirect_fd);

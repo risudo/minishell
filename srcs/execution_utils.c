@@ -2,7 +2,7 @@
 
 void	execute_command(t_execdata *data)
 {
-	void	(*cmd_func[CMD_NUM])(t_execdata *data);
+	void (*cmd_func[CMD_NUM])(t_execdata *data);
 
 	if (data->cmd_type == NON_CMD)
 		return ;
