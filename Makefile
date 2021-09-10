@@ -32,7 +32,8 @@ SRCS_NAME = main.c \
 			wrapper1.c \
 			wrapper2.c \
 			wrapper3.c \
-			wrapper4.c
+			wrapper4.c \
+			signal_handler.c
 
 SRCS = ${addprefix ${SRCS_DIR}, ${SRCS_NAME}}
 

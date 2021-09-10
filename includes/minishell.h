@@ -11,6 +11,7 @@
 # include <string.h>
 # include <errno.h>
 # include <stdbool.h>
+# include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "../libft/libft.h"
@@ -22,5 +23,7 @@ extern unsigned char	g_status;
 
 t_execdata	*parse_cmd(char *command, t_envlist *envlist);
 t_envlist	*create_envlist(char **envp);
+void		signal_handler(int signo);
+void		child_handler(int signo);
 
 #endif
