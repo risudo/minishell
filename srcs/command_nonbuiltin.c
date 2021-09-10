@@ -92,10 +92,10 @@ static char	*cmdpath_from_direct(char *cmd)
 	if (path_type == UNKNOWN)
 	{
 		ft_perror(cmd);
-		if (errno == 20)
-			g_status = 126;
-		else
+		if (errno == 2)
 			g_status = 127;
+		else
+			g_status = 126;
 	}
 	else if (path_type == EXECUTABLE)
 		cmd_path = cmd;
