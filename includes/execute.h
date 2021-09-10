@@ -2,7 +2,6 @@
 # define EXECUTE_H
 
 # include "minishell.h"
-# define FD_MAX 2000
 
 //execution_start.c
 int			execute_loop(t_execdata *data);
@@ -25,9 +24,8 @@ void		builtin_exit(t_execdata *data);
 void		non_builtin(t_execdata *data);
 
 //execution_utils.c
-
 void		execute_command(t_execdata *data);
-int			redirect_fd_handler(t_execdata *data, t_fd_mode mode, int fd);
+void		free_2d_array(char **array);
 
 //env_functions.c
 char		*ft_getenv(t_envlist *elst, char *search_key);
@@ -42,12 +40,11 @@ char		**convert_cmdlist_2dchar(t_cmdlist *clst);
 //execution_utils_libft.c
 long		ft_atol(char *str, bool *nonnum_check);
 int			ft_strcmp(char *s1, char *s2);
-void		free_2d_array(char **array);
 
 //wrapper2.c
 char		*ft_xstrjoin(char *str1, char *str2);
 char		**ft_xsplit(char *src_str, char cut_char);
-void		xclose(int fd);
+void		ft_close(int fd);
 pid_t		xfork(void);
 void		xwaitpid(pid_t pid, int *wstatus, int options);
 

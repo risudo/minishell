@@ -61,16 +61,3 @@ int	ft_strcmp(char *s1, char *s2)
 		s2++;
 	}
 }
-
-void	free_2d_array(char **array)
-{
-	int	i;
-
-	if (array)
-	{
-		i = -1;
-		while (array[++i])
-			free(array[i]);
-		free(array);
-	}
-}
