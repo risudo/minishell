@@ -1,17 +1,6 @@
 #include "minishell.h"
-#include "signal.h"
 
 unsigned char	g_status = 0;
-
-void	handler(int signo)
-{
-	(void)signo;
-	g_status = 128 + SIGINT;
-	ft_putchar_fd('\n', STDOUT_FILENO);
-	rl_replace_line("", 0);
-	rl_on_new_line();
-	rl_redisplay();
-}
 
 void	minishell_loop(char **envp)
 {
@@ -41,7 +30,7 @@ void	minishell_loop(char **envp)
 
 int	main(int argc, char **argv, char **envp)
 {
-	if (signal(SIGINT, handler) == SIG_ERR
+	if (signal(SIGINT, signal_handler) == SIG_ERR
 		|| signal(SIGQUIT, SIG_IGN) == SIG_ERR)
 	{
 		perror("signal");

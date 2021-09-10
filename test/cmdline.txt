@@ -1,0 +1,42 @@
+echo aaa|cat
+   echo aaa|cat
+echo aaa|cat
+echo aaa | cat
+echo aaa| cat
+echo "aaa | bbb"
+echo "aaa > bbb"
+echo $
+echo $ | cat
+echo $?
+echo "$?"
+echo '$?'
+echo $?$?
+echo $?aa
+echo $USER
+echo "$USER"
+echo '$USER'
+echo '"$USER"'
+echo "'$USER'"
+echo ""$USER""
+echo "'"$USER"'"
+echo $USER?
+echo $USER_
+echo $USER!
+echo "aa$VAR"
+echo aa$VAR
+echo $SPACE
+echo aa$SPACE
+echo aa"$SPACE"bb
+echo $FILE2
+echo $FILE2$FILE1
+echo $%$HOME
+echo $SPACE2
+echo XX$SPACE2
+echo -nk test
+echo $AKIYAMA
+echo $ECHO aaa bbb ccc
+/bin/cat hello.txt
+/bin/ls
+pwd jaskdf
+echo $AKIYAMA$IN_RED | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e
+echo aaa "bbb | cat -e"
