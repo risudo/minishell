@@ -102,24 +102,31 @@ static void	serch_new_space_cmdlist(t_cmdlist *clist)
 	}
 }
 
-void	serch_env_cmdlist(t_cmdlist *clist, t_envlist *envlist)
+void	serch_env_cmdlist(t_cmdlist **clist, t_envlist *envlist)
 {
-	char	*doll_ptr;
-	size_t	len;
+	char		*doll_ptr;
+	size_t		len;
+	t_cmdlist	*prev;
+	t_cmdlist	*head;
 
-	while (clist)
+	head = (*clist);
+	while ((*clist))
 	{
-		doll_ptr = ft_strdoll(clist->str);
-		while (doll_ptr != NULL && clist->quot[doll_ptr - clist->str] != 'S')
+		doll_ptr = ft_strdoll((*clist)->str);
+		while (doll_ptr && (*clist)->quot[doll_ptr - (*clist)->str] != 'S')
 		{
-			len = expansion_key_cmdlist(clist, envlist, doll_ptr);
-			free(clist->quot);
-			clist->quot = get_quot_flag(clist->str);
-			doll_ptr = ft_strdoll(clist->str + len);
+			len = expansion_key_cmdlist((*clist), envlist, doll_ptr);
+			free((*clist)->quot);
+			(*clist)->quot = get_quot_flag((*clist)->str);
+			doll_ptr = ft_strdoll((*clist)->str + len);
 		}
-		if (ft_strchr(clist->quot, '1') || ft_strchr(clist->quot, '2'))
-			clear_quot_cmdlist(clist);
-		serch_new_space_cmdlist(clist);
-		clist = clist->next;
+		if (!(*clist)->str[0] && delone_cmdlist(clist, prev, &head))
+			continue ;
+		if (ft_strchr((*clist)->quot, '1') || ft_strchr((*clist)->quot, '2'))
+			clear_quot_cmdlist((*clist));
+		serch_new_space_cmdlist((*clist));
+		prev = (*clist);
+		(*clist) = (*clist)->next;
 	}
+	(*clist) = (t_cmdlist *)head;
 }
