@@ -30,12 +30,8 @@ void	minishell_loop(char **envp)
 
 int	main(int argc, char **argv, char **envp)
 {
-	if (signal(SIGINT, signal_handler) == SIG_ERR
-		|| signal(SIGQUIT, SIG_IGN) == SIG_ERR)
-	{
-		perror("signal");
-		exit(EXIT_FAILURE);
-	}
+	xsignal(SIGINT, signal_handler);
+	xsignal(SIGQUIT, SIG_IGN);
 	minishell_loop(envp);
 	(void)argc;
 	(void)argv;

@@ -11,6 +11,7 @@ void		*ft_xcalloc(size_t count, size_t size);
 char		*ft_xsubstr(char const *s, unsigned int start, size_t len);
 char		*ft_xstrdup(const char *src);
 char		*ft_xitoa(int n);
+void		xsignal(int sig, void f(int));
 
 // tokenize
 t_token		*tokenize_cmd_by_space(char *cmd, bool *err);
