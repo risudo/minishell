@@ -28,7 +28,7 @@ char	*get_new_flag(char **quot, char *end_quot)
 		}
 		ret[i++] = (*quot)[j++];
 	}
-	xfree(*quot);
+	free(*quot);
 	return (ret);
 }
 

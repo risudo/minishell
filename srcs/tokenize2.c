@@ -33,7 +33,7 @@ static t_token	*get_newstr_list(t_token *list, char *delimiter_ptr)
 		len = delimiter_ptr - list->str;
 	str = ft_xsubstr(list->str, 0, len);
 	excluded = ft_xsubstr(list->str, len, ft_strlen(list->str) - len);
-	xfree(list->str);
+	free(list->str);
 	list->str = str;
 	list = insert_new_token(list, excluded);
 	return (list);

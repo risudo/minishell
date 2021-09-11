@@ -15,7 +15,7 @@ char	*ft_strjoin_three(char *str1, char *str2, char *str3)
 
 	tmp = ft_xstrjoin(str1, str2);
 	ret = ft_xstrjoin(tmp, str3);
-	xfree(tmp);
+	free(tmp);
 	return (ret);
 }
 

@@ -23,10 +23,10 @@ static size_t	expansion_key_cmdlist(t_cmdlist *clist,
 	key = ft_xsubstr(doll_ptr, 1, len - 1);
 	back_key = ft_xsubstr(doll_ptr + len, 0, ft_strlen(doll_ptr + len));
 	value = ft_getenv(envlist, key);
-	xfree(clist->str);
+	free(clist->str);
 	clist->str = ft_strjoin_three(front_key, value, back_key);
 	len = ft_strlen(front_key) + ft_strlen(value);
-	xfree(front_key), xfree(key), xfree(back_key);
+	free(front_key), free(key), free(back_key);
 	return (len);
 }
 
@@ -50,7 +50,7 @@ static void	clear_quot_cmdlist(t_cmdlist *clist)
 		}
 		new_str[j++] = clist->str[i++];
 	}
-	xfree(clist->str);
+	free(clist->str);
 	clist->str = new_str;
 	clist->quot = get_removed_endflag(&clist->quot, '1');
 	clist->quot = get_removed_endflag(&clist->quot, '2');
@@ -113,7 +113,7 @@ void	serch_env_cmdlist(t_cmdlist *clist, t_envlist *envlist)
 		while (doll_ptr != NULL && clist->quot[doll_ptr - clist->str] != 'S')
 		{
 			len = expansion_key_cmdlist(clist, envlist, doll_ptr);
-			xfree(clist->quot);
+			free(clist->quot);
 			clist->quot = get_quot_flag(clist->str);
 			doll_ptr = ft_strdoll(clist->str + len);
 		}

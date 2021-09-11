@@ -85,7 +85,7 @@ int	expand_filename(t_iolist *iolist, t_envlist *envlist)
 	while (doll_ptr && filequot[doll_ptr - filename] != 'S')
 	{
 		len = expansion_key_io(&filename, envlist, doll_ptr);
-		xfree(filequot);
+		free(filequot);
 		filequot = get_quot_flag(filename);
 		doll_ptr = ft_strdoll(filename + len);
 	}
