@@ -52,7 +52,7 @@ void		xwaitpid(pid_t pid, int *wstatus, int options);
 int			ft_dup(t_execdata *data, t_stdfd type, int oldfd);
 int			ft_pipe(int *pipefd);
 t_path_type	ft_stat(char *pathname);
-int			ft_dup2(int oldfd, int newfd, int exit_status);
+int			ft_dup2(int oldfd, int newfd);
 int			ft_open(t_iolist *filenode, \
 					int flags, mode_t mode);
 
