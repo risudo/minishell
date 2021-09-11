@@ -27,10 +27,10 @@ size_t	expansion_key_io(char **line, \
 	key = ft_xsubstr(doll_ptr, 1, len - 1);
 	back_key = ft_xsubstr(doll_ptr + len, 0, ft_strlen(doll_ptr + len));
 	value = ft_getenv(envlist, key);
-	xfree(*line);
+	free(*line);
 	*line = ft_strjoin_three(front_key, value, back_key);
 	len = ft_strlen(front_key) + ft_strlen(value);
-	xfree(front_key), xfree(key), xfree(back_key);
+	free(front_key), free(key), free(back_key);
 	return (len);
 }
 
@@ -54,7 +54,7 @@ void	clear_quot_filename(char **filename, char **filequot)
 		}
 		new_str[j++] = (*filename)[i++];
 	}
-	xfree(*filename);
+	free(*filename);
 	*filename = new_str;
 	*filequot = get_removed_endflag(filequot, '1');
 	*filequot = get_removed_endflag(filequot, '2');

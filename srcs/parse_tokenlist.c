@@ -23,9 +23,9 @@ static void	expand_status(t_token *list, char *doll_ptr)
 	front = ft_xsubstr(list->str, 0, doll_ptr - list->str);
 	back = ft_xsubstr(doll_ptr, 2, ft_strlen(doll_ptr + 2));
 	value = ft_xitoa(g_status);
-	xfree(list->str);
+	free(list->str);
 	list->str = ft_strjoin_three(front, value, back);
-	xfree(front), xfree(back), xfree(value);
+	free(front), free(back), free(value);
 }
 
 static bool	is_in_squot(char *str, char *doll_ptr)

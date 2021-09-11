@@ -37,6 +37,8 @@ t_envlist	*create_envlist(char **envp)
 
 	i = 0;
 	cur = &head;
+	if (envp[i] == NULL)
+		return (NULL);
 	while (envp[i])
 	{
 		cur = new_envlist(cur, envp[i]);

@@ -11,9 +11,9 @@ void	clear_envlist(t_envlist *envlist)
 	while (envlist)
 	{
 		next = envlist->next;
-		xfree(envlist->key);
-		xfree(envlist->value);
-		xfree(envlist);
+		free(envlist->key);
+		free(envlist->value);
+		free(envlist);
 		envlist = next;
 	}
 }
@@ -25,8 +25,8 @@ void	clear_tokenlist(t_token *list)
 	while (list)
 	{
 		next = list->next;
-		xfree(list->str);
-		xfree(list);
+		free(list->str);
+		free(list);
 		list = next;
 	}
 }
@@ -38,9 +38,9 @@ void	clear_cmdlist(t_cmdlist *list)
 	while (list)
 	{
 		next = list->next;
-		xfree(list->str);
-		xfree(list->quot);
-		xfree(list);
+		free(list->str);
+		free(list->quot);
+		free(list);
 		list = next;
 	}
 }
@@ -53,9 +53,9 @@ void	clear_iolist(t_iolist *list)
 	{
 		next = list->next;
 		xclose(list->open_fd);
-		xfree(list->str);
-		xfree(list->quot);
-		xfree(list);
+		free(list->str);
+		free(list->quot);
+		free(list);
 		list = next;
 	}
 }
@@ -70,7 +70,7 @@ void	clear_execdata(t_execdata *data)
 		clear_cmdlist(data->clst);
 		clear_iolist(data->iolst);
 		free_2d_array(data->cmdline);
-		xfree(data);
+		free(data);
 		data = next;
 	}
 }

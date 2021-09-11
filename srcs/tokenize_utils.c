@@ -9,18 +9,18 @@ t_token	*join_redirect(t_token *list)
 		next = list->next->next;
 	if (list->next->str[0] == '>')
 	{
-		xfree(list->str);
+		free(list->str);
 		list->str = ft_xstrdup(">>");
 	}
 	if (list->next->str[0] == '<')
 	{
-		xfree(list->str);
+		free(list->str);
 		list->str = ft_xstrdup("<<");
 	}
 	if (list->next)
 	{
-		xfree(list->next->str);
-		xfree(list->next);
+		free(list->next->str);
+		free(list->next);
 		list->next = next;
 	}
 	if (next)

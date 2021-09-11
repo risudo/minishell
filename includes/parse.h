@@ -10,7 +10,6 @@
 void		*ft_xcalloc(size_t count, size_t size);
 char		*ft_xsubstr(char const *s, unsigned int start, size_t len);
 char		*ft_xstrdup(const char *src);
-void		xfree(void *ptr);
 char		*ft_xitoa(int n);
 
 // tokenize

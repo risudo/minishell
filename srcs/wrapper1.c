@@ -39,12 +39,6 @@ char	*ft_xstrdup(const char *src)
 	return (ret);
 }
 
-void	xfree(void *ptr)
-{
-	free(ptr);
-	ptr = NULL;
-}
-
 char	*ft_xitoa(int n)
 {
 	char	*ret;
