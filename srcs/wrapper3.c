@@ -24,7 +24,7 @@ int	ft_dup(t_execdata *data, t_stdfd type, int oldfd)
 	return (newfd);
 }
 
-int	ft_dup2(int oldfd, int newfd, int exit_status)
+int	ft_dup2(int oldfd, int newfd)
 {
 	int	fd;
 
@@ -40,8 +40,6 @@ int	ft_dup2(int oldfd, int newfd, int exit_status)
 				ft_perror("file descriptor out of range");
 			else
 				ft_perror("dup2");
-			if (exit_status)
-				exit(exit_status);
 		}
 		xclose(oldfd);
 	}

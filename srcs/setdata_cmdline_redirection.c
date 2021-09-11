@@ -45,19 +45,19 @@ static int	redirection(t_execdata *data, t_iolist *iolst, \
 	if (iolst->c_type != IN_HERE_DOC)
 		ret = expand_filename(iolst->next, data->elst);
 	if (ret != -1 && iolst->c_type == IN_REDIRECT)
-		ret = ft_dup2(ft_open(iolst->next, O_RDONLY, 0), redirect_fd, 0);
+		ret = ft_dup2(ft_open(iolst->next, O_RDONLY, 0), redirect_fd);
 	else if (ret != -1 && iolst->c_type == IN_HERE_DOC)
 	{
-		ret = ft_dup2(iolst->open_fd, redirect_fd, 0);
+		ret = ft_dup2(iolst->open_fd, redirect_fd);
 		iolst->open_fd = -1;
 	}
 	else if (ret != -1 && iolst->c_type == OUT_REDIRECT)
 		ret = ft_dup2(ft_open(iolst->next, O_WRONLY | O_CREAT | O_TRUNC, 0666), \
-						redirect_fd, 0);
+						redirect_fd);
 	else if (ret != -1 && iolst->c_type == OUT_HERE_DOC)
 		ret = ft_dup2(\
 				ft_open(iolst->next, O_WRONLY | O_CREAT | O_APPEND, 0666), \
-						redirect_fd, 0);
+						redirect_fd);
 	if (ret != -1 && STDERR_FILENO < redirect_fd)
 		iolst->open_fd = redirect_fd;
 	*is_fd_specified = 0;
