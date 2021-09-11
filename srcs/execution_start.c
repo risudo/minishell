@@ -48,6 +48,7 @@ int	execute_loop(t_execdata *data)
 	int	pid;
 	int	pipefd[PIPEFD_NUM];
 	int	prev_pipe_read;
+	int	wstatus;
 
 	prev_pipe_read = STDIN_FILENO;
 	while (data)
@@ -55,14 +56,20 @@ int	execute_loop(t_execdata *data)
 		ft_pipe(pipefd);
 		pid = xfork();
 		if (pid == 0)
+		{
 			child_execute(data, prev_pipe_read, \
 					pipefd[READ], pipefd[WRITE]);
+		}
 		else
+		{
+			xsignal(SIGINT, SIG_IGN);
 			prev_pipe_read = parent_connect_fd(data, \
 					prev_pipe_read, pipefd[READ], pipefd[WRITE]);
+		}
 		data = data->next;
 	}
-	return (pid);
+	xwaitpid(pid, &wstatus, 0);
+	return (wstatus);
 }
 
 static int	std_fd_handler(t_execdata *data, t_fd_mode mode)
@@ -98,7 +105,6 @@ static int	std_fd_handler(t_execdata *data, t_fd_mode mode)
 */
 void	execute_start(t_execdata *data)
 {
-	int			lastchild_pid;
 	int			wstatus;
 
 	if (setdata_heredoc_cmdtype(data) == -1)
@@ -112,13 +118,16 @@ void	execute_start(t_execdata *data)
 	}
 	else
 	{
-		lastchild_pid = execute_loop(data);
-		xwaitpid(lastchild_pid, &wstatus, 0);
-		g_status = WEXITSTATUS(wstatus);
-		while (data->next)
+		wstatus = execute_loop(data);
+		xsignal(SIGINT, signal_handler);
+		if (WIFEXITED(wstatus))
+			g_status = WEXITSTATUS(wstatus);
+		else if (WIFSIGNALED(wstatus))
 		{
-			wait(NULL);
-			data = data->next;
+			ft_putchar_fd('\n', STDOUT_FILENO);
+			g_status = WTERMSIG(wstatus) + 128;
 		}
+		while (data->next)
+			wait(NULL), data = data->next;
 	}
 }
