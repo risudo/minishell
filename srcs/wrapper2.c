@@ -26,10 +26,16 @@ char	**ft_xsplit(char *src_str, char cut_char)
 	return (splited_str);
 }
 
-void	ft_close(int fd)
+void	xclose(int fd)
 {
-	if (0 <= fd)
-		close(fd);
+	if (0 <= fd && close(fd) == -1)
+	{
+		if (errno != EBADF)
+		{
+			ft_perror("close");
+			exit(EXIT_FAILURE);
+		}
+	}
 }
 
 pid_t	xfork(void)

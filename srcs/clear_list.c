@@ -52,7 +52,7 @@ void	clear_iolist(t_iolist *list)
 	while (list)
 	{
 		next = list->next;
-		ft_close(list->open_fd);
+		xclose(list->open_fd);
 		xfree(list->str);
 		xfree(list->quot);
 		xfree(list);

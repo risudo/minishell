@@ -10,11 +10,11 @@ static void	child_execute(t_execdata *data, int prev_pipe_read, \
 						int piperead, int pipewrite)
 {
 	ft_dup2(prev_pipe_read, STDIN_FILENO, 1);
-	ft_close(piperead);
+	xclose(piperead);
 	if (data->next)
 		ft_dup2(pipewrite, STDOUT_FILENO, 1);
 	else
-		ft_close(pipewrite);
+		xclose(pipewrite);
 	if (setdata_cmdline_redirect(data) != -1)
 		execute_command(data);
 	exit(g_status);
@@ -23,11 +23,11 @@ static void	child_execute(t_execdata *data, int prev_pipe_read, \
 static int	parent_connect_fd(t_execdata *data, int prev_pipe_read, \
 						int piperead, int pipewrite)
 {
-	ft_close(pipewrite);
+	xclose(pipewrite);
 	if (prev_pipe_read != STDIN_FILENO)
-		ft_close(prev_pipe_read);
+		xclose(prev_pipe_read);
 	if (data->next == NULL)
-		ft_close(piperead);
+		xclose(piperead);
 	return (piperead);
 }
 
