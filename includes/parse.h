@@ -45,7 +45,7 @@ t_execdata	*check_syntax(t_execdata *data);
 void		put_syntax_error(char *str);
 
 // expansion
-void		serch_env_cmdlist(t_cmdlist *clist, t_envlist *envlist);
+void		serch_env_cmdlist(t_cmdlist **clist, t_envlist *envlist);
 char		*get_quot_flag(char *str);
 char		*get_removed_endflag(char **quot, char flag);
 size_t		ft_strlen_excluded_quot(char *str, char *quot);
@@ -58,6 +58,7 @@ size_t		get_space_idx(t_cmdlist *clist);
 bool		is_delimiter(char c);
 char		*ft_strjoin_three(char *str1, char *str2, char *str3);
 bool		is_delimiter_quot(char c, char flag);
+int			delone_cmdlist(t_cmdlist **cur, t_cmdlist *prev, t_cmdlist **head);
 
 // test
 void		put_execdata(t_execdata *data);

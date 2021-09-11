@@ -44,3 +44,24 @@ char	*get_removed_endflag(char **quot, char flag)
 	}
 	return (*quot);
 }
+
+int	delone_cmdlist(t_cmdlist **cur, t_cmdlist *prev, t_cmdlist **head)
+{
+	t_cmdlist	*tmp;
+
+	if (*cur == *head)
+	{
+		tmp = (*cur);
+		(*cur) = (*cur)->next;
+		free(tmp->str), free(tmp->quot), free(tmp);
+		(*head) = (*cur);
+	}
+	else
+	{
+		tmp = (*cur);
+		(*cur) = (*cur)->next;
+		prev->next = (*cur);
+		free(tmp->str), free(tmp->quot), free(tmp);
+	}
+	return (1);
+}

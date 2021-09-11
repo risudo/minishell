@@ -7,7 +7,7 @@ static t_execdata	*expand_variable(t_execdata *data)
 	head = data;
 	while (data)
 	{
-		serch_env_cmdlist(data->clst, data->elst);
+		serch_env_cmdlist(&data->clst, data->elst);
 		data = data->next;
 	}
 	return (data);
