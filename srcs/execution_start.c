@@ -43,13 +43,13 @@ static int	parent_connect_fd(t_execdata *data, int prev_pipe_read, \
 **   set data
 **   run execution
 */
-int	execute_loop(t_execdata *data)
+static void	execute_loop(t_execdata *data, int *wstatus)
 {
 	int	pid;
 	int	pipefd[PIPEFD_NUM];
 	int	prev_pipe_read;
-	int	wstatus;
 
+	xsignal(SIGINT, SIG_IGN);
 	prev_pipe_read = STDIN_FILENO;
 	while (data)
 	{
@@ -57,19 +57,18 @@ int	execute_loop(t_execdata *data)
 		pid = xfork();
 		if (pid == 0)
 		{
+			xsignal(SIGINT, SIG_DFL);
+			xsignal(SIGQUIT, SIG_DFL);
 			child_execute(data, prev_pipe_read, \
 					pipefd[READ], pipefd[WRITE]);
 		}
 		else
-		{
-			xsignal(SIGINT, SIG_IGN);
 			prev_pipe_read = parent_connect_fd(data, \
 					prev_pipe_read, pipefd[READ], pipefd[WRITE]);
-		}
 		data = data->next;
 	}
-	xwaitpid(pid, &wstatus, 0);
-	return (wstatus);
+	xwaitpid(pid, wstatus, 0);
+	xsignal(SIGINT, signal_handler);
 }
 
 static int	std_fd_handler(t_execdata *data, t_fd_mode mode)
@@ -105,7 +104,7 @@ static int	std_fd_handler(t_execdata *data, t_fd_mode mode)
 */
 void	execute_start(t_execdata *data)
 {
-	int			wstatus;
+	int	last_child_status;
 
 	if (setdata_heredoc_cmdtype(data) == -1)
 		return ;
@@ -118,15 +117,8 @@ void	execute_start(t_execdata *data)
 	}
 	else
 	{
-		wstatus = execute_loop(data);
-		xsignal(SIGINT, signal_handler);
-		if (WIFEXITED(wstatus))
-			g_status = WEXITSTATUS(wstatus);
-		else if (WIFSIGNALED(wstatus))
-		{
-			ft_putchar_fd('\n', STDOUT_FILENO);
-			g_status = WTERMSIG(wstatus) + 128;
-		}
+		execute_loop(data, &last_child_status);
+		set_status_from_child_status(last_child_status);
 		while (data->next)
 			wait(NULL), data = data->next;
 	}
