@@ -74,17 +74,18 @@ static int	get_here_doc(char *limiter, t_execdata *data, \
 	int		wstatus;
 
 	ft_pipe(pipefd);
+	xsignal(SIGINT, SIG_IGN);
 	if (xfork() == 0)
 	{
-		if (signal(SIGINT, child_handler) == SIG_ERR)
-			perror("signal"), exit(EXIT_FAILURE);
+		xsignal(SIGINT, SIG_DFL);
 		xclose(pipefd[READ]);
 		child_get_here_doc(limiter, data, is_quot, pipefd[WRITE]);
 	}
 	xclose(pipefd[WRITE]);
 	iolst->open_fd = pipefd[READ];
 	wait(&wstatus);
-	g_status = WEXITSTATUS(wstatus);
+	xsignal(SIGINT, signal_handler);
+	set_status_from_child_status(wstatus);
 	if (g_status != 0)
 		return (-1);
 	return (0);

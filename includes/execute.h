@@ -4,7 +4,6 @@
 # include "minishell.h"
 
 //execution_start.c
-int			execute_loop(t_execdata *data);
 void		execute_start(t_execdata *data);
 
 //setdata_cmdline_redirection.c
@@ -26,6 +25,7 @@ void		non_builtin(t_execdata *data);
 //execution_utils.c
 void		execute_command(t_execdata *data);
 void		free_2d_array(char **array);
+void		set_status_from_child_status(int wstatus);
 
 //env_functions.c
 char		*ft_getenv(t_envlist *elst, char *search_key);
