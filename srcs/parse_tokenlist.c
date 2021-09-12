@@ -53,9 +53,9 @@ static int	check_token_syntax(t_token *head, t_token *last)
 	int	ret;
 
 	ret = 0;
-	if (last->special == PIPE || head->special == PIPE)
+	if (last && (last->special == PIPE || head->special == PIPE))
 		put_syntax_error("|"), ret = -1;
-	if (last->special >= IN_REDIRECT && last->special <= OUT_HERE_DOC)
+	if (last && last->special >= IN_REDIRECT && last->special <= OUT_HERE_DOC)
 		put_syntax_error(last->str), ret = -1;
 	while (head && ret == 0)
 	{
@@ -82,6 +82,7 @@ int	parse_tokenlist(t_token *list)
 	char	*doll_ptr;
 
 	head = list;
+	prev = NULL;
 	while (list)
 	{
 		if (is_consecutive_redirect(list))

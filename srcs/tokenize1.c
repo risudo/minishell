@@ -54,11 +54,13 @@ t_quottype	get_flag_quot(char *cmd, t_quottype flag_quot)
 		return (DEFAULT);
 }
 
-static char	*skip_space(char **cmd)
+static int	init_vars(char **cmd, char **start, t_quottype *flag)
 {
-	while (ft_isspace(**cmd))
+	*flag = DEFAULT;
+	while (**cmd && ft_isspace(**cmd))
 		(*cmd)++;
-	return (*cmd);
+	*start = *cmd;
+	return (**start == '\0');
 }
 
 t_token	*tokenize_cmd_by_space(char *cmd, bool *err)
@@ -68,9 +70,9 @@ t_token	*tokenize_cmd_by_space(char *cmd, bool *err)
 	char		*start;
 	t_quottype	flag_quot;
 
-	flag_quot = DEFAULT;
 	cur = &head;
-	start = skip_space(&cmd);
+	if (init_vars(&cmd, &start, &flag_quot))
+		return (NULL);
 	while (*cmd)
 	{
 		if (ft_isspace(*cmd) && !(flag_quot == D_QUOT || flag_quot == S_QUOT))
