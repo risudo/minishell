@@ -38,15 +38,19 @@ void	builtin_echo(t_execdata *data)
 
 void	builtin_cd(t_execdata *data)
 {
-	ft_setenv(data->elst, ft_xstrdup("OLDPWD"), getcwd(NULL, 0), 0);
+	char	*old_pwd;
+
+	old_pwd = getcwd(NULL, 0);
 	if (data->cmdline[1] && \
 		data->cmdline[1][0] && \
 		chdir(data->cmdline[1]) == -1)
 	{
 		ft_perror("cd");
 		g_status = 1;
+		free(old_pwd);
 		return ;
 	}
+	ft_setenv(data->elst, ft_xstrdup("OLDPWD"), old_pwd, 0);
 	if (ft_getenv(data->elst, "PWD"))
 		ft_setenv(data->elst, ft_xstrdup("PWD"), getcwd(NULL, 0), 0);
 	g_status = 0;

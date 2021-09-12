@@ -9,10 +9,11 @@
 static void	child_execute(t_execdata *data, int prev_pipe_read, \
 						int piperead, int pipewrite)
 {
-	ft_dup2(prev_pipe_read, STDIN_FILENO, 1);
+	if (ft_dup2(prev_pipe_read, STDIN_FILENO) == -1)
+		exit(EXIT_FAILURE);
 	xclose(piperead);
-	if (data->next)
-		ft_dup2(pipewrite, STDOUT_FILENO, 1);
+	if (data->next && ft_dup2(pipewrite, STDOUT_FILENO) == -1)
+		exit(EXIT_FAILURE);
 	else
 		xclose(pipewrite);
 	if (setdata_cmdline_redirect(data) != -1)
@@ -88,9 +89,10 @@ static int	std_fd_handler(t_execdata *data, t_fd_mode mode)
 	}
 	else if (mode == STD_RESTORE)
 	{
-		ft_dup2(data->stdfd[ORIGINAL_IN], STDIN_FILENO, 1);
-		ft_dup2(data->stdfd[ORIGINAL_OUT], STDOUT_FILENO, 1);
-		ft_dup2(data->stdfd[ORIGINAL_ERR], STDERR_FILENO, 1);
+		if (ft_dup2(data->stdfd[ORIGINAL_IN], STDIN_FILENO) == -1 || \
+			ft_dup2(data->stdfd[ORIGINAL_OUT], STDOUT_FILENO) == -1 || \
+			ft_dup2(data->stdfd[ORIGINAL_ERR], STDERR_FILENO) == -1)
+			exit(EXIT_FAILURE);
 	}
 	return (ret);
 }

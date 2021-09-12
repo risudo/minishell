@@ -95,12 +95,12 @@ int	setdata_heredoc_cmdtype(t_execdata *data)
 	t_iolist	*move;
 	int			is_quot;
 
-	is_quot = 0;
 	while (data)
 	{
 		move = data->iolst;
 		while (move)
 		{
+			is_quot = 0;
 			if (move->c_type == IN_HERE_DOC)
 			{
 				if (ft_strchr(move->next->quot, '1') || \
