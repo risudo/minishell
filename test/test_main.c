@@ -1,8 +1,6 @@
 #include "minishell.h"
-#include "signal.h"
 
 unsigned char	g_status = 0;
-
 
 void end(void)__attribute__((destructor));
 void end(void)
@@ -14,16 +12,6 @@ void end(void)
     sprintf(cmd_str, "%s %d %s\n", "leaks", current_pid, ">> leaks.txt 2>&1");
     int ret = system(cmd_str);
     if (ret) printf("\e[31m!leak detected!\e[0m\n");
-}
-
-void	handler(int signo)
-{
-	(void)signo;
-	g_status = 128 + SIGINT;
-	ft_putchar_fd('\n', STDOUT_FILENO);
-	rl_replace_line("", 0);
-	rl_on_new_line();
-	rl_redisplay();
 }
 
 void	minishell_loop(char **envp)
@@ -56,12 +44,8 @@ void	minishell_loop(char **envp)
 
 int	main(int argc, char **argv, char **envp)
 {
-	if (signal(SIGINT, handler) == SIG_ERR
-		|| signal(SIGQUIT, SIG_IGN) == SIG_ERR)
-	{
-		perror("signal");
-		exit(EXIT_FAILURE);
-	}
+	xsignal(SIGINT, signal_handler);
+	xsignal(SIGQUIT, SIG_IGN);
 	minishell_loop(envp);
 	(void)argc;
 	(void)argv;

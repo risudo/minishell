@@ -30,3 +30,14 @@ void	free_2d_array(char **array)
 		free(array);
 	}
 }
+
+void	set_status_from_child_status(int wstatus)
+{
+	if (WIFEXITED(wstatus))
+		g_status = WEXITSTATUS(wstatus);
+	else if (WIFSIGNALED(wstatus))
+	{
+		ft_putchar_fd('\n', STDOUT_FILENO);
+		g_status = WTERMSIG(wstatus) + 128;
+	}
+}
