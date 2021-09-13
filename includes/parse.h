@@ -14,7 +14,7 @@ char		*ft_xitoa(int n);
 void		xsignal(int sig, void f(int));
 
 // tokenize
-t_token		*tokenize_cmd_by_space(char *cmd, bool *err);
+t_token		*tokenize_cmd(char *cmd, bool *err);
 int			parse_tokenlist(t_token *list);
 int			split_operater(t_token *list);
 void		clear_execdata(t_execdata *data);
@@ -45,7 +45,7 @@ t_execdata	*check_syntax(t_execdata *data);
 void		put_syntax_error(char *str);
 
 // expansion
-void		serch_env_cmdlist(t_cmdlist **clist, t_envlist *envlist);
+void		expand_cmdlist(t_cmdlist **clist, t_envlist *envlist);
 char		*get_quot_flag(char *str);
 char		*get_removed_endflag(char **quot, char flag);
 size_t		ft_strlen_excluded_quot(char *str, char *quot);

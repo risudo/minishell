@@ -7,7 +7,7 @@ static t_execdata	*expand_variable(t_execdata *data)
 	head = data;
 	while (data)
 	{
-		serch_env_cmdlist(&data->clst, data->elst);
+		expand_cmdlist(&data->clst, data->elst);
 		data = data->next;
 	}
 	return (data);
@@ -29,7 +29,7 @@ t_execdata	*parse_cmd(char *command, t_envlist *envlist)
 	bool		err;
 
 	err = false;
-	tokenlist = tokenize_cmd_by_space(command, &err);
+	tokenlist = tokenize_cmd(command, &err);
 	if (err == true)
 		return (create_error_execdata(tokenlist));
 	split_operater(tokenlist);
