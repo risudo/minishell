@@ -7,7 +7,7 @@
 ** 3 If there are spaces after expanding, insert new list.
 */
 
-static size_t	expansion_key_cmdlist(t_cmdlist *clist,
+static size_t	expand_key_cmdlist(t_cmdlist *clist,
 		t_envlist *envlist, char *doll_ptr)
 {
 	char	*key;
@@ -74,7 +74,7 @@ static t_cmdlist	*insert_new_cmdlist(t_cmdlist *clist, int i)
 	return (clist);
 }
 
-static void	serch_new_space_cmdlist(t_cmdlist *clist)
+static void	search_new_space_cmdlist(t_cmdlist *clist)
 {
 	size_t	i;
 	size_t	len;
@@ -90,7 +90,7 @@ static void	serch_new_space_cmdlist(t_cmdlist *clist)
 		free(clist->str), free(clist->quot);
 		clist->str = str;
 		clist->quot = get_quot_flag(clist->str);
-		serch_new_space_cmdlist(clist);
+		search_new_space_cmdlist(clist);
 	}
 	else if (ft_isspace(clist->str[i]))
 	{
@@ -102,7 +102,7 @@ static void	serch_new_space_cmdlist(t_cmdlist *clist)
 	}
 }
 
-void	serch_env_cmdlist(t_cmdlist **clist, t_envlist *envlist)
+void	expand_cmdlist(t_cmdlist **clist, t_envlist *envlist)
 {
 	char		*doll_ptr;
 	size_t		len;
@@ -115,7 +115,7 @@ void	serch_env_cmdlist(t_cmdlist **clist, t_envlist *envlist)
 		doll_ptr = ft_strdoll((*clist)->str);
 		while (doll_ptr && (*clist)->quot[doll_ptr - (*clist)->str] != 'S')
 		{
-			len = expansion_key_cmdlist((*clist), envlist, doll_ptr);
+			len = expand_key_cmdlist((*clist), envlist, doll_ptr);
 			free((*clist)->quot);
 			(*clist)->quot = get_quot_flag((*clist)->str);
 			doll_ptr = ft_strdoll((*clist)->str + len);
@@ -124,7 +124,7 @@ void	serch_env_cmdlist(t_cmdlist **clist, t_envlist *envlist)
 			continue ;
 		if (ft_strchr((*clist)->quot, '1') || ft_strchr((*clist)->quot, '2'))
 			clear_quot_cmdlist((*clist));
-		serch_new_space_cmdlist((*clist));
+		search_new_space_cmdlist((*clist));
 		prev = (*clist);
 		(*clist) = (*clist)->next;
 	}

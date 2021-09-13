@@ -11,8 +11,9 @@ export SPACE2=" aa   bb    "
 export FILE1="f"
 export FILE2='$FILE1'
 export IN_RED="<"
-export ECHO="echo -n"
+export ECHO="echo"
 export AKIYAMA=akiyama=ryojiro
+export PIPE="|"
 echo hello > hello.txt
 
 echo "\033[2J\033[1;1H"
@@ -40,7 +41,7 @@ do
  echo $? >> minishell_status.txt
  echo $line >> minishell_status.txt
 
- echo $line >> error_bash_txt
+ echo $line >> error_bash.txt
  echo $line | bash >> error_bash.txt 2>&1
  echo $? >> bash_status.txt
  echo $line >> bash_status.txt
@@ -64,10 +65,10 @@ diff -s minishell_status.txt bash_status.txt \
 | sed "s/Files minishell_status.txt and bash_status.txt are identical/OK/g" \
 | GREP_COLOR='23;32' grep -E --color "$|OK"
 
-rm hello.txt result.txt error_result.txt f
+rm hello.txt result.txt error_result.txt f outfile outfile1 outfile2
 
-# rm minishell.txt bash.txt
-# rm minishell_status.txt bash_status.txt
-rm error_bash.txt error_minishell.txt
+rm minishell.txt bash.txt
+rm minishell_status.txt bash_status.txt
+# rm error_bash.txt error_minishell.txt
 
-unset A SPACE SPACE2 FILE1 FILE2 AKIYAMA ECHO IN_RED
+unset A SPACE SPACE2 FILE1 FILE2 AKIYAMA ECHO IN_RED PIPE
