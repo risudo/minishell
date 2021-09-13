@@ -63,7 +63,7 @@ static int	init_vars(char **cmd, char **start, t_quottype *flag)
 	return (**start == '\0');
 }
 
-t_token	*tokenize_cmd_by_space(char *cmd, bool *err)
+t_token	*tokenize_cmd(char *cmd, bool *err)
 {
 	t_token		head;
 	t_token		*cur;

@@ -32,9 +32,23 @@ echo $FILE2$FILE1
 echo $%$HOME
 echo $SPACE2
 echo XX$SPACE2
+echo $~HOME
 echo -nk test
 echo $AKIYAMA
 echo $ECHO aaa bbb ccc
+$NON
+echo aa $NON bb
+
+$ECHO abcdef
+echo 42 < hello.txt
+echo aaabbb$NON_VALUE ttttt
+< ../srcs/execution_utils.c  >outfile1 <../srcs/envlist.c cat< ../srcs/delimit_fd.c <../srcs/main.c <      ../srcs/wrapper2.c > outfile2
+cat outfile1
+cat outfile2
+echo $AKIYAMA|cat -e|cat>outfile
+cat outfile
+echo aaa " bbb | cat -n"
+echo aaa $PIPE cat
 /bin/cat hello.txt
 /bin/ls
 pwd jaskdf
