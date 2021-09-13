@@ -71,29 +71,30 @@ static void	execute_loop(t_execdata *data, int *wstatus)
 	xsignal(SIGINT, signal_handler);
 }
 
+/*
+** SAVE: save fd (point to standard I/O)
+** RESTORE: set STD*_FILENO to point to standard I/O
+*/
 static int	std_fd_handler(t_execdata *data, t_fd_mode mode)
 {
-	int	ret;
-
-	ret = 0;
-	if (mode == STD_SAVE)
+	if (mode == SAVE)
 	{
-		ret = ft_dup(data, ORIGINAL_IN, STDIN_FILENO);
-		if (ret != -1)
-			ret = ft_dup(data, ORIGINAL_OUT, STDOUT_FILENO);
-		if (ret != -1)
-			ret = ft_dup(data, ORIGINAL_ERR, STDERR_FILENO);
-		if (ret == -1)
+		if (ft_dup(data, ORIGINAL_IN, STDIN_FILENO) == -1 || \
+			ft_dup(data, ORIGINAL_OUT, STDOUT_FILENO) == -1 || \
+			ft_dup(data, ORIGINAL_ERR, STDERR_FILENO) == -1)
+		{
 			g_status = 1;
+			return (-1);
+		}
 	}
-	else if (mode == STD_RESTORE)
+	else if (mode == RESTORE)
 	{
 		if (ft_dup2(data->stdfd[ORIGINAL_IN], STDIN_FILENO) == -1 || \
 			ft_dup2(data->stdfd[ORIGINAL_OUT], STDOUT_FILENO) == -1 || \
 			ft_dup2(data->stdfd[ORIGINAL_ERR], STDERR_FILENO) == -1)
 			exit(EXIT_FAILURE);
 	}
-	return (ret);
+	return (0);
 }
 
 /*
@@ -110,10 +111,10 @@ void	execute_start(t_execdata *data)
 		return ;
 	if (data->next == NULL && data->cmd_type != OTHER)
 	{
-		if (std_fd_handler(data, STD_SAVE) != -1 && \
+		if (std_fd_handler(data, SAVE) != -1 && \
 				setdata_cmdline_redirect(data) != -1)
 			execute_command(data);
-		std_fd_handler(data, STD_RESTORE);
+		std_fd_handler(data, RESTORE);
 	}
 	else
 	{
