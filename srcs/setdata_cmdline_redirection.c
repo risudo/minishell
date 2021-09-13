@@ -2,10 +2,16 @@
 
 /*
 ** Used to prepare data before executing command.
-** 1 Make command line char array.
+** 1 Make command line (2D char array).
 ** 2 Redirection.
 */
 
+/*
+** this function is used when redirection fd specified (like: 42<txt)
+** to check if specified fd and stdfd (point to standard I/O)
+** are the same.
+** If same, resave stdfd.
+*/
 static int	resave_stdfd(t_execdata *data, int fd)
 {
 	if (data->stdfd[ORIGINAL_IN] == fd)

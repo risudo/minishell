@@ -1,19 +1,13 @@
 #include "minishell.h"
 
 /*
-** Execute non built-in commands or no command.
+** Execute non built-in commands.
 */
 
 #define CMD_NO "command not found"
 #define PEM_NO "Permission denied"
 #define DIR_NO "is a directory"
 #define FILE_DIR_NO "No such file or directory"
-
-static void	result_of_search(char *cmd, char *str, int status)
-{
-	ft_puterror(cmd, str, NULL);
-	g_status = status;
-}
 
 /*
 ** make list from split the PATH and join "/" + "command".
@@ -73,9 +67,9 @@ static char	*cmdpath_from_pathenv(char *cmd, char *path_env)
 	}
 	free_2d_array(pathlist);
 	if (!cmd_path && g_status == 126)
-		result_of_search(cmd, PEM_NO, 126);
+		ft_puterror(cmd, PEM_NO, NULL);
 	else if (!cmd_path)
-		result_of_search(cmd, CMD_NO, 127);
+		ft_puterror(cmd, CMD_NO, NULL), g_status = 127;
 	return (cmd_path);
 }
 
@@ -100,11 +94,11 @@ static char	*cmdpath_from_direct(char *cmd)
 	else if (path_type == EXECUTABLE)
 		cmd_path = cmd;
 	else if (path_type == UN_EXECUTABLE)
-		result_of_search(cmd, PEM_NO, 126);
+		ft_puterror(cmd, PEM_NO, NULL), g_status = 126;
 	else if (path_type == IS_DIR)
-		result_of_search(cmd, DIR_NO, 126);
+		ft_puterror(cmd, DIR_NO, NULL), g_status = 126;
 	else
-		result_of_search(cmd, FILE_DIR_NO, 127);
+		ft_puterror(cmd, FILE_DIR_NO, NULL), g_status = 127;
 	return (cmd_path);
 }
 
