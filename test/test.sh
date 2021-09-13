@@ -1,8 +1,20 @@
-make -C ../
+PROMPT='minishell\$ '
+
+if [ $1 != fclean ]; then
+	make -C ../
+fi
 
 rm -f error_result.txt result.txt minishell.txt bash.txt \
 	error_bash.txt error_minishell.txt \
 	minishell_status.txt bash_status.txt \
+
+if [ $1 == clean ] ; then
+	echo 'remove output file'
+	exit
+elif [ $1 == fclean ] ; then
+	make -C ../ fclean
+	exit
+fi
 
 
 export A="   rsudo"
@@ -51,8 +63,8 @@ done < ./error_cmdline.txt
 
 
 
-sed '/minishell\$ /d' result.txt > minishell.txt
-sed '/minishell\$ /d' error_result.txt > error_minishell.txt
+sed "/${PROMPT}/d" result.txt > minishell.txt
+sed "/${PROMPT}/d" error_result.txt > error_minishell.txt
 
 echo '--NORMAL TEST--'
 diff -s minishell.txt bash.txt \
@@ -67,8 +79,41 @@ diff -s minishell_status.txt bash_status.txt \
 
 rm hello.txt result.txt error_result.txt f outfile outfile1 outfile2
 
-rm minishell.txt bash.txt
-rm minishell_status.txt bash_status.txt
-# rm error_bash.txt error_minishell.txt
+NORMAL=0
+STATUS=0
+ERROR=0
+
+while getopts nse OPT
+do
+  case $OPT in
+     n) NORMAL=1 ;;
+     s) STATUS=1;;
+     e) ERROR=1;;
+  esac
+done
+
+if [ ${NORMAL} -eq 1 -o ${STATUS} -eq 1 -o ${ERROR} -eq 1 ] ; then
+	MSG='\nLeave\n'
+fi
+
+if [ ${NORMAL} -eq 0 ]; then
+	rm minishell.txt bash.txt
+else
+	MSG+='- normal output\n'
+fi
+
+if [ ${STATUS} -eq 0 ]; then
+	rm minishell_status.txt bash_status.txt
+else
+	MSG+='- status output\n'
+fi
+
+if [ ${ERROR} -eq 0 ]; then
+	rm error_bash.txt error_minishell.txt
+else
+	MSG+='- error output\n'
+fi
+
+echo $MSG
 
 unset A SPACE SPACE2 FILE1 FILE2 AKIYAMA ECHO IN_RED PIPE
