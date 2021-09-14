@@ -1,6 +1,6 @@
 #include <unistd.h>
 
-int main()
+int	main(void)
 {
 	write(1, "fd = 1\n", 7);
 	write(2, "fd = 2\n", 7);
@@ -9,4 +9,5 @@ int main()
 	write(255, "fd = 255\n", 9);
 	write(256, "fd = 256\n", 9);
 	write(1, "fd = 1\n", 7);
+	return (0);
 }
