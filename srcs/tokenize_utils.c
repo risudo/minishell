@@ -1,43 +1,5 @@
 #include "minishell.h"
 
-t_token	*join_redirect(t_token *list)
-{
-	t_token	*next;
-
-	next = NULL;
-	if (list->next)
-		next = list->next->next;
-	if (list->next->str[0] == '>')
-	{
-		free(list->str);
-		list->str = ft_xstrdup(">>");
-	}
-	if (list->next->str[0] == '<')
-	{
-		free(list->str);
-		list->str = ft_xstrdup("<<");
-	}
-	if (list->next)
-	{
-		free(list->next->str);
-		free(list->next);
-		list->next = next;
-	}
-	if (next)
-		next->prev = list;
-	return (list);
-}
-
-bool	is_consecutive_redirect(t_token *list)
-{
-	if (list->next
-		&& ((list->str[0] == '>' && list->next->str[0] == '>')
-			|| (list->str[0] == '<' && list->next->str[0] == '<')))
-		return (true);
-	else
-		return (false);
-}
-
 void	set_special_c(t_token *list)
 {
 	while (list)
