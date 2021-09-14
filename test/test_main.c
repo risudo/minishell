@@ -25,10 +25,7 @@ void	minishell_loop(char **envp)
 	{
 		line = readline("minishell$ ");
 		if (!line)
-		{
-			ft_putstr_fd("\033[1A\033[11C", STDOUT_FILENO);
 			line = ft_xstrdup("exit");
-		}
 		if (line[0] != '\0')
 		{
 			data = parse_cmd(line, elst);
