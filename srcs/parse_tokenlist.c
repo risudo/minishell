@@ -62,8 +62,8 @@ static int	check_token_syntax(t_token *head, t_token *last)
 		if (head->special >= IN_REDIRECT && head->special <= OUT_HERE_DOC
 			&& (ft_strlen(head->str) >= 3
 				|| (head->next
-				&& head->next->special >= IN_REDIRECT && head->next->special <= OUT_HERE_DOC))
-			)
+					&& head->next->special >= IN_REDIRECT
+					&& head->next->special <= OUT_HERE_DOC)))
 		{
 			ret = -1;
 			put_syntax_error(head->str);
