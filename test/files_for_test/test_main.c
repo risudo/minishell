@@ -2,16 +2,19 @@
 
 unsigned char	g_status = 0;
 
-void end(void)__attribute__((destructor));
-void end(void)
-{
-    pid_t current_pid;
-    char cmd_str[50];
+void	end(void)__attribute__((destructor));
 
-    current_pid = getpid();
-    sprintf(cmd_str, "%s %d %s\n", "leaks", current_pid, ">> leaks.txt 2>&1");
-    int ret = system(cmd_str);
-    if (ret) printf("\e[31m!leak detected!\e[0m\n");
+void	end(void)
+{
+	pid_t	current_pid;
+	char	cmd_str[50];
+	int		ret;
+
+	current_pid = getpid();
+	sprintf(cmd_str, "%s %d %s\n", "leaks", current_pid, ">> leaks.txt 2>&1");
+	ret = system(cmd_str);
+	if (ret)
+		printf("\e[31m!leak detected!\e[0m\n");
 }
 
 void	minishell_loop(char **envp)
@@ -25,10 +28,7 @@ void	minishell_loop(char **envp)
 	{
 		line = readline("minishell$ ");
 		if (!line)
-		{
-			ft_putstr_fd("\033[1A\033[11C", STDOUT_FILENO);
 			line = ft_xstrdup("exit");
-		}
 		if (line[0] != '\0')
 		{
 			data = parse_cmd(line, elst);

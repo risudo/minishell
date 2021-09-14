@@ -2,8 +2,21 @@ NAME = minishell
 
 SRCS_DIR = ./srcs/
 
-SRCS_NAME = main.c \
-			clear_list.c \
+TEST_DIR = ./test/files_for_test/
+
+HEADER_DIR = ./includes
+
+LIBFT_DIR = ./libft
+
+READLINE_DIR = $(shell brew --prefix readline)
+
+ifdef TEST_MODE
+MAIN = ${TEST_DIR}test_main.c
+else
+MAIN = ${SRCS_DIR}main.c
+endif
+
+SRCS_NAME = clear_list.c \
 			command_builtin1.c \
 			command_builtin2.c \
 			command_builtin3.c \
@@ -37,13 +50,9 @@ SRCS_NAME = main.c \
 
 SRCS = ${addprefix ${SRCS_DIR}, ${SRCS_NAME}}
 
-HEADER_DIR = ./includes
+OBJS = ${MAIN:.c=.o}
 
-LIBFT_DIR = ./libft
-
-READLINE_DIR = $(shell brew --prefix readline)
-
-OBJS = ${SRCS:.c=.o}
+OBJS += ${SRCS:.c=.o}
 
 CC = gcc
 
@@ -57,9 +66,6 @@ ${NAME}: ${OBJS} ${HEADER_DIR}
 	@${MAKE} -C ${LIBFT_DIR}
 	${CC} ${C_FLAGS} -o ${NAME} ${OBJS} -L${READLINE_DIR}/lib -lreadline -lhistory -L${LIBFT_DIR} -lft
 
-val:
-	valgrind --leak-check=full -s --show-leak-kinds=all ./${NAME}
-
 clean:
 	${MAKE} -C ${LIBFT_DIR} clean
 	${RM} ${OBJS}
@@ -70,4 +76,13 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all bonus val val_bonus clean fclean re
+val:
+	valgrind --leak-check=full -s --show-leak-kinds=all ./${NAME}
+
+test:
+	${MAKE} TEST_MODE=1
+
+test_fclean:
+	${MAKE} fclean TEST_MODE=1
+
+.PHONY: all clean fclean re val test test_fclean
