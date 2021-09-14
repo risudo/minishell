@@ -85,4 +85,4 @@ test:
 test_fclean:
 	${MAKE} fclean TEST_MODE=1
 
-.PHONY: all bonus val val_bonus clean fclean test re
+.PHONY: all clean fclean re val test test_fclean
