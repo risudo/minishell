@@ -59,11 +59,11 @@ static int	check_token_syntax(t_token *head, t_token *last)
 		put_syntax_error(last->str), ret = -1;
 	while (head && ret == 0)
 	{
-		if (head->prev
-			&& head->prev->special >= IN_REDIRECT
-			&& head->prev->special <= OUT_HERE_DOC
-			&& head->special >= IN_REDIRECT
-			&& head->special <= OUT_HERE_DOC)
+		if (head->special >= IN_REDIRECT && head->special <= OUT_HERE_DOC
+			&& (ft_strlen(head->str) >= 3
+				|| (head->next
+					&& head->next->special >= IN_REDIRECT
+					&& head->next->special <= OUT_HERE_DOC)))
 		{
 			ret = -1;
 			put_syntax_error(head->str);
@@ -85,8 +85,6 @@ int	parse_tokenlist(t_token *list)
 	prev = NULL;
 	while (list)
 	{
-		if (is_consecutive_redirect(list))
-			list = join_redirect(list);
 		doll_ptr = ft_strnstr(list->str, "$?", ft_strlen("list->str"));
 		if (doll_ptr && !is_in_squot(list->str, doll_ptr))
 		{

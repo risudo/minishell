@@ -39,11 +39,28 @@ static t_token	*get_newstr_list(t_token *list, char *delimiter_ptr)
 	return (list);
 }
 
+static bool	is_delimiter_to_split(char *ptr, char *head)
+{
+	if (*ptr == '|'
+		|| (ptr != head
+			&& ((*ptr != '<' && *ptr != '>'
+					&& (*(ptr - 1) == '<' || *(ptr - 1) == '>'))
+				|| (((*ptr == '<' && *(ptr - 1) != '<')
+						|| (*ptr == '>' && *(ptr - 1) != '>'))))))
+	{
+		return (true);
+	}
+	else
+	{
+		return (false);
+	}
+}
+
 /*
 ** @param(str): token list's str
 ** Return pointer to the character to be delimited.
 */
-char	*is_delimiter_operater(char *str)
+char	*get_delimiter_ptr(char *str)
 {
 	t_quottype	flag;
 	bool		nodigit;
@@ -54,10 +71,9 @@ char	*is_delimiter_operater(char *str)
 	flag = DEFAULT;
 	while (*str)
 	{
-		flag = get_flag_quot(str, flag);
 		if (head != str && !ft_isdigit(*(str - 1)))
 			nodigit = true;
-		if ((*str == '>' || *str == '<' || *str == '|')
+		if ((is_delimiter_to_split(str, head))
 			&& flag != D_QUOT && flag != S_QUOT
 			&& ((!nodigit && *(str + 1) != '\0') || nodigit))
 		{
@@ -65,6 +81,7 @@ char	*is_delimiter_operater(char *str)
 				str++;
 			return (str);
 		}
+		flag = get_flag_quot(str, flag);
 		str++;
 	}
 	return (NULL);
@@ -78,7 +95,7 @@ int	split_operater(t_token *list)
 	head = list;
 	while (list)
 	{
-		delimiter_ptr = is_delimiter_operater(list->str);
+		delimiter_ptr = get_delimiter_ptr(list->str);
 		if (ft_strlen(list->str) >= 2 && delimiter_ptr)
 		{
 			list = get_newstr_list(list, delimiter_ptr);
