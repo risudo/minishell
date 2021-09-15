@@ -39,21 +39,18 @@ static t_token	*get_newstr_list(t_token *list, char *delimiter_ptr)
 	return (list);
 }
 
-static bool	is_delimiter_to_split(char *ptr, char *head)
+static bool	is_delimiter_to_split(char *ptr, char *head, bool nodigit)
 {
 	if (*ptr == '|'
 		|| (ptr != head
 			&& ((*ptr != '<' && *ptr != '>'
 					&& (*(ptr - 1) == '<' || *(ptr - 1) == '>'))
-				|| (((*ptr == '<' && *(ptr - 1) != '<')
+				|| (nodigit && ((*ptr == '<' && *(ptr - 1) != '<')
 						|| (*ptr == '>' && *(ptr - 1) != '>'))))))
 	{
 		return (true);
 	}
-	else
-	{
-		return (false);
-	}
+	return (false);
 }
 
 /*
@@ -73,7 +70,7 @@ char	*get_delimiter_ptr(char *str)
 	{
 		if (head != str && !ft_isdigit(*(str - 1)))
 			nodigit = true;
-		if ((is_delimiter_to_split(str, head))
+		if (is_delimiter_to_split(str, head, nodigit)
 			&& flag != D_QUOT && flag != S_QUOT
 			&& ((!nodigit && *(str + 1) != '\0') || nodigit))
 		{

@@ -7,13 +7,6 @@
 ** 3 Check syntax error.
 */
 
-void	put_syntax_error(char *str)
-{
-	ft_putstr_fd("minishell: syntax error near unexpected token ",
-		 STDERR_FILENO);
-	ft_putendl_fd(str, STDERR_FILENO);
-}
-
 static void	expand_status(t_token *list, char *doll_ptr)
 {
 	char	*front;
@@ -48,6 +41,16 @@ static bool	is_in_squot(char *str, char *doll_ptr)
 	return (false);
 }
 
+static bool	is_syntax_error(t_token *list)
+{
+	return ((list->special >= IN_REDIRECT && list->special <= OUT_HERE_DOC
+			&& list->next
+			&& list->next->special >= IN_REDIRECT
+			&& list->next->special <= OUT_HERE_DOC)
+		|| (ft_strnstr(list->str, ">>>", ft_strlen(list->str))
+			||ft_strnstr(list->str, "<<<", ft_strlen(list->str))));
+}
+
 static int	check_token_syntax(t_token *head, t_token *last)
 {
 	int	ret;
@@ -59,11 +62,7 @@ static int	check_token_syntax(t_token *head, t_token *last)
 		put_syntax_error(last->str), ret = -1;
 	while (head && ret == 0)
 	{
-		if (head->special >= IN_REDIRECT && head->special <= OUT_HERE_DOC
-			&& (ft_strlen(head->str) >= 3
-				|| (head->next
-					&& head->next->special >= IN_REDIRECT
-					&& head->next->special <= OUT_HERE_DOC)))
+		if (is_syntax_error(head))
 		{
 			ret = -1;
 			put_syntax_error(head->str);

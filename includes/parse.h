@@ -27,6 +27,7 @@ t_quottype	get_flag_quot(char *cmd, t_quottype flag_quot);
 // parse tokenlist
 int			parse_tokenlist(t_token *list);
 void		set_special_c(t_token *list);
+void		put_syntax_error(char *str);
 
 // execdata
 t_execdata	*create_execdata(t_token *tokenlist,
