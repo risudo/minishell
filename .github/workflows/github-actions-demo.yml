@@ -14,8 +14,8 @@ jobs:
       - name: List files in the repository
         run: |
           ls -R ${{ github.workspace }}
-      - run: echo "🍏 This job's status is ${{ job.status }}."
       - name: make check
         shell: bash
         working-directory: ${{ github.workspace }}
         run: cd ${{ github.workspace }} && make check
+      - run: echo "🍏 This job's status is ${{ job.status }}."
