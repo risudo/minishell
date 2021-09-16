@@ -52,10 +52,10 @@ void	put_iolist(t_iolist *list)
 			printf("\t  c_type: IN_REDIRECT\n");
 		if (list->c_type == OUT_REDIRECT)
 			printf("\t  c_type: OUT_REDIRECT\n");
-		if (list->c_type == IN_HERE_DOC)
-			printf("\t  c_type: IN_HERE_DOC\n");
-		if (list->c_type == OUT_HERE_DOC)
-			printf("\t  c_type: OUT_HERE_DOC\n");
+		if (list->c_type == HERE_DOC)
+			printf("\t  c_type: HERE_DOC\n");
+		if (list->c_type == APPEND_REDIRECT)
+			printf("\t  c_type: APPEND_REDIRECT\n");
 		if (list->c_type == PIPE)
 			printf("\t  c_type: PIPE\n");
 		if (list->c_type == FD)

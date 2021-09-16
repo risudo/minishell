@@ -14,8 +14,8 @@ typedef enum e_special_c
 {
 	IN_REDIRECT,
 	OUT_REDIRECT,
-	IN_HERE_DOC,
-	OUT_HERE_DOC,
+	HERE_DOC,
+	APPEND_REDIRECT,
 	PIPE,
 	FD,
 	ELSE

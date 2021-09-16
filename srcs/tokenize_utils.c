@@ -6,10 +6,10 @@ void	set_special_c(t_token *list)
 	{
 		if (list->str[ft_strlen(list->str) - 1] == '>'
 			&& list->str[ft_strlen(list->str) - 2] == '>')
-			list->special = OUT_HERE_DOC;
+			list->special = APPEND_REDIRECT;
 		else if (list->str[ft_strlen(list->str) - 1] == '<'
 			&& list->str[ft_strlen(list->str) - 2] == '<')
-			list->special = IN_HERE_DOC;
+			list->special = HERE_DOC;
 		else if (list->str[ft_strlen(list->str) - 1] == '>')
 			list->special = OUT_REDIRECT;
 		else if (list->str[ft_strlen(list->str) - 1] == '<')

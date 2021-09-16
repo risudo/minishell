@@ -102,7 +102,7 @@ int	setdata_heredoc_cmdtype(t_execdata *data)
 		while (move)
 		{
 			is_quot = 0;
-			if (move->c_type == IN_HERE_DOC)
+			if (move->c_type == HERE_DOC)
 			{
 				if (ft_strchr(move->next->quot, '1') || \
 					ft_strchr(move->next->quot, '2'))

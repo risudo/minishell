@@ -19,7 +19,7 @@ static t_iolist	*get_iolst(t_token *start, t_token *cur_token)
 		if (!is_cmd(start))
 		{
 			cur = new_iolst(cur, start);
-			if (cur->c_type >= IN_REDIRECT && cur->c_type <= OUT_HERE_DOC
+			if (cur->c_type >= IN_REDIRECT && cur->c_type <= APPEND_REDIRECT
 				&& ft_isdigit(cur->str[0]))
 			{
 				cur = delimit_fd(cur);
