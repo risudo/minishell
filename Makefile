@@ -85,4 +85,7 @@ test:
 test_fclean:
 	${MAKE} fclean TEST_MODE=1
 
+check:
+	cd ./test && ./test.sh
+
 .PHONY: all clean fclean re val test test_fclean
