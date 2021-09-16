@@ -16,4 +16,6 @@ jobs:
           ls -R ${{ github.workspace }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
       - name: make check
+        shell: bash
+        working-directory: ${{ github.workspace }}
         run: make check
