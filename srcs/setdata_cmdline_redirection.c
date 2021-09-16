@@ -34,10 +34,10 @@ static int	set_redirect_fd(t_execdata *data, t_iolist *iolst, \
 		*is_fd_specified = 1;
 	}
 	else if (*is_fd_specified == 0 && \
-		(iolst->c_type == IN_REDIRECT || iolst->c_type == IN_HERE_DOC))
+		(iolst->c_type == IN_REDIRECT || iolst->c_type == HERE_DOC))
 		*redirect_fd = STDIN_FILENO;
 	else if (*is_fd_specified == 0 && \
-		(iolst->c_type == OUT_REDIRECT || iolst->c_type == OUT_HERE_DOC))
+		(iolst->c_type == OUT_REDIRECT || iolst->c_type == APPEND_REDIRECT))
 		*redirect_fd = STDOUT_FILENO;
 	return (0);
 }
@@ -48,11 +48,11 @@ static int	redirection(t_execdata *data, t_iolist *iolst, \
 	int	ret;
 
 	ret = 0;
-	if (iolst->c_type != IN_HERE_DOC)
+	if (iolst->c_type != HERE_DOC)
 		ret = expand_filename(iolst->next, data->elst);
 	if (ret != -1 && iolst->c_type == IN_REDIRECT)
 		ret = ft_dup2(ft_open(iolst->next, O_RDONLY, 0), redirect_fd);
-	else if (ret != -1 && iolst->c_type == IN_HERE_DOC)
+	else if (ret != -1 && iolst->c_type == HERE_DOC)
 	{
 		ret = ft_dup2(iolst->open_fd, redirect_fd);
 		iolst->open_fd = -1;
@@ -60,7 +60,7 @@ static int	redirection(t_execdata *data, t_iolist *iolst, \
 	else if (ret != -1 && iolst->c_type == OUT_REDIRECT)
 		ret = ft_dup2(ft_open(iolst->next, O_WRONLY | O_CREAT | O_TRUNC, 0666), \
 						redirect_fd);
-	else if (ret != -1 && iolst->c_type == OUT_HERE_DOC)
+	else if (ret != -1 && iolst->c_type == APPEND_REDIRECT)
 		ret = ft_dup2(\
 				ft_open(iolst->next, O_WRONLY | O_CREAT | O_APPEND, 0666), \
 						redirect_fd);
@@ -85,7 +85,7 @@ int	setdata_cmdline_redirect(t_execdata *data)
 	{
 		ret = set_redirect_fd(data, move, &redirect_fd, &is_fd_specified);
 		if (ret != -1 && \
-			IN_REDIRECT <= move->c_type && move->c_type <= OUT_HERE_DOC)
+			IN_REDIRECT <= move->c_type && move->c_type <= APPEND_REDIRECT)
 			ret = redirection(data, move, \
 					redirect_fd, &is_fd_specified);
 		if (ret == -1)

@@ -43,10 +43,10 @@ static bool	is_in_squot(char *str, char *doll_ptr)
 
 static bool	is_syntax_error(t_token *list)
 {
-	return ((list->special >= IN_REDIRECT && list->special <= OUT_HERE_DOC
+	return ((list->special >= IN_REDIRECT && list->special <= APPEND_REDIRECT
 			&& list->next
 			&& list->next->special >= IN_REDIRECT
-			&& list->next->special <= OUT_HERE_DOC)
+			&& list->next->special <= APPEND_REDIRECT)
 		|| (ft_strnstr(list->str, ">>>", ft_strlen(list->str))
 			||ft_strnstr(list->str, "<<<", ft_strlen(list->str))));
 }
@@ -58,7 +58,7 @@ static int	check_token_syntax(t_token *head, t_token *last)
 	ret = 0;
 	if (last && (last->special == PIPE || head->special == PIPE))
 		put_syntax_error("|"), ret = -1;
-	if (last && last->special >= IN_REDIRECT && last->special <= OUT_HERE_DOC)
+	if (last && last->special >= IN_REDIRECT && last->special <= APPEND_REDIRECT)
 		put_syntax_error(last->str), ret = -1;
 	while (head && ret == 0)
 	{

@@ -2,7 +2,7 @@
 
 bool	is_env_iolist(char flag, t_iolist *prev)
 {
-	if (flag != 'S' && (prev == NULL || prev->c_type != IN_HERE_DOC))
+	if (flag != 'S' && (prev == NULL || prev->c_type != HERE_DOC))
 	{
 		return (true);
 	}
