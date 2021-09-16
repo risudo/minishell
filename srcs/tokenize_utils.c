@@ -4,10 +4,12 @@ void	set_special_c(t_token *list)
 {
 	while (list)
 	{
-		if (list->str[ft_strlen(list->str) - 1] == '>'
+		if (ft_strlen(list->str) >= 2
+			&& list->str[ft_strlen(list->str) - 1] == '>'
 			&& list->str[ft_strlen(list->str) - 2] == '>')
 			list->special = APPEND_REDIRECT;
-		else if (list->str[ft_strlen(list->str) - 1] == '<'
+		else if (ft_strlen(list->str) >= 2
+			&& list->str[ft_strlen(list->str) - 1] == '<'
 			&& list->str[ft_strlen(list->str) - 2] == '<')
 			list->special = HERE_DOC;
 		else if (list->str[ft_strlen(list->str) - 1] == '>')
