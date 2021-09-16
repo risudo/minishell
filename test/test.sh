@@ -27,9 +27,9 @@ export PIPE="|"
 echo hello > hello.txt
 
 echo "\033[2J\033[1;1H"
+echo "testing."
 while read line
 do
- echo '"'$line'"'
 
  echo $line | ../minishell >> result.txt 2>&1
  echo $? >> minishell_status.txt
@@ -39,12 +39,11 @@ do
  echo $? >> bash_status.txt
  echo $line >> bash_status.txt
 
- echo "\033[1;1H\033[0J"
 done < ./cmdline.txt
-
+ echo "\033[1;1H\033[0J"
+ echo "testing.."
 while read line
 do
- echo '"'$line'"'
 
  echo $line >> error_result.txt
  echo $line | ../minishell >> error_result.txt 2>&1
@@ -56,8 +55,8 @@ do
  echo $? >> bash_status.txt
  echo $line >> bash_status.txt
 
- echo "\033[1;1H\033[0J"
 done < ./error_cmdline.txt
+ echo "\033[1;1H\033[0J"
 
 
 sed "/${PROMPT}/d" result.txt > minishell.txt
