@@ -86,10 +86,8 @@ char	*get_delimiter_ptr(char *str)
 
 int	split_operater(t_token *list)
 {
-	t_token	*head;
 	char	*delimiter_ptr;
 
-	head = list;
 	while (list)
 	{
 		delimiter_ptr = get_delimiter_ptr(list->str);
