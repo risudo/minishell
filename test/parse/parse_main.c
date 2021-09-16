@@ -18,7 +18,7 @@ int	main(int argc, char **argv, char **envp)
 		*status = g_status;
 		put_execdata(data);
 		clear_envlist(envlist);
-		xfree(status);
+		free(status);
 		clear_execdata(data);
 	}
 	return (0);

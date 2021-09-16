@@ -1,7 +1,9 @@
 make -C ../../libft
 # gcc -Wall -Wextra -Werror -fsanitize=address \
 # gcc -Wall -Wextra -Werror -fsanitize=undefined \
-gcc -Wall -Wextra -Werror -lreadline -L /usr/local/opt/readline -I /usr/local/opt/readline -I ../../includes/ -o parse \
+READLINE_DIR=`brew --prefix readline`
+
+gcc -Wall -Wextra -Werror -I${READLINE_DIR}/include -I ../../includes/ -L${READLINE_DIR} -lreadline -o parse \
 parse_main.c \
 test_parse.c \
 test_parse2.c \
@@ -35,4 +37,5 @@ test_parse2.c \
 ../../srcs/wrapper2.c \
 ../../srcs/wrapper3.c \
 ../../srcs/wrapper4.c \
+../../srcs/signal_handler.c \
 ../../libft/libft.a
