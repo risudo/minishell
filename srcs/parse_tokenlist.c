@@ -58,7 +58,8 @@ static int	check_token_syntax(t_token *head, t_token *last)
 	ret = 0;
 	if (last && (last->special == PIPE || head->special == PIPE))
 		put_syntax_error("|"), ret = -1;
-	if (last && last->special >= IN_REDIRECT && last->special <= APPEND_REDIRECT)
+	if (last && last->special >= IN_REDIRECT
+		&& last->special <= APPEND_REDIRECT)
 		put_syntax_error(last->str), ret = -1;
 	while (head && ret == 0)
 	{

@@ -5,6 +5,12 @@ echo aaa | cat
 echo aaa| cat
 echo "aaa | bbb"
 echo "aaa > bbb"
+echo '''' | cat -e
+echo '' '' | cat -e
+echo " " " """ | ''c'at' -e
+echo ">"
+echo ">>"
+eCHo aaa
 echo $
 echo $ |	cat
 echo $?
@@ -42,7 +48,6 @@ echo aa $NON bb
 $ECHO abcdef
 echo 42 < hello.txt
 echo 42 0< hello.txt
-echo 42 1>> hello.txt
 echo aaabbb$NON_VALUE ttttt
 < ../srcs/execution_utils.c  >outfile1 <../srcs/envlist.c cat< ../srcs/delimit_fd.c <../srcs/main.c <      ../srcs/wrapper2.c > outfile2
 cat outfile1
@@ -55,6 +60,5 @@ echo aaa $PIPE cat
 /bin/ls
 pwd jaskdf
 echo $AKIYAMA$IN_RED | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e| cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e| cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e| cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e| cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e| cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e| cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e| cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e| cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e| cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e| cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e| cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e| cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e| cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e| cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e| cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e| cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e| cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e| cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e | cat -n | cat -e
-ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls
 >f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f
 echo aaa "bbb | cat -e"

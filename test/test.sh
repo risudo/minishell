@@ -4,10 +4,10 @@ rm -f error_result.txt result.txt minishell.txt bash.txt \
 	error_bash.txt error_minishell.txt \
 	minishell_status.txt bash_status.txt \
 
-if [ $1 = clean ] ; then
+if [[ $1 == clean ]] ; then
 	echo 'remove output file'
 	exit
-elif [ $1 = fclean ] ; then
+elif [[ $1 == fclean ]] ; then
 	make -C ../ fclean
 	exit
 else
