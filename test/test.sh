@@ -60,7 +60,6 @@ do
 done < ./error_cmdline.txt
 
 
-
 sed "/${PROMPT}/d" result.txt > minishell.txt
 sed "/${PROMPT}/d" error_result.txt > error_minishell.txt
 
@@ -85,8 +84,8 @@ while getopts nse OPT
 do
   case $OPT in
      n) NORMAL=1 ;;
-     s) STATUS=1;;
-     e) ERROR=1;;
+     s) STATUS=1 ;;
+     e) ERROR=1 ;;
   esac
 done
 

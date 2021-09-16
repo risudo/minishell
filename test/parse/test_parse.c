@@ -1,12 +1,12 @@
 #include "../includes/parse.h"
 
-void	end(void)__attribute__((destructor));
+// void	end(void)__attribute__((destructor));
 
-void	end(void)
-{
-	if (system("leaks parse > /dev/null"))
-		system("leaks parse");
-}
+// void	end(void)
+// {
+// 	if (system("leaks parse > /dev/null"))
+// 		system("leaks parse");
+// }
 
 void	put_tokenlist(t_token *list)
 {
@@ -62,7 +62,6 @@ void	put_iolist(t_iolist *list)
 			printf("\t  c_type: FD\n");
 		if (list->c_type == ELSE)
 			printf("\t  c_type: ELSE\n");
-		printf("\t  here_doc_fd: %d\n\n", list->here_doc_fd);
 		list = list->next, i++;
 	}
 	printf("\n");

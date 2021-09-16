@@ -128,6 +128,8 @@ echo 'VAR="  aa  bb  "' >> result.txt
 
 ./parse 'echo aaa >>>' >> result.txt 2>&1
 
+./parse 'echo aaa >>> a' >> result.txt 2>&1
+
 ./parse 'echo "aa' >> result.txt 2>&1
 
 ./parse 'echo '\''aa' >> result.txt 2>&1
