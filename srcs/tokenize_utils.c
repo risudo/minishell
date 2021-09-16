@@ -21,3 +21,10 @@ void	set_special_c(t_token *list)
 		list = list->next;
 	}
 }
+
+void	put_syntax_error(char *str)
+{
+	ft_putstr_fd("minishell: syntax error near unexpected token ",
+		 STDERR_FILENO);
+	ft_putendl_fd(str, STDERR_FILENO);
+}
