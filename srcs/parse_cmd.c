@@ -2,9 +2,6 @@
 
 static t_execdata	*expand_variable(t_execdata *data)
 {
-	t_execdata	*head;
-
-	head = data;
 	while (data)
 	{
 		expand_cmdlist(&data->clst, data->elst);
