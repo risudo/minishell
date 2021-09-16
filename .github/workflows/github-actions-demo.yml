@@ -18,4 +18,4 @@ jobs:
       - name: make check
         shell: bash
         working-directory: ${{ github.workspace }}
-        run: make check
+        run: cd ${{ github.workspace }} && make check
