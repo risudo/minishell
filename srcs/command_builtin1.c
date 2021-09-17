@@ -26,13 +26,13 @@ void	builtin_echo(t_execdata *data)
 		option++;
 	while (data->cmdline[arg_i])
 	{
-		printf("%s", data->cmdline[arg_i]);
+		ft_putstr_fd(data->cmdline[arg_i], STDOUT_FILENO);
 		if (data->cmdline[arg_i + 1] != NULL)
-			printf(" ");
+			ft_putstr_fd(" ", STDOUT_FILENO);
 		arg_i++;
 	}
 	if (option == 0)
-		printf("\n");
+		ft_putstr_fd("\n", STDOUT_FILENO);
 	g_status = 0;
 }
 
