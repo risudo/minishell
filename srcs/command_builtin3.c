@@ -14,7 +14,7 @@ void	builtin_unset(t_execdata *data)
 	i = 1;
 	while (data->cmdline[i])
 	{
-		ft_unsetenv(data->elst, data->cmdline[i]);
+		data->elst = ft_unsetenv(data->elst, data->cmdline[i]);
 		i++;
 	}
 	g_status = 0;
