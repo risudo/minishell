@@ -25,7 +25,7 @@ static ssize_t	check_name_rule(char *src_str)
 	return (i);
 }
 
-static void	to_setenv(t_envlist *head, char *src_str, size_t i)
+static t_envlist	*to_setenv(t_envlist *head, char *src_str, size_t i)
 {
 	char	*key;
 	char	*value;
@@ -49,7 +49,7 @@ static void	to_setenv(t_envlist *head, char *src_str, size_t i)
 		value = NULL;
 		mode = 0;
 	}
-	ft_setenv(head, key, value, mode);
+	return (ft_setenv(head, key, value, mode));
 }
 
 static void	put_env_asciiorder(t_envlist *head, t_envlist *min_node)
@@ -95,7 +95,8 @@ void	builtin_export(t_execdata *data)
 		{
 			split_point = check_name_rule(data->cmdline[arg_i]);
 			if (split_point != -1)
-				to_setenv(data->elst, data->cmdline[arg_i], split_point);
+				data->elst = \
+					to_setenv(data->elst, data->cmdline[arg_i], split_point);
 			else
 			{
 				ft_puterror("export", data->cmdline[arg_i], \

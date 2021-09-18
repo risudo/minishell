@@ -33,12 +33,13 @@ void	minishell_loop(char **envp)
 		{
 			data = parse_cmd(line, elst);
 			execute_start(data);
+			elst = data->elst;
 			clear_execdata(data);
 			add_history(line);
 		}
+		free(line);
 		if (g_status != 0)
 			printf("\x1b[31m[%d] \033[m", g_status);
-		free(line);
 	}
 }
 
