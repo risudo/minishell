@@ -15,13 +15,13 @@ static t_execdata	*expand_variable(t_execdata *data)
 	return (data);
 }
 
-static t_execdata	*create_error_execdata(t_token *tokenlist, t_envlist *envlist)
+static t_execdata	*create_error_execdata(t_token *tlist, t_envlist *elist)
 {
 	t_execdata	*data;
 
 	data = (t_execdata *)ft_calloc(1, sizeof(*data));
-	data->elst = envlist;
-	clear_tokenlist(tokenlist);
+	data->elst = elist;
+	clear_tokenlist(tlist);
 	return (data);
 }
 
