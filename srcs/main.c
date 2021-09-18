@@ -18,6 +18,7 @@ void	minishell_loop(char **envp)
 		{
 			data = parse_cmd(line, elst);
 			execute_start(data);
+			elst = data->elst;
 			clear_execdata(data);
 			add_history(line);
 		}

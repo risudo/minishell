@@ -30,7 +30,7 @@ void		set_status_from_child_status(int wstatus);
 //env_functions.c
 char		*ft_getenv(t_envlist *elst, char *search_key);
 t_envlist	*ft_unsetenv(t_envlist *elst, char *rm_key);
-void		ft_setenv(t_envlist *elst, char *new_key, \
+t_envlist	*ft_setenv(t_envlist *head, char *new_key, \
 						char *new_value, int append);
 
 //execution_utils_list.c

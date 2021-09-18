@@ -50,9 +50,10 @@ void	builtin_cd(t_execdata *data)
 		free(old_pwd);
 		return ;
 	}
-	ft_setenv(data->elst, ft_xstrdup("OLDPWD"), old_pwd, 0);
+	data->elst = ft_setenv(data->elst, ft_xstrdup("OLDPWD"), old_pwd, 0);
 	if (ft_getenv(data->elst, "PWD"))
-		ft_setenv(data->elst, ft_xstrdup("PWD"), getcwd(NULL, 0), 0);
+		data->elst = \
+			ft_setenv(data->elst, ft_xstrdup("PWD"), getcwd(NULL, 0), 0);
 	g_status = 0;
 }
 
