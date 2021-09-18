@@ -1,7 +1,7 @@
 #include "minishell.h"
 
 /*
-** Serch cmdlist and do the following.
+** expand_cmdlist() do the following.
 ** 1 Expand environment valiables.
 ** 2 Clear quotation.
 ** 3 If there are spaces after expanding, insert new list.

@@ -9,8 +9,7 @@ void	child_handler(int signo)
 
 void	signal_handler(int signo)
 {
-	(void)signo;
-	g_status = 128 + SIGINT;
+	g_status = 128 + signo;
 	ft_putchar_fd('\n', STDOUT_FILENO);
 	rl_replace_line("", 0);
 	rl_on_new_line();

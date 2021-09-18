@@ -1,5 +1,10 @@
 #include "minishell.h"
 
+/*
+** Parse command and create data to execute.
+** If there are anything error, return empty data.
+*/
+
 static t_execdata	*expand_variable(t_execdata *data)
 {
 	while (data)

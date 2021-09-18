@@ -2,7 +2,7 @@
 
 /*
 ** Split tokenlist that have special character like pipe.
-** Example: ls|cat
+** Example: ls|cat -> [0] ls [1] | [2]cat
 */
 
 static t_token	*insert_new_token(t_token *list, char *str)
