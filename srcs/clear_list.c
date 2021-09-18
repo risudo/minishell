@@ -31,7 +31,7 @@ void	clear_tokenlist(t_token *list)
 	}
 }
 
-void	clear_cmdlist(t_cmdlist *list)
+static void	clear_cmdlist(t_cmdlist *list)
 {
 	t_cmdlist	*next;
 
@@ -45,7 +45,7 @@ void	clear_cmdlist(t_cmdlist *list)
 	}
 }
 
-void	clear_iolist(t_iolist *list)
+static void	clear_iolist(t_iolist *list)
 {
 	t_iolist	*next;
 

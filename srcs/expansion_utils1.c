@@ -1,15 +1,5 @@
 #include "minishell.h"
 
-bool	is_env_iolist(char flag, t_iolist *prev)
-{
-	if (flag != 'S' && (prev == NULL || prev->c_type != HERE_DOC))
-	{
-		return (true);
-	}
-	else
-		return (false);
-}
-
 char	*get_new_flag(char **quot, char *end_quot)
 {
 	char	*ret;

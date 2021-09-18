@@ -2,8 +2,8 @@
 
 /*
 ** Parse token list do following
-** 1 If the character of redirects are consecutive, join these.
-** 2 Expand "$?".
+** 1 Expand "$?".
+** 2 Set special_c flags.
 ** 3 Check syntax error.
 */
 

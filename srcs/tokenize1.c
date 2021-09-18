@@ -1,7 +1,7 @@
 #include "minishell.h"
 
 /*
-** Tokenize command and create t_token list.
+** Tokenize command by space and create t_token list.
 */
 
 bool	ft_isspace(char c)
