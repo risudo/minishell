@@ -44,7 +44,7 @@ void	builtin_exit(t_execdata *data)
 	if (data->cmdline[2])
 	{
 		ft_puterror("exit", "too many arguments", NULL);
-		g_status = 1;
+		g_status = 2;
 		return ;
 	}
 	g_status = (unsigned char)ft_atol(data->cmdline[1], &nonnum_check);

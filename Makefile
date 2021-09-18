@@ -64,7 +64,7 @@ all: ${NAME}
 
 ${NAME}: ${OBJS} ${HEADER_DIR}
 	@${MAKE} -C ${LIBFT_DIR}
-	${CC} ${C_FLAGS} -o ${NAME} ${OBJS} -L${READLINE_DIR}/lib -lreadline -lhistory -L${LIBFT_DIR} -lft
+	${CC} ${CFLAGS} -o ${NAME} ${OBJS} -L${READLINE_DIR}/lib -lreadline -lhistory -L${LIBFT_DIR} -lft
 
 clean:
 	${MAKE} -C ${LIBFT_DIR} clean
