@@ -56,50 +56,55 @@ static void	clear_quot_cmdlist(t_cmdlist *clist)
 	clist->quot = get_removed_endflag(&clist->quot, '2');
 }
 
-static t_cmdlist	*insert_new_cmdlist(t_cmdlist *clist, int i)
+static t_cmdlist	*insert_new_cmdlist(t_cmdlist *clist, size_t *i, size_t idx)
 {
 	t_cmdlist	*new;
 	size_t		len;
 
-	while (ft_isspace(clist->str[i]))
-		i++;
-	len = ft_strlen(clist->str + i);
+	while (ft_isspace(clist->str[*i]) && *i < idx)
+		(*i)++;
+	len = ft_strlen(clist->str + *i);
 	if (len == 0)
 		return (clist);
 	new = (t_cmdlist *)ft_xcalloc(1, sizeof(*new));
-	new->str = ft_xsubstr(clist->str, i, len);
+	new->str = ft_xsubstr(clist->str, *i, len);
 	new->quot = get_quot_flag(new->str);
 	new->next = clist->next;
 	clist->next = new;
 	return (clist);
 }
 
-static void	search_new_space_cmdlist(t_cmdlist *clist)
+/*
+** @(idx) index of end of environment variable after expanding.
+*/
+
+static size_t	search_new_space_cmdlist(t_cmdlist *clist, size_t idx)
 {
 	size_t	i;
-	size_t	len;
 	char	*str;
 
 	i = get_space_idx(clist);
-	if (i == 0 && ft_isspace(clist->str[i]))
+	if (i == 0 && ft_isspace(clist->str[i]) && idx != SIZE_MAX)
 	{
 		while (ft_isspace(clist->str[i]))
 			i++;
-		len = ft_strlen(clist->str + i);
-		str = ft_xsubstr(clist->str, i, len);
-		free(clist->str), free(clist->quot);
-		clist->str = str;
+		str = ft_xsubstr(clist->str, i, ft_strlen(clist->str + i));
+		free(clist->str), free(clist->quot), clist->str = str;
 		clist->quot = get_quot_flag(clist->str);
-		search_new_space_cmdlist(clist);
+		idx = search_new_space_cmdlist(clist, idx - i);
 	}
-	else if (ft_isspace(clist->str[i]))
+	else if (ft_isspace(clist->str[i]) && idx != SIZE_MAX)
 	{
 		str = ft_xsubstr(clist->str, 0, i);
-		clist = insert_new_cmdlist(clist, i);
-		free(clist->str), free(clist->quot);
-		clist->str = str;
+		clist = insert_new_cmdlist(clist, &i, idx);
+		free(clist->str), free(clist->quot), clist->str = str;
 		clist->quot = get_quot_flag(clist->str);
+		if (idx > i)
+			idx -= i;
+		else
+			idx = SIZE_MAX;
 	}
+	return (idx);
 }
 
 void	expand_cmdlist(t_cmdlist **clist, t_envlist *envlist)
@@ -124,9 +129,9 @@ void	expand_cmdlist(t_cmdlist **clist, t_envlist *envlist)
 			continue ;
 		if (ft_strchr((*clist)->quot, '1') || ft_strchr((*clist)->quot, '2'))
 			clear_quot_cmdlist((*clist));
-		search_new_space_cmdlist((*clist));
+		len = search_new_space_cmdlist((*clist), len);
 		prev = (*clist);
 		(*clist) = (*clist)->next;
 	}
-	(*clist) = (t_cmdlist *)head;
+	(*clist) = head;
 }

@@ -1,3 +1,4 @@
+echo a\npwd
 echo aaa|cat
    echo aaa|cat
 echo aaa|cat	\
@@ -10,7 +11,8 @@ echo '' '' | cat -e
 echo " " " """ | ''c'at' -e
 echo ">"
 echo ">>"
-eCHo aaa
+echo $SPACE2"cc     "
+echo $SPACE2"    cc     "
 echo $
 echo $ |	cat
 echo $?
