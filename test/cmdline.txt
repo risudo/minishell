@@ -12,7 +12,7 @@ echo " " " """ | ''c'at' -e
 echo ">"
 echo ">>"
 echo $SPACE2"cc     "
-echo $SPACE2"    cc     "
+echo $SPACE2"    cc     "$SPACE2
 echo $
 echo $ |	cat
 echo $?

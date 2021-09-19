@@ -47,6 +47,7 @@ char		*get_quot_flag(char *str);
 char		*get_removed_endflag(char **quot, char flag);
 size_t		ft_strlen_excluded_quot(char *str, char *quot);
 size_t		get_space_idx(t_cmdlist *clist);
+char		*ft_strdoll_cmdlist(const char *s, t_cmdlist *clist);
 
 // expansion_utils
 bool		is_delimiter(char c);
