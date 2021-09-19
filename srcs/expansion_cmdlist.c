@@ -116,20 +116,20 @@ void	expand_cmdlist(t_cmdlist **clist, t_envlist *envlist)
 	head = (*clist);
 	while ((*clist))
 	{
-		doll_ptr = ft_strdoll_cmdlist((*clist)->str, (*clist)->quot, (*clist)->str);
+		doll_ptr = ft_strdol((*clist)->str, (*clist)->quot, (*clist)->str);
 		while (doll_ptr)
 		{
 			len = expand_key_cmdlist((*clist), envlist, doll_ptr);
 			free((*clist)->quot);
 			(*clist)->quot = get_quot_flag((*clist)->str);
-			doll_ptr = ft_strdoll_cmdlist((*clist)->str + len, (*clist)->quot, (*clist)->str);
+			doll_ptr = ft_strdol((*clist)->str + len,
+					(*clist)->quot, (*clist)->str);
 		}
 		if (!(*clist)->str[0] && delone_cmdlist(clist, prev, &head))
 			continue ;
 		if (ft_strchr((*clist)->quot, '1') || ft_strchr((*clist)->quot, '2'))
 			clear_quot_cmdlist((*clist));
-		search_new_space_cmdlist((*clist));
-		prev = (*clist);
+		search_new_space_cmdlist((*clist)), prev = (*clist);
 		(*clist) = (*clist)->next;
 	}
 	(*clist) = head;

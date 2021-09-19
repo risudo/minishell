@@ -56,7 +56,7 @@ int	delone_cmdlist(t_cmdlist **cur, t_cmdlist *prev, t_cmdlist **head)
 	return (1);
 }
 
-char	*ft_strdoll_cmdlist(char *s, char *quot, char *head)
+char	*ft_strdol(char *s, char *quot, char *head)
 {
 	char	*doll_ptr;
 
@@ -64,7 +64,7 @@ char	*ft_strdoll_cmdlist(char *s, char *quot, char *head)
 	if (doll_ptr
 		&& (is_delimiter(*(doll_ptr + 1))
 			|| quot[doll_ptr - head] == 'S'))
-		return (ft_strdoll_cmdlist(doll_ptr + 1, quot, head));
+		return (ft_strdol(doll_ptr + 1, quot, head));
 	else
 		return (doll_ptr);
 }
