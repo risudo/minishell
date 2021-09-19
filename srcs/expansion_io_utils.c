@@ -1,16 +1,5 @@
 #include "minishell.h"
 
-char	*ft_strdoll(const char *s)
-{
-	char	*doll_ptr;
-
-	doll_ptr = ft_strchr(s, '$');
-	if (doll_ptr && is_delimiter(*(doll_ptr + 1)))
-		return (ft_strdoll(doll_ptr + 1));
-	else
-		return (doll_ptr);
-}
-
 size_t	expansion_key_io(char **line, \
 		t_envlist *envlist, char *doll_ptr)
 {

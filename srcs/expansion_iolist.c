@@ -81,13 +81,13 @@ int	expand_filename(t_iolist *iolist, t_envlist *envlist)
 	filename = ft_xstrdup(iolist->str);
 	filequot = get_quot_flag(filename);
 	is_null = 0;
-	doll_ptr = ft_strdoll(filename);
-	while (doll_ptr && filequot[doll_ptr - filename] != 'S')
+	doll_ptr = ft_strdoll(filename, filequot, filename);
+	while (doll_ptr)
 	{
 		len = expansion_key_io(&filename, envlist, doll_ptr);
 		free(filequot);
 		filequot = get_quot_flag(filename);
-		doll_ptr = ft_strdoll(filename + len);
+		doll_ptr = ft_strdoll(filename + len, filequot, filename);
 	}
 	if (filename[0] == '\0')
 		is_null++;

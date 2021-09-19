@@ -34,11 +34,11 @@ static void	expansion_heredoc(char **line, t_envlist *elst)
 	char	*doll_ptr;
 	size_t	len;
 
-	doll_ptr = ft_strdoll(*line);
+	doll_ptr = ft_strdoll(*line, NULL, *line);
 	while (doll_ptr)
 	{
 		len = expansion_key_io(line, elst, doll_ptr);
-		doll_ptr = ft_strdoll(*line + len);
+		doll_ptr = ft_strdoll(*line + len, NULL, *line);
 	}
 }
 
