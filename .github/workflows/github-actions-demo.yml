@@ -18,4 +18,6 @@ jobs:
         shell: bash
         working-directory: ${{ github.workspace }}
         run: cd ${{ github.workspace }} && make check
+      - name: 42 Norminette
+        uses: alexandregv/norminette-action@v3
       - run: echo "🍏 This job's status is ${{ job.status }}."
