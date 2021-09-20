@@ -116,13 +116,13 @@ void	expand_cmdlist(t_cmdlist **clist, t_envlist *envlist)
 	head = (*clist);
 	while ((*clist))
 	{
-		doll_ptr = ft_strdol((*clist)->str, (*clist)->quot, (*clist)->str);
+		doll_ptr = ft_strdoll((*clist)->str, (*clist)->quot, (*clist)->str);
 		while (doll_ptr)
 		{
 			len = expand_key_cmdlist((*clist), envlist, doll_ptr);
 			free((*clist)->quot);
 			(*clist)->quot = get_quot_flag((*clist)->str);
-			doll_ptr = ft_strdol((*clist)->str + len,
+			doll_ptr = ft_strdoll((*clist)->str + len,
 					(*clist)->quot, (*clist)->str);
 		}
 		if (!(*clist)->str[0] && delone_cmdlist(clist, prev, &head))
