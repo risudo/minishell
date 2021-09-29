@@ -1,2 +1,2 @@
 # minishell
-![render1632876389098](https://user-images.githubusercontent.com/76856052/135184492-f78f578e-6264-4c7e-af29-d011c37975e4.gif)
+![render1632878809870](https://user-images.githubusercontent.com/76856052/135187498-f8a922a5-38c3-41a5-b368-81309fc1da9a.gif)
