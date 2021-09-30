@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution_utils_libft.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: rakiyama <ryojiro25@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 22:11:57 by rsudo             #+#    #+#             */
-/*   Updated: 2021/09/20 22:11:58 by rsudo            ###   ########.fr       */
+/*   Updated: 2021/09/30 15:08:19 by rakiyama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,12 @@
 static bool	is_overflow(unsigned long num, \
 						int sign, bool *nonnum_check)
 {
-	if ((sign == 1 && LONG_MAX < num) || \
-		(sign == -1 && LONG_MAX < num - 1))
+	if (INT_MAX < num && \
+		((sign == 1 && LONG_MAX < num) || \
+		(sign == -1 && LONG_MAX < num - 1)))
 		return (true);
-	*nonnum_check = false;
+	else if (*nonnum_check)
+		*nonnum_check = false;
 	return (false);
 }
 
