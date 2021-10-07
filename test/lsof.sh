@@ -8,6 +8,6 @@ sleep 5
 rm ps_current_process.txt
 while [ 1 ]
 do
-lsof -a -p $pid
+lsof -p $pid
 sleep 1
 done
