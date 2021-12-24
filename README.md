@@ -33,3 +33,8 @@ make
     - ctrl-C print a new prompt on a newline
     - ctrl-D exit the shell
     - ctrl-\ do nothing
+# For more information
+- rsudo's Hatena Blog: [bash再実装課題の振り返り](https://rio-1.hatenablog.com/entry/2021/10/05/182916?_ga=2.192044130.99751359.1640076943-702415775.1516097932)
+- rakiyama's Hatena Blog: [シェルの再実装しましたというお話。](https://rakiyama0229.hatenablog.jp/entry/2021/10/05/120920)
+
+
