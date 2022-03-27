@@ -1,0 +1,10 @@
+*
+!*/
+!*.*
+!Makefile
+*.o
+*.d
+*.a
+.DS_Store
+settings.json
+!.gitignore

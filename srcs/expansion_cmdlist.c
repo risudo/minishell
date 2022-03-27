@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion_cmdlist.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: rakiyama <rakiyama@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 22:12:09 by rsudo             #+#    #+#             */
-/*   Updated: 2021/09/20 22:12:10 by rsudo            ###   ########.fr       */
+/*   Updated: 2022/03/27 15:00:52 by rakiyama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@ static t_cmdlist	*insert_new_cmdlist(t_cmdlist *clist, size_t *i)
 {
 	t_cmdlist	*new;
 	size_t		len;
-	char		*tmp;
 
 	while (ft_isspace(clist->str[*i])
 		&& clist->quot[*i] != 'S' && clist->quot[*i] != 'D')
@@ -82,7 +81,6 @@ static t_cmdlist	*insert_new_cmdlist(t_cmdlist *clist, size_t *i)
 		return (clist);
 	new = (t_cmdlist *)ft_xcalloc(1, sizeof(*new));
 	new->str = ft_xsubstr(clist->str, *i, len);
-	tmp = clist->quot;
 	new->quot = ft_xsubstr(clist->quot, *i, ft_strlen(clist->quot + *i));
 	new->next = clist->next;
 	clist->next = new;
