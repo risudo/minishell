@@ -17,10 +17,14 @@ MAIN = ${SRCS_DIR}main.c
 endif
 
 SRCS_NAME = clear_list.c \
-			command_builtin1.c \
-			command_builtin2.c \
-			command_builtin3.c \
-			command_nonbuiltin.c \
+			execution_echo.c \
+			execution_cd.c \
+			execution_pwd.c \
+			execution_export.c \
+			execution_unset.c \
+			execution_env.c \
+			execution_exit.c \
+			execution_nonbuilin.c \
 			env_functions.c \
 			envlist.c \
 			execdata.c \
@@ -42,10 +46,23 @@ SRCS_NAME = clear_list.c \
 			tokenize1.c \
 			tokenize2.c \
 			tokenize_utils.c \
-			wrapper1.c \
-			wrapper2.c \
-			wrapper3.c \
-			wrapper4.c \
+			xclose.c \
+			xfork.c \
+			xft_calloc.c \
+			xft_itoa.c \
+			xft_split.c \
+			xft_strdup.c \
+			xft_strjoin.c \
+			xft_substr.c \
+			xsignal.c \
+			xwaitpid.c \
+			ft_dup.c \
+			ft_dup2.c \
+			ft_open.c \
+			ft_perror.c \
+			ft_pipe.c \
+			ft_puterror.c \
+			ft_stat.c \
 			signal_handler.c
 
 SRCS = ${addprefix ${SRCS_DIR}, ${SRCS_NAME}}

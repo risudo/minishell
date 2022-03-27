@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_functions.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: rakiyama <rakiyama@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 22:11:36 by rsudo             #+#    #+#             */
-/*   Updated: 2021/09/20 22:11:37 by rsudo            ###   ########.fr       */
+/*   Updated: 2022/03/27 16:54:01 by rakiyama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ static t_envlist	*get_elst_node(t_envlist *head, t_envlist *prev, \
 {
 	t_envlist	*new_elst;
 
-	new_elst = ft_xcalloc(1, sizeof(*new_elst));
+	new_elst = xft_calloc(1, sizeof(*new_elst));
 	new_elst->key = new_key;
 	new_elst->value = new_value;
 	new_elst->next = NULL;
@@ -84,9 +84,9 @@ t_envlist	*ft_setenv(t_envlist *elst, char *new_key, \
 			if (new_value)
 			{
 				if (append)
-					add_value = ft_xstrjoin(elst->value, new_value);
+					add_value = xft_strjoin(elst->value, new_value);
 				else
-					add_value = ft_xstrdup(new_value);
+					add_value = xft_strdup(new_value);
 				free(new_value), free(elst->value), elst->value = add_value;
 			}
 			free(new_key);

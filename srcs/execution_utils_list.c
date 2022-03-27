@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution_utils_list.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: rakiyama <rakiyama@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 22:12:00 by rsudo             #+#    #+#             */
-/*   Updated: 2021/09/20 22:12:01 by rsudo            ###   ########.fr       */
+/*   Updated: 2022/03/27 16:54:01 by rakiyama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,14 +54,14 @@ char	**convert_envlist_2dchar(t_envlist *elst)
 	char		*tmp;
 
 	cnt = envlist_size(elst);
-	array = (char **)ft_xcalloc((cnt + 1), sizeof(char *));
+	array = (char **)xft_calloc((cnt + 1), sizeof(char *));
 	cnt = 0;
 	move = elst;
 	while (move)
 	{
-		array[cnt] = ft_xstrjoin(move->key, "=");
+		array[cnt] = xft_strjoin(move->key, "=");
 		tmp = array[cnt];
-		array[cnt] = ft_xstrjoin(array[cnt], move->value);
+		array[cnt] = xft_strjoin(array[cnt], move->value);
 		free(tmp);
 		cnt++;
 		move = move->next;
@@ -76,12 +76,12 @@ char	**convert_cmdlist_2dchar(t_cmdlist *clst)
 	size_t		cnt;
 
 	cnt = cmdlist_size(clst);
-	array = (char **)ft_xcalloc((cnt + 1), sizeof(char *));
+	array = (char **)xft_calloc((cnt + 1), sizeof(char *));
 	cnt = 0;
 	move = clst;
 	while (move)
 	{
-		array[cnt] = ft_xstrjoin(move->str, NULL);
+		array[cnt] = xft_strjoin(move->str, NULL);
 		cnt++;
 		move = move->next;
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execdata.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: rakiyama <rakiyama@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 22:11:47 by rsudo             #+#    #+#             */
-/*   Updated: 2021/09/20 22:11:48 by rsudo            ###   ########.fr       */
+/*   Updated: 2022/03/27 16:54:01 by rakiyama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ static t_execdata	*new_execdata(t_execdata *cur, t_token *start,
 {
 	t_execdata	*new;
 
-	new = (t_execdata *)ft_xcalloc(1, sizeof(*new));
+	new = (t_execdata *)xft_calloc(1, sizeof(*new));
 	new->cmdline = NULL;
 	new->stdfd[ORIGINAL_IN] = -42;
 	new->stdfd[ORIGINAL_OUT] = -42;

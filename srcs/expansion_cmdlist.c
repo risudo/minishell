@@ -6,7 +6,7 @@
 /*   By: rakiyama <rakiyama@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 22:12:09 by rsudo             #+#    #+#             */
-/*   Updated: 2022/03/27 15:00:52 by rakiyama         ###   ########.fr       */
+/*   Updated: 2022/03/27 16:54:01 by rakiyama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ static size_t	expand_key_cmdlist(t_cmdlist *clist,
 	len = 1;
 	while (!is_delimiter(doll_ptr[len]))
 		len++;
-	front_key = ft_xsubstr(clist->str, 0, doll_ptr - clist->str);
-	key = ft_xsubstr(doll_ptr, 1, len - 1);
-	back_key = ft_xsubstr(doll_ptr + len, 0, ft_strlen(doll_ptr + len));
+	front_key = xft_substr(clist->str, 0, doll_ptr - clist->str);
+	key = xft_substr(doll_ptr, 1, len - 1);
+	back_key = xft_substr(doll_ptr + len, 0, ft_strlen(doll_ptr + len));
 	value = ft_getenv(envlist, key);
 	free(clist->str);
 	clist->str = ft_strjoin_three(front_key, value, back_key);
@@ -50,7 +50,7 @@ static void	clear_quot_cmdlist(t_cmdlist *clist)
 
 	i = 0;
 	j = 0;
-	new_str = (char *)ft_xcalloc(
+	new_str = (char *)xft_calloc(
 			ft_strlen_excluded_quot(clist->str, clist->quot) + 1,
 			sizeof(char));
 	while (clist->str[i])
@@ -79,9 +79,9 @@ static t_cmdlist	*insert_new_cmdlist(t_cmdlist *clist, size_t *i)
 	len = ft_strlen(clist->str + *i);
 	if (len == 0)
 		return (clist);
-	new = (t_cmdlist *)ft_xcalloc(1, sizeof(*new));
-	new->str = ft_xsubstr(clist->str, *i, len);
-	new->quot = ft_xsubstr(clist->quot, *i, ft_strlen(clist->quot + *i));
+	new = (t_cmdlist *)xft_calloc(1, sizeof(*new));
+	new->str = xft_substr(clist->str, *i, len);
+	new->quot = xft_substr(clist->quot, *i, ft_strlen(clist->quot + *i));
 	new->next = clist->next;
 	clist->next = new;
 	return (clist);
@@ -98,20 +98,20 @@ static void	search_new_space_cmdlist(t_cmdlist *clist)
 	{
 		while (ft_isspace(clist->str[i]))
 			i++;
-		str = ft_xsubstr(clist->str, i, ft_strlen(clist->str + i));
+		str = xft_substr(clist->str, i, ft_strlen(clist->str + i));
 		free(clist->str), clist->str = str;
 		tmp = clist->quot;
-		clist->quot = ft_xsubstr(clist->quot, i, ft_strlen(clist->quot + i));
+		clist->quot = xft_substr(clist->quot, i, ft_strlen(clist->quot + i));
 		free(tmp);
 		search_new_space_cmdlist(clist);
 	}
 	else if (ft_isspace(clist->str[i]))
 	{
-		str = ft_xsubstr(clist->str, 0, i);
+		str = xft_substr(clist->str, 0, i);
 		clist = insert_new_cmdlist(clist, &i);
 		free(clist->str), clist->str = str;
 		tmp = clist->quot;
-		clist->quot = ft_xsubstr(clist->quot, i, ft_strlen(clist->quot + i));
+		clist->quot = xft_substr(clist->quot, i, ft_strlen(clist->quot + i));
 		free(tmp);
 	}
 }

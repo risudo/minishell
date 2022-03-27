@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion_utils1.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: rakiyama <rakiyama@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 22:12:21 by rsudo             #+#    #+#             */
-/*   Updated: 2021/09/20 22:12:22 by rsudo            ###   ########.fr       */
+/*   Updated: 2022/03/27 16:54:01 by rakiyama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char	*get_new_flag(char **quot, char *end_quot)
 
 	i = 0;
 	j = 0;
-	ret = ft_xcalloc(ft_strlen(*quot), sizeof(char));
+	ret = xft_calloc(ft_strlen(*quot), sizeof(char));
 	while ((*quot)[j])
 	{
 		if (j == end_quot - *quot || j == end_quot - *quot - 1)

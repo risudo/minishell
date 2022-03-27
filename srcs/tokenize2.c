@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: rakiyama <rakiyama@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 22:13:04 by rsudo             #+#    #+#             */
-/*   Updated: 2021/09/20 22:13:05 by rsudo            ###   ########.fr       */
+/*   Updated: 2022/03/27 16:54:01 by rakiyama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static t_token	*insert_new_token(t_token *list, char *str)
 	t_token	*new;
 	t_token	*next;
 
-	new = (t_token *)ft_xcalloc(1, sizeof(*new));
+	new = (t_token *)xft_calloc(1, sizeof(*new));
 	new->str = str;
 	new->prev = list;
 	next = list->next;
@@ -43,8 +43,8 @@ static t_token	*get_newstr_list(t_token *list, char *delimiter_ptr)
 		len = 1;
 	else
 		len = delimiter_ptr - list->str;
-	str = ft_xsubstr(list->str, 0, len);
-	excluded = ft_xsubstr(list->str, len, ft_strlen(list->str) - len);
+	str = xft_substr(list->str, 0, len);
+	excluded = xft_substr(list->str, len, ft_strlen(list->str) - len);
 	free(list->str);
 	list->str = str;
 	list = insert_new_token(list, excluded);

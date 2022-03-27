@@ -1,22 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   wrapper4.c                                         :+:      :+:    :+:   */
+/*   ft_puterror.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: rakiyama <rakiyama@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 22:13:19 by rsudo             #+#    #+#             */
-/*   Updated: 2021/09/20 22:13:20 by rsudo            ###   ########.fr       */
+/*   Updated: 2022/03/27 17:22:07 by rakiyama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	ft_perror(char *perror_str)
-{
-	ft_putstr_fd("minishell: ", STDERR_FILENO);
-	perror(perror_str);
-}
 
 void	ft_puterror(char *str1, char *str2, char *str3)
 {

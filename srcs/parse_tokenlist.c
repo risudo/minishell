@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_tokenlist.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: rakiyama <rakiyama@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 22:12:39 by rsudo             #+#    #+#             */
-/*   Updated: 2021/09/20 22:12:40 by rsudo            ###   ########.fr       */
+/*   Updated: 2022/03/27 16:54:01 by rakiyama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@ static void	expand_status(t_token *list, char *doll_ptr)
 	char	*back;
 	char	*value;
 
-	front = ft_xsubstr(list->str, 0, doll_ptr - list->str);
-	back = ft_xsubstr(doll_ptr, 2, ft_strlen(doll_ptr + 2));
-	value = ft_xitoa(g_status);
+	front = xft_substr(list->str, 0, doll_ptr - list->str);
+	back = xft_substr(doll_ptr, 2, ft_strlen(doll_ptr + 2));
+	value = xft_itoa(g_status);
 	free(list->str);
 	list->str = ft_strjoin_three(front, value, back);
 	free(front), free(back), free(value);

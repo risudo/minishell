@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   delimit_fd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: rakiyama <rakiyama@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 22:11:32 by rsudo             #+#    #+#             */
-/*   Updated: 2021/09/20 22:11:33 by rsudo            ###   ########.fr       */
+/*   Updated: 2022/03/27 16:54:01 by rakiyama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static t_iolist	*insert_redirect_iolist(t_iolist *cur,
 {
 	t_iolist	*new;
 
-	new = (t_iolist *)ft_xcalloc(1, sizeof(*new));
+	new = (t_iolist *)xft_calloc(1, sizeof(*new));
 	new->str = redirect;
 	new->quot = get_quot_flag(new->str);
 	new->open_fd = -1;
@@ -36,8 +36,8 @@ t_iolist	*delimit_fd(t_iolist *cur)
 	i = 0;
 	while (ft_isdigit(cur->str[i]))
 		i++;
-	fd = ft_xsubstr(cur->str, 0, i);
-	redirect = ft_xsubstr(cur->str, i, ft_strlen(cur->str + i));
+	fd = xft_substr(cur->str, 0, i);
+	redirect = xft_substr(cur->str, i, ft_strlen(cur->str + i));
 	free(cur->quot), free(cur->str);
 	cur->str = fd;
 	cur->quot = get_quot_flag(cur->str);

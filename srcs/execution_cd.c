@@ -1,49 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   execution_cd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rakiyama <rakiyama@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/09/20 22:12:30 by rsudo             #+#    #+#             */
+/*   Created: 2021/09/20 22:10:49 by rsudo             #+#    #+#             */
 /*   Updated: 2022/03/27 16:54:01 by rakiyama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-unsigned char	g_status = 0;
-
-void	minishell_loop(char **envp)
+void	builtin_cd(t_execdata *data)
 {
-	t_envlist		*elst;
-	t_execdata		*data;
-	char			*line;
+	char	*old_pwd;
 
-	elst = create_envlist(envp);
-	while (1)
+	old_pwd = getcwd(NULL, 0);
+	if (data->cmdline[1] && \
+		data->cmdline[1][0] && \
+		chdir(data->cmdline[1]) == -1)
 	{
-		line = readline("minishell$ ");
-		if (!line)
-			line = xft_strdup("exit");
-		if (line[0] != '\0')
-		{
-			data = parse_cmd(line, elst);
-			execute_start(data);
-			elst = data->elst;
-			clear_execdata(data);
-			add_history(line);
-		}
-		free(line);
+		ft_perror("cd");
+		g_status = 1;
+		free(old_pwd);
+		return ;
 	}
-}
-
-int	main(int argc, char **argv, char **envp)
-{
-	xsignal(SIGINT, signal_handler);
-	xsignal(SIGQUIT, SIG_IGN);
-	minishell_loop(envp);
-	(void)argc;
-	(void)argv;
-	return (g_status);
+	data->elst = ft_setenv(data->elst, xft_strdup("OLDPWD"), old_pwd, 0);
+	if (ft_getenv(data->elst, "PWD"))
+		data->elst = \
+			ft_setenv(data->elst, xft_strdup("PWD"), getcwd(NULL, 0), 0);
+	g_status = 0;
 }

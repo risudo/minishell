@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion_iolist.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: rakiyama <rakiyama@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 22:12:18 by rsudo             #+#    #+#             */
-/*   Updated: 2021/09/20 22:12:19 by rsudo            ###   ########.fr       */
+/*   Updated: 2022/03/27 16:54:01 by rakiyama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static char	*rm_isspace(char *filename, char *filequot)
 	if (filename[start + len + back])
 		clear_name = NULL;
 	else
-		clear_name = ft_xsubstr(filename, start, len);
+		clear_name = xft_substr(filename, start, len);
 	free(filename);
 	return (clear_name);
 }
@@ -90,7 +90,7 @@ int	expand_filename(t_iolist *iolist, t_envlist *envlist)
 	int			is_null;
 	size_t		len;
 
-	filename = ft_xstrdup(iolist->str);
+	filename = xft_strdup(iolist->str);
 	filequot = get_quot_flag(filename);
 	is_null = 0;
 	doll_ptr = ft_strdoll(filename, filequot, filename);
