@@ -46,8 +46,16 @@ SRCS_NAME = clear_list.c \
 			tokenize1.c \
 			tokenize2.c \
 			tokenize_utils.c \
-			wrapper1.c \
-			wrapper2.c \
+			xclose.c \
+			xfork.c \
+			xft_calloc.c \
+			xft_itoa.c \
+			xft_split.c \
+			xft_strdup.c \
+			xft_strjoin.c \
+			xft_substr.c \
+			xsignal.c \
+			xwaitpid.c \
 			wrapper3.c \
 			wrapper4.c \
 			signal_handler.c
