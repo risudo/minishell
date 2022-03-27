@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   wrapper1.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: rakiyama <rakiyama@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 22:13:07 by rsudo             #+#    #+#             */
-/*   Updated: 2021/09/20 22:13:08 by rsudo            ###   ########.fr       */
+/*   Updated: 2022/03/27 16:54:01 by rakiyama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/parse.h"
 
-void	*ft_xcalloc(size_t count, size_t size)
+void	*xft_calloc(size_t count, size_t size)
 {
 	void	*ptr;
 
@@ -25,7 +25,7 @@ void	*ft_xcalloc(size_t count, size_t size)
 	return (ptr);
 }
 
-char	*ft_xsubstr(char const *s, unsigned int start, size_t len)
+char	*xft_substr(char const *s, unsigned int start, size_t len)
 {
 	char	*ret;
 
@@ -38,7 +38,7 @@ char	*ft_xsubstr(char const *s, unsigned int start, size_t len)
 	return (ret);
 }
 
-char	*ft_xstrdup(const char *src)
+char	*xft_strdup(const char *src)
 {
 	char	*ret;
 
@@ -51,7 +51,7 @@ char	*ft_xstrdup(const char *src)
 	return (ret);
 }
 
-char	*ft_xitoa(int n)
+char	*xft_itoa(int n)
 {
 	char	*ret;
 

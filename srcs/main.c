@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: rakiyama <rakiyama@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 22:12:30 by rsudo             #+#    #+#             */
-/*   Updated: 2021/09/20 22:12:31 by rsudo            ###   ########.fr       */
+/*   Updated: 2022/03/27 16:54:01 by rakiyama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	minishell_loop(char **envp)
 	{
 		line = readline("minishell$ ");
 		if (!line)
-			line = ft_xstrdup("exit");
+			line = xft_strdup("exit");
 		if (line[0] != '\0')
 		{
 			data = parse_cmd(line, elst);

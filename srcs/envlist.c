@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   envlist.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: rakiyama <rakiyama@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 22:11:39 by rsudo             #+#    #+#             */
-/*   Updated: 2021/09/20 22:11:40 by rsudo            ###   ########.fr       */
+/*   Updated: 2022/03/27 16:54:01 by rakiyama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ static void	set_key_and_value(char *env, t_envlist *new)
 
 	p_equal = ft_strchr(env, '=');
 	key_len = p_equal - env;
-	key = ft_xsubstr(env, 0, key_len);
-	value = ft_xsubstr(env, key_len + 1, ft_strlen(env) - key_len - 1);
+	key = xft_substr(env, 0, key_len);
+	value = xft_substr(env, key_len + 1, ft_strlen(env) - key_len - 1);
 	new->key = key;
 	new->value = value;
 }
@@ -35,7 +35,7 @@ static t_envlist	*new_envlist(t_envlist *cur, char *env)
 {
 	t_envlist	*new;
 
-	new = ft_xcalloc(1, sizeof(*new));
+	new = xft_calloc(1, sizeof(*new));
 	set_key_and_value(env, new);
 	cur->next = new;
 	return (new);

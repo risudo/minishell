@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   wrapper2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: rakiyama <rakiyama@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 22:13:11 by rsudo             #+#    #+#             */
-/*   Updated: 2021/09/20 22:13:12 by rsudo            ###   ########.fr       */
+/*   Updated: 2022/03/27 16:54:01 by rakiyama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*ft_xstrjoin(char *str1, char *str2)
+char	*xft_strjoin(char *str1, char *str2)
 {
 	char	*joined_str;
 
@@ -25,7 +25,7 @@ char	*ft_xstrjoin(char *str1, char *str2)
 	return (joined_str);
 }
 
-char	**ft_xsplit(char *src_str, char cut_char)
+char	**xft_split(char *src_str, char cut_char)
 {
 	char	**splited_str;
 

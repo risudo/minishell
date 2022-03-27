@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execdata_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: rakiyama <rakiyama@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 22:11:44 by rsudo             #+#    #+#             */
-/*   Updated: 2021/09/20 22:11:45 by rsudo            ###   ########.fr       */
+/*   Updated: 2022/03/27 16:54:01 by rakiyama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ char	*get_quot_flag(char *str)
 	char	flag;
 	size_t	i;
 
-	ret = (char *)ft_xcalloc(ft_strlen(str) + 1, sizeof(char));
+	ret = (char *)xft_calloc(ft_strlen(str) + 1, sizeof(char));
 	i = 0;
 	flag = '0';
 	while (*str)
@@ -60,9 +60,9 @@ t_cmdlist	*new_clst(t_cmdlist *cur, t_token *token)
 {
 	t_cmdlist	*new;
 
-	new = (t_cmdlist *)ft_xcalloc(1, sizeof(*new));
+	new = (t_cmdlist *)xft_calloc(1, sizeof(*new));
 	cur->next = new;
-	new->str = ft_xstrdup(token->str);
+	new->str = xft_strdup(token->str);
 	new->quot = get_quot_flag(new->str);
 	return (new);
 }
@@ -82,11 +82,11 @@ t_iolist	*new_iolst(t_iolist *cur, t_token *token)
 {
 	t_iolist	*new;
 
-	new = (t_iolist *)ft_xcalloc(1, sizeof(*new));
+	new = (t_iolist *)xft_calloc(1, sizeof(*new));
 	new->open_fd = -1;
 	new->c_type = token->special;
 	cur->next = new;
-	new->str = ft_xstrdup(token->str);
+	new->str = xft_strdup(token->str);
 	new->quot = get_quot_flag(new->str);
 	return (new);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rakiyama <ryojiro25@gmail.com>             +#+  +:+       +#+        */
+/*   By: rakiyama <rakiyama@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 22:14:54 by rakiyama          #+#    #+#             */
-/*   Updated: 2021/09/20 22:14:56 by rakiyama         ###   ########.fr       */
+/*   Updated: 2022/03/27 16:54:01 by rakiyama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@
 # include <stdio.h>
 
 // wrapper
-void		*ft_xcalloc(size_t count, size_t size);
-char		*ft_xsubstr(char const *s, unsigned int start, size_t len);
-char		*ft_xstrdup(const char *src);
-char		*ft_xitoa(int n);
+void		*xft_calloc(size_t count, size_t size);
+char		*xft_substr(char const *s, unsigned int start, size_t len);
+char		*xft_strdup(const char *src);
+char		*xft_itoa(int n);
 void		xsignal(int sig, void f(int));
 
 // tokenize

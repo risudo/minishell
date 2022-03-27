@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   command_nonbuiltin.c                               :+:      :+:    :+:   */
+/*   execution_nonbuilin.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: rakiyama <rakiyama@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 22:11:29 by rsudo             #+#    #+#             */
-/*   Updated: 2021/09/20 22:11:30 by rsudo            ###   ########.fr       */
+/*   Updated: 2022/03/27 16:54:01 by rakiyama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,15 +38,15 @@ static char	**make_exec_pathlist(char *cmd, char *path_env)
 
 	if (!path_env)
 		return (NULL);
-	pathlist = ft_xsplit(path_env, ':');
+	pathlist = xft_split(path_env, ':');
 	i = 0;
 	while (pathlist[i])
 	{
 		tmp = pathlist[i];
-		pathlist[i] = ft_xstrjoin(pathlist[i], "/");
+		pathlist[i] = xft_strjoin(pathlist[i], "/");
 		free(tmp);
 		tmp = pathlist[i];
-		pathlist[i] = ft_xstrjoin(pathlist[i], cmd);
+		pathlist[i] = xft_strjoin(pathlist[i], cmd);
 		free(tmp);
 		i++;
 	}
@@ -71,7 +71,7 @@ static char	*cmdpath_from_pathenv(char *cmd, char *path_env)
 		path_type = ft_stat(pathlist[i]);
 		if (path_type == EXECUTABLE)
 		{
-			cmd_path = ft_xstrdup(pathlist[i]);
+			cmd_path = xft_strdup(pathlist[i]);
 			break ;
 		}
 		else if (path_type == UN_EXECUTABLE)

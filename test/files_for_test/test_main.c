@@ -28,7 +28,7 @@ void	minishell_loop(char **envp)
 	{
 		line = readline("minishell$ ");
 		if (!line)
-			line = ft_xstrdup("exit");
+			line = xft_strdup("exit");
 		if (line[0] != '\0')
 		{
 			data = parse_cmd(line, elst);

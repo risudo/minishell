@@ -10,7 +10,7 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	envlist = create_envlist(envp);
-	status = (unsigned char *)ft_xcalloc(1, sizeof(int));
+	status = (unsigned char *)xft_calloc(1, sizeof(int));
 	if (argv[1])
 	{
 		printf("command: [%s]\n", argv[1]);

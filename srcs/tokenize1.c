@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize1.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: rakiyama <rakiyama@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 22:12:59 by rsudo             #+#    #+#             */
-/*   Updated: 2021/09/20 22:13:00 by rsudo            ###   ########.fr       */
+/*   Updated: 2022/03/27 16:54:01 by rakiyama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ static t_token	*new_token(t_token *cur, char **cmd,
 	t_token	*tok;
 	size_t	len;
 
-	tok = (t_token *)ft_xcalloc(1, sizeof(*tok));
+	tok = (t_token *)xft_calloc(1, sizeof(*tok));
 	len = *cmd - *start;
-	tok->str = ft_xsubstr(*start, 0, len);
+	tok->str = xft_substr(*start, 0, len);
 	tok->type = *flag_quot;
 	cur->next = tok;
 	tok->prev = cur;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion_utils2.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: rakiyama <rakiyama@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 22:12:25 by rsudo             #+#    #+#             */
-/*   Updated: 2021/09/20 22:12:26 by rsudo            ###   ########.fr       */
+/*   Updated: 2022/03/27 16:54:01 by rakiyama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ char	*ft_strjoin_three(char *str1, char *str2, char *str3)
 	char	*tmp;
 	char	*ret;
 
-	tmp = ft_xstrjoin(str1, str2);
-	ret = ft_xstrjoin(tmp, str3);
+	tmp = xft_strjoin(str1, str2);
+	ret = xft_strjoin(tmp, str3);
 	free(tmp);
 	return (ret);
 }

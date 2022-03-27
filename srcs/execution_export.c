@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_export.c                                   :+:      :+:    :+:   */
+/*   execution_export.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rakiyama <rakiyama@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 22:10:53 by rsudo             #+#    #+#             */
-/*   Updated: 2022/03/27 16:05:18 by rakiyama         ###   ########.fr       */
+/*   Updated: 2022/03/27 16:54:01 by rakiyama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,19 +40,19 @@ static t_envlist	*to_setenv(t_envlist *head, char *src_str, size_t i)
 
 	if (src_str[i] == '+')
 	{
-		key = ft_xsubstr(src_str, 0, i);
-		value = ft_xsubstr(src_str, i + 2, ft_strlen(src_str) - i - 2);
+		key = xft_substr(src_str, 0, i);
+		value = xft_substr(src_str, i + 2, ft_strlen(src_str) - i - 2);
 		mode = 1;
 	}
 	else if (src_str[i] == '=')
 	{
-		key = ft_xsubstr(src_str, 0, i);
-		value = ft_xsubstr(src_str, i + 1, ft_strlen(src_str) - i - 1);
+		key = xft_substr(src_str, 0, i);
+		value = xft_substr(src_str, i + 1, ft_strlen(src_str) - i - 1);
 		mode = 0;
 	}
 	else
 	{
-		key = ft_xstrdup(src_str);
+		key = xft_strdup(src_str);
 		value = NULL;
 		mode = 0;
 	}

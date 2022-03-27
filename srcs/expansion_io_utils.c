@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion_io_utils.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: rakiyama <rakiyama@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 22:12:14 by rsudo             #+#    #+#             */
-/*   Updated: 2021/09/20 22:12:15 by rsudo            ###   ########.fr       */
+/*   Updated: 2022/03/27 16:54:01 by rakiyama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@ size_t	expansion_key_io(char **line, \
 	len = 1;
 	while (!is_delimiter(doll_ptr[len]))
 		len++;
-	front_key = ft_xsubstr(*line, 0, doll_ptr - *line);
-	key = ft_xsubstr(doll_ptr, 1, len - 1);
-	back_key = ft_xsubstr(doll_ptr + len, 0, ft_strlen(doll_ptr + len));
+	front_key = xft_substr(*line, 0, doll_ptr - *line);
+	key = xft_substr(doll_ptr, 1, len - 1);
+	back_key = xft_substr(doll_ptr + len, 0, ft_strlen(doll_ptr + len));
 	value = ft_getenv(envlist, key);
 	free(*line);
 	*line = ft_strjoin_three(front_key, value, back_key);
@@ -43,7 +43,7 @@ void	clear_quot_filename(char **filename, char **filequot)
 
 	i = 0;
 	j = 0;
-	new_str = ft_xcalloc(\
+	new_str = xft_calloc(\
 			ft_strlen_excluded_quot(*filename, *filequot) + 1, \
 			sizeof(char));
 	while ((*filename)[i])

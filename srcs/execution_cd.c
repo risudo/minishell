@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_cd.c                                       :+:      :+:    :+:   */
+/*   execution_cd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rakiyama <rakiyama@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 22:10:49 by rsudo             #+#    #+#             */
-/*   Updated: 2022/03/27 16:01:23 by rakiyama         ###   ########.fr       */
+/*   Updated: 2022/03/27 16:54:01 by rakiyama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ void	builtin_cd(t_execdata *data)
 		free(old_pwd);
 		return ;
 	}
-	data->elst = ft_setenv(data->elst, ft_xstrdup("OLDPWD"), old_pwd, 0);
+	data->elst = ft_setenv(data->elst, xft_strdup("OLDPWD"), old_pwd, 0);
 	if (ft_getenv(data->elst, "PWD"))
 		data->elst = \
-			ft_setenv(data->elst, ft_xstrdup("PWD"), getcwd(NULL, 0), 0);
+			ft_setenv(data->elst, xft_strdup("PWD"), getcwd(NULL, 0), 0);
 	g_status = 0;
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rakiyama <ryojiro25@gmail.com>             +#+  +:+       +#+        */
+/*   By: rakiyama <rakiyama@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 22:14:49 by rakiyama          #+#    #+#             */
-/*   Updated: 2021/09/20 22:14:50 by rakiyama         ###   ########.fr       */
+/*   Updated: 2022/03/27 16:54:01 by rakiyama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,8 @@ long		ft_atol(char *str, bool *nonnum_check);
 int			ft_strcmp(char *s1, char *s2);
 
 //wrapper2.c
-char		*ft_xstrjoin(char *str1, char *str2);
-char		**ft_xsplit(char *src_str, char cut_char);
+char		*xft_strjoin(char *str1, char *str2);
+char		**xft_split(char *src_str, char cut_char);
 void		xclose(int fd);
 pid_t		xfork(void);
 void		xwaitpid(pid_t pid, int *wstatus, int options);
