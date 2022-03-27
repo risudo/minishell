@@ -56,8 +56,13 @@ SRCS_NAME = clear_list.c \
 			xft_substr.c \
 			xsignal.c \
 			xwaitpid.c \
-			wrapper3.c \
-			wrapper4.c \
+			ft_dup.c \
+			ft_dup2.c \
+			ft_open.c \
+			ft_perror.c \
+			ft_pipe.c \
+			ft_puterror.c \
+			ft_stat.c \
 			signal_handler.c
 
 SRCS = ${addprefix ${SRCS_DIR}, ${SRCS_NAME}}
