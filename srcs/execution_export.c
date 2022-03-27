@@ -1,21 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   command_builtin2.c                                 :+:      :+:    :+:   */
+/*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: rakiyama <rakiyama@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 22:10:53 by rsudo             #+#    #+#             */
-/*   Updated: 2021/09/20 22:10:54 by rsudo            ###   ########.fr       */
+/*   Updated: 2022/03/27 16:05:18 by rakiyama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/*
-** Execute built-in command.
-** - export
-*/
 
 static ssize_t	check_name_rule(char *src_str)
 {

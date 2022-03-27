@@ -1,50 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   command_builtin3.c                                 :+:      :+:    :+:   */
+/*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rsudo <rsudo@student.42tokyo.jp>           +#+  +:+       +#+        */
+/*   By: rakiyama <rakiyama@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/20 22:11:11 by rsudo             #+#    #+#             */
-/*   Updated: 2021/09/20 22:11:12 by rsudo            ###   ########.fr       */
+/*   Updated: 2022/03/27 16:05:12 by rakiyama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/*
-** Execute built-in commands.
-** - unset
-** - env
-** - exit
-*/
-
-void	builtin_unset(t_execdata *data)
-{
-	size_t	i;
-
-	i = 1;
-	while (data->cmdline[i])
-	{
-		data->elst = ft_unsetenv(data->elst, data->cmdline[i]);
-		i++;
-	}
-	g_status = 0;
-}
-
-void	builtin_env(t_execdata *data)
-{
-	t_envlist	*move;
-
-	move = data->elst;
-	while (move)
-	{
-		if (move->value)
-			printf("%s=%s\n", move->key, move->value);
-		move = move->next;
-	}
-	g_status = 0;
-}
 
 void	builtin_exit(t_execdata *data)
 {

@@ -17,10 +17,14 @@ MAIN = ${SRCS_DIR}main.c
 endif
 
 SRCS_NAME = clear_list.c \
-			command_builtin1.c \
-			command_builtin2.c \
-			command_builtin3.c \
-			command_nonbuiltin.c \
+			execution_echo.c \
+			execution_cd.c \
+			execution_pwd.c \
+			execution_export.c \
+			execution_unset.c \
+			execution_env.c \
+			execution_exit.c \
+			execution_nonbuilin.c \
 			env_functions.c \
 			envlist.c \
 			execdata.c \
